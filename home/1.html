@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>หน้าหลัก - Voice for Change</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @font-face {
+      font-family: 'Google Sans';
+      src: url('../Google_Sans/static/GoogleSans-Regular.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Google Sans';
+      src: url('../Google_Sans/static/GoogleSans-Medium.ttf') format('truetype');
+      font-weight: 500;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Google Sans';
+      src: url('../Google_Sans/static/GoogleSans-SemiBold.ttf') format('truetype');
+      font-weight: 600;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Google Sans';
+      src: url('../Google_Sans/static/GoogleSans-Bold.ttf') format('truetype');
+      font-weight: 700;
+      font-style: normal;
+    }
+    * { font-family: 'Google Sans', sans-serif; }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(200, 200, 200, 0.5);
+      box-shadow: 0 4px 16px rgba(31, 38, 135, 0.08);
+    }
+    .menu-item { transition: all 0.15s; }
+    .menu-item:hover { background: rgba(241, 245, 249, 0.8); }
+    .menu-item.active { background: rgba(239, 246, 255, 0.9); color: #2563eb; }
+    .message-row { transition: background 0.15s; }
+    .message-row:hover { background: rgba(248, 250, 252, 0.8); }
+  </style>
+</head>
+<body class="bg-gray-100 h-screen flex flex-col">
+
+  <!-- Top Navbar -->
+  <nav class="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+    <div class="px-4 py-2 flex items-center justify-between">
+      <div class="flex items-center gap-6">
+        <img src="../logo/Pattaya Aviation.png" alt="Logo" class="w-10 h-10 object-contain">
+        <div class="flex flex-col">
+          <span class="text-gray-800 text-lg leading-tight">Voice for Change</span>
+          <span class="text-gray-500 text-xs">เสียงแห่งการเปลี่ยนแปลง</span>
+        </div>
+      </div>
+      <button onclick="logout()" class="flex items-center gap-2 px-3 py-1.5 text-gray-500 hover:text-red-500 text-xs font-medium border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+        </svg>
+        ออกจากระบบ
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content Area -->
+  <div class="flex-1 flex flex-col overflow-hidden p-4 gap-4">
+    
+    <!-- Menu Bar (Full Width) -->
+    <div class="glass-card rounded-lg px-2 py-1.5 flex items-center gap-1">
+      <button type="button" onclick="toggleSidebar()" class="px-2 py-1.5 text-gray-500 hover:bg-gray-100 rounded cursor-pointer relative z-10" title="เปิด/ปิด Sidebar">
+        <svg class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+      <div class="w-px h-5 bg-gray-200 mx-1"></div>
+      <button class="px-3 py-1.5 text-sm text-blue-600 bg-blue-50 rounded font-medium">หน้าแรก</button>
+      <button class="px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded">ดู</button>
+      <button class="px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 rounded">ความช่วยเหลือ</button>
+      <div class="flex-1"></div>
+      <div class="flex items-center border border-gray-200 rounded px-2 py-1">
+        <input type="text" placeholder="ค้นหา..." class="w-40 text-sm outline-none text-gray-600 placeholder-gray-400">
+        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Content Below Menu Bar -->
+    <div class="flex flex-1 gap-4 overflow-hidden">
+      
+      <!-- Sidebar Container -->
+      <aside id="sidebar" class="w-52 transition-all duration-300 flex">
+        <div class="glass-card rounded-2xl p-3 flex flex-col gap-1 flex-1">
+          <button class="menu-item active w-full px-3 py-2.5 rounded-lg text-left text-sm font-medium flex items-center gap-3" onclick="filterMessages(null)">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+            </svg>
+            กล่องข้อความ
+          </button>
+          <button class="menu-item w-full px-3 py-2.5 rounded-lg text-left text-sm text-gray-600 flex items-center gap-3" onclick="filterMessages('complaint')">
+            <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+            ร้องเรียน
+          </button>
+          <button class="menu-item w-full px-3 py-2.5 rounded-lg text-left text-sm text-gray-600 flex items-center gap-3" onclick="filterMessages('suggestion')">
+            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+            </svg>
+            ข้อเสนอแนะ
+          </button>
+          <button class="menu-item w-full px-3 py-2.5 rounded-lg text-left text-sm text-gray-600 flex items-center gap-3" onclick="filterMessages('compliment')">
+            <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            </svg>
+            ชมเชย
+          </button>
+        </div>
+      </aside>
+
+      <!-- Message List Container -->
+      <div class="w-[380px] glass-card rounded-2xl flex flex-col overflow-hidden">
+        <!-- Header -->
+        <div class="px-4 py-3 border-b border-gray-200">
+          <div class="flex items-center justify-between text-sm text-gray-500">
+            <span>เรื่อง</span>
+            <span>เวลา</span>
+          </div>
+          <div class="text-xs text-gray-400 mt-0.5">หมวดหมู่</div>
+        </div>
+        
+        <!-- Messages -->
+        <div class="flex-1 overflow-auto p-3 space-y-2" id="message-list">
+          <!-- Messages will be inserted here -->
+        </div>
+      </div>
+
+      <!-- Preview Panel -->
+      <aside class="flex-1 glass-card rounded-2xl flex flex-col" id="preview-panel">
+        <div class="flex-1 flex items-center justify-center">
+          <div class="text-center p-8">
+            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <p class="text-gray-400 text-sm">เลือกข้อความเพื่อดูรายละเอียด</p>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Check login
+    if (!localStorage.getItem('isLoggedIn')) {
+      window.location.href = 'login.html';
+    }
+    
+    // Display user info
+    const employeeId = localStorage.getItem('employeeId');
+    const userInfoEl = document.getElementById('user-info');
+    if (employeeId && userInfoEl) {
+      userInfoEl.textContent = 'รหัสพนักงาน: ' + employeeId;
+    }
+
+    // Sample messages
+    const messages = [
+      { id: 1, type: 'complaint', from: 'พนักงาน 12345', subject: 'ปัญหาเรื่องแอร์ในออฟฟิศไม่เย็น', preview: 'ต้องการแจ้งปัญหาเรื่องแอร์ในออฟฟิศชั้น 3 ไม่เย็น ทำให้ทำงานลำบาก...', date: '14:30', category: 'ร้องเรียน' },
+      { id: 2, type: 'suggestion', from: 'พนักงาน 23456', subject: 'เสนอให้มีห้องพักผ่อนสำหรับพนักงาน', preview: 'อยากเสนอให้มีห้องพักผ่อนเพื่อให้พนักงานได้ผ่อนคลายในช่วงพัก...', date: '13:15', category: 'ข้อเสนอแนะ' },
+      { id: 3, type: 'compliment', from: 'พนักงาน 34567', subject: 'ขอชมเชยทีม IT ที่ช่วยเหลือดีมาก', preview: 'ขอชมเชยทีม IT ที่เข้ามาแก้ไขปัญหาคอมพิวเตอร์ได้อย่างรวดเร็ว...', date: '11:00', category: 'ชมเชย' },
+      { id: 4, type: 'complaint', from: 'พนักงาน 45678', subject: 'ปัญหาที่จอดรถไม่เพียงพอ', preview: 'ทุกเช้าต้องวนหาที่จอดรถนานมาก เพราะที่จอดไม่เพียงพอ...', date: '19 ม.ค.', category: 'ร้องเรียน' },
+      { id: 5, type: 'suggestion', from: 'พนักงาน 56789', subject: 'เสนอจัดกิจกรรม Team Building', preview: 'อยากให้บริษัทจัดกิจกรรม Team Building เพื่อสร้างความสัมพันธ์...', date: '19 ม.ค.', category: 'ข้อเสนอแนะ' },
+      { id: 6, type: 'complaint', from: 'พนักงาน 67890', subject: 'เรื่องอาหารกลางวันในโรงอาหาร', preview: 'อาหารในโรงอาหารมีตัวเลือกน้อย และรสชาติไม่ค่อยดี...', date: '18 ม.ค.', category: 'ร้องเรียน' },
+    ];
+
+    function renderMessages(filter = null) {
+      const list = document.getElementById('message-list');
+      const filtered = filter ? messages.filter(m => m.type === filter) : messages;
+      
+      list.innerHTML = filtered.map(msg => `
+        <div class="message-row border border-gray-200 rounded-2xl px-4 py-3 cursor-pointer" onclick="viewMessage(${msg.id})">
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-medium text-sm text-gray-800 truncate">${msg.subject}</span>
+            <span class="text-xs text-gray-400 ml-2 shrink-0">${msg.date}</span>
+          </div>
+          <div class="text-xs text-gray-400">${msg.category}</div>
+        </div>
+      `).join('');
+    }
+
+    function viewMessage(id) {
+      const msg = messages.find(m => m.id === id);
+      const preview = document.getElementById('preview-panel');
+      
+      preview.innerHTML = `
+        <div class="p-6 border-b border-gray-200">
+          <div class="text-xs text-gray-400 mb-2">${msg.category}</div>
+          <h2 class="text-lg font-semibold text-gray-800 mb-2">${msg.subject}</h2>
+          <div class="text-sm text-gray-500">${msg.from} • ${msg.date}</div>
+        </div>
+        <div class="flex-1 p-6 overflow-auto">
+          <p class="text-gray-600 leading-relaxed">${msg.preview}</p>
+        </div>
+        <div class="p-4 border-t border-gray-200">
+          <div class="flex gap-2">
+            <button class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl transition font-medium text-sm">ตอบกลับ</button>
+            <button class="px-4 py-2.5 border border-gray-300 rounded-xl hover:bg-gray-50 transition text-sm text-gray-600">เก็บถาวร</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function filterMessages(type) {
+      // Update active menu
+      document.querySelectorAll('.menu-item').forEach(el => {
+        el.classList.remove('active');
+        if (!type && el.textContent.includes('กล่องข้อความ')) el.classList.add('active');
+        if (type === 'complaint' && el.textContent.includes('ร้องเรียน')) el.classList.add('active');
+        if (type === 'suggestion' && el.textContent.includes('ข้อเสนอแนะ')) el.classList.add('active');
+        if (type === 'compliment' && el.textContent.includes('ชมเชย')) el.classList.add('active');
+      });
+      renderMessages(type);
+    }
+
+    function logout() {
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('employeeId');
+      window.location.href = 'login.html';
+    }
+
+    // Toggle Sidebar
+    var sidebarOpen = true;
+    window.toggleSidebar = function() {
+      var sidebar = document.getElementById('sidebar');
+      sidebarOpen = !sidebarOpen;
+      if (sidebarOpen) {
+        sidebar.classList.remove('w-0', 'overflow-hidden', 'opacity-0');
+        sidebar.classList.add('w-52');
+      } else {
+        sidebar.classList.remove('w-52');
+        sidebar.classList.add('w-0', 'overflow-hidden', 'opacity-0');
+      }
+    };
+
+    // Initial render
+    renderMessages();
+  </script>
+
+</body>
+</html>

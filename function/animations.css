@@ -1,0 +1,53 @@
+/* ============================================
+   PA System - Animation Styles (Simplified)
+   ============================================ */
+
+@view-transition { navigation: auto; }
+
+/* ============================================
+   Welcome Page Background
+   ============================================ */
+.welcome-bg {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f0f9ff 100%);
+  min-height: 100vh;
+}
+
+/* ============================================
+   Glassmorphism Cards
+   ============================================ */
+.glass-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+}
+
+/* Disable hover effect for form containers */
+.glass-card.no-hover,
+.glass-card.no-hover:hover {
+  transform: none;
+}
+
+/* ============================================
+   Simple Fade In Animation
+   ============================================ */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   Gradient Text
+   ============================================ */
+.gradient-text {
+  background: linear-gradient(135deg, #3b82f6 0%, #0ea5e9 50%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

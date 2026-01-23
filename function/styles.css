@@ -1,0 +1,159 @@
+/**
+ * PA System - Shared Styles
+ * ใช้ร่วมกันทุกหน้าเพื่อให้แก้ไขที่เดียว
+ */
+
+/* Google Sans Font Faces */
+@font-face {
+  font-family: "Google Sans";
+  src: url("../Google_Sans/static/GoogleSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Google Sans";
+  src: url("../Google_Sans/static/GoogleSans-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Google Sans";
+  src: url("../Google_Sans/static/GoogleSans-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Google Sans";
+  src: url("../Google_Sans/static/GoogleSans-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+  font-family: "Google Sans", sans-serif;
+}
+
+/* Prevent body scroll - scroll inside content area only */
+html, body {
+  overflow: hidden !important;
+  height: 100% !important;
+  margin: 0;
+  padding: 0;
+}
+
+/* Content area that scrolls below fixed navbar */
+.content-area {
+  position: fixed !important;
+  top: 56px !important; /* navbar height */
+  left: 0 !important;
+  right: 0 !important;
+  height: calc(100vh - 56px) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y !important;
+  overscroll-behavior: contain;
+  padding-bottom: 20px; /* extra space at bottom */
+  
+  /* Flexbox to push footer to bottom */
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Main content wrapper - takes available space */
+.content-area > div:first-child {
+  flex: 1 0 auto;
+}
+
+/* Footer wrapper - stays at bottom */
+.content-area > [data-footer="true"],
+.content-area > div:last-child:has(> p:only-child) {
+  flex-shrink: 0;
+  margin-top: auto;
+}
+
+/* Background Styles */
+.gradient-bg {
+  background: url("../Background/bg.jpg") no-repeat center center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+/* Glass Card Effect */
+.glass-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+}
+
+/* Glass Navbar */
+.glass-navbar {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 16px rgba(31, 38, 135, 0.08);
+}
+
+/* Status Colors */
+.status-received {
+  background: #fef3c7;
+  color: #92400e;
+}
+.status-reviewing {
+  background: #dbeafe;
+  color: #1e40af;
+}
+.status-in-progress {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+.status-resolved {
+  background: #d1fae5;
+  color: #065f46;
+}
+.status-closed {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+/* Tab Active State */
+.tab-active {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+}
+
+/* Animations */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Input Focus Styles */
+.tracking-input:focus {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+}
+
+/* Custom Border Radius */
+.rounded-\[2\.5rem\] {
+  border-radius: 2.5rem;
+}
+
+/* View Transition */
+@view-transition {
+  navigation: auto;
+}

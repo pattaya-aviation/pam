@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ชมเชย - Voice for Change</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../function/styles.css">
+  <link rel="stylesheet" href="../function/animations.css">
+</head>
+<body class="h-full">
+  <!-- Fixed Navbar -->
+  <div id="navbar-container"></div>
+  <script src="../function/navbar.js"></script>
+  <script src="../function/scrollbar.js"></script>
+  <script>
+    document.getElementById('navbar-container').innerHTML = createBackNavbarHTML({ 
+      backUrl: 'voice for change.html',
+      pageTitle: 'ชมเชย',
+      pageSubtitle: 'ส่งคำชมเชยให้กับบุคคลหรือทีม',
+      pageTitleColor: 'text-emerald-500'
+    });
+    setupNavbarTitleScroll();
+  </script>
+
+  <!-- Scrollable Content Area -->
+  <div id="app" class="content-area welcome-bg" style="overflow-y: scroll !important; -webkit-overflow-scrolling: touch;">
+    
+  <div class="relative z-10 max-w-lg mx-auto px-4 py-6">
+    <!-- Form -->
+    <div class="glass-card rounded-[2.5rem] p-6">
+      <!-- Header -->
+      <div class="mb-6">
+        <div>
+          <h1 class="text-xl font-bold text-emerald-500">ชมเชย</h1>
+          <p class="text-gray-500 text-sm">ส่งคำชมเชยให้กับบุคคลหรือทีม</p>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="border-t border-gray-200 mb-5"></div>
+
+      <form id="compliment-form" onsubmit="submitForm(event)">
+        <!-- Employee ID -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">รหัสพนักงาน</label>
+          <input type="text" id="employee-id" placeholder="เช่น EMP001" 
+            class="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition">
+        </div>
+
+        <!-- First Name -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อ</label>
+          <input type="text" id="firstname" placeholder="ชื่อ" 
+            class="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition">
+        </div>
+
+        <!-- Last Name -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">นามสกุล</label>
+          <input type="text" id="lastname" placeholder="นามสกุล" 
+            class="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition">
+        </div>
+
+        <!-- Phone -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">เบอร์โทร</label>
+          <input type="tel" id="phone" placeholder="0xx-xxx-xxxx" 
+            class="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition">
+        </div>
+
+        <!-- Email -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">อีเมล</label>
+          <input type="email" id="email" placeholder="example@email.com" 
+            class="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition">
+        </div>
+
+        <!-- Divider -->
+        <div class="border-t border-gray-200 my-6"></div>
+        <p class="text-xs text-gray-400 mb-4 -mt-3">รายละเอียดคำชมเชย</p>
+
+        <!-- Recipient Type -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">ชมเชยใคร <span class="text-red-500">*</span></label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="flex items-center justify-center p-3 border border-gray-200 rounded-2xl cursor-pointer hover:border-emerald-300 transition">
+              <input type="radio" name="recipient_type" value="individual" class="mr-2"> บุคคล
+            </label>
+            <label class="flex items-center justify-center p-3 border border-gray-200 rounded-2xl cursor-pointer hover:border-emerald-300 transition">
+              <input type="radio" name="recipient_type" value="team" class="mr-2"> ทีม/แผนก
+            </label>
+          </div>
+        </div>
+
+        <!-- Recipient Name -->
+        <div class="mb-5">
+          <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อผู้รับคำชมเชย <span class="text-red-500">*</span></label>
+          <input type="text" id="recipient" required maxlength="100" placeholder="ระบุชื่อบุคคลหรือทีม" 
+            class="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition">
+        </div>
+
+        <!-- Subject -->
+        <div class="mb-5">
+          <label class="block text-sm font-medium text-gray-700 mb-2">หัวข้อคำชมเชย <span class="text-red-500">*</span></label>
+          <input type="text" id="subject" required maxlength="100" placeholder="เช่น ทำงานดีเยี่ยม, ช่วยเหลืองานได้ดี" 
+            class="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition">
+        </div>
+
+        <!-- Description -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">รายละเอียดคำชมเชย <span class="text-red-500">*</span></label>
+          <textarea id="description" required rows="5" maxlength="2000" placeholder="กรุณาอธิบายสิ่งที่คุณประทับใจ..."
+            class="w-full px-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition resize-none"></textarea>
+          <p class="text-xs text-gray-400 mt-2">คำชมเชยจะถูกส่งไปยังผู้รับและหัวหน้างาน</p>
+        </div>
+
+        <!-- File Upload -->
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 mb-2">แนบไฟล์ (ถ้ามี)</label>
+          
+          <div id="file-list" class="space-y-3 mb-3">
+            <div class="file-item border border-gray-200 rounded-2xl p-3">
+              <div class="flex items-center gap-3">
+                <input type="text" placeholder="ชื่อไฟล์ (ไม่บังคับ)" 
+                  class="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition">
+                <label class="flex items-center gap-2 px-4 py-2 border-2 border-dashed border-gray-200 rounded-xl hover:border-emerald-300 transition cursor-pointer">
+                  <input type="file" class="hidden" accept="image/*,.pdf,.doc,.docx" onchange="updateFileName(this)">
+                  <div class="file-placeholder flex items-center gap-2">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                    </svg>
+                    <span class="text-xs text-gray-500 whitespace-nowrap">เลือกไฟล์</span>
+                  </div>
+                  <span class="file-name text-xs text-green-600 hidden"></span>
+                </label>
+                <button type="button" onclick="this.closest('.file-item').remove()" class="text-gray-400 hover:text-emerald-500 transition">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" onclick="addFileItem()" class="w-full py-2 border border-dashed border-gray-300 rounded-2xl text-sm text-gray-500 hover:border-emerald-400 hover:text-emerald-500 transition flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            เพิ่มไฟล์
+          </button>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-4 rounded-2xl font-semibold hover:from-emerald-600 hover:to-emerald-700 transition-all flex items-center justify-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+          </svg>
+          ส่งคำชมเชย
+        </button>
+      </form>
+    </div>
+
+    </div>
+
+    <!-- Copyright Footer -->
+    <div class="w-full py-6 pb-12 mt-6">
+      <p class="text-xs text-gray-400 text-center">Copyright © 2026 Pattaya Aviation | Human Resource Department</p>
+    </div>
+
+  </div> <!-- Close content-area -->
+  <script src="../function/file-upload.js"></script>
+  <script src="../function/footer.js"></script>
+  <script>
+    function submitForm(e) {
+      e.preventDefault();
+      alert('ส่งคำชมเชยสำเร็จ!');
+      // Add your form submission logic here
+    }
+    function addFileItem() { addFileItemEmerald(); }
+  </script>
+</body>
+</html>
+

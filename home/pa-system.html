@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="th" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PA System - เสียงแห่งการเปลี่ยนแปลง</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link rel="stylesheet" href="../function/styles.css">
+  <link rel="stylesheet" href="../function/animations.css">
+ </head>
+ <body class="h-full">
+  <!-- Fixed Navbar -->
+  <div id="navbar-container"></div>
+  <script src="../function/navbar.js"></script>
+  <script src="../function/sidebar.js"></script>
+  <script src="../function/scrollbar.js"></script>
+  <script>
+    document.getElementById('navbar-container').innerHTML = createHomeNavbarHTML();
+  </script>
+  
+  <!-- Welcome Page Content -->
+  <div id="app" class="content-area welcome-bg" style="overflow-y: scroll !important; -webkit-overflow-scrolling: touch;">
+    
+
+    <!-- Main Content -->
+    <div class="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-20">
+
+      
+      <!-- Welcome Text -->
+      <div class="text-center max-w-10xl mx-auto">
+        <p class="title-animate text-sm font-medium text-blue-500 tracking-widest uppercase mb-4">
+          ยินดีต้อนรับสู่
+        </p>
+        
+        <h1 class="subtitle-animate text-5xl md:text-6xl font-bold text-gray-800 mb-4">
+          PA <span class="gradient-text">System</span>
+        </h1>
+      </div>
+      
+    </div>
+
+    <!-- Copyright Footer -->
+    <div class="w-full py-6 pb-12">
+      <p class="text-xs text-gray-400 text-center">Copyright © 2026 Pattaya Aviation | Human Resource Department</p>
+    </div>
+
+   </div>
+   <script src="../function/footer.js"></script>
+  </body>
+</html>
