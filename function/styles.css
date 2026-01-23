@@ -41,9 +41,8 @@ html, body {
   height: 100% !important;
   margin: 0;
   padding: 0;
-  background: #ffffff !important;
-  /* Extend to safe areas */
-  padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+  /* Transparent background - let browser show native colors */
+  background: transparent !important;
 }
 
 /* Content area that scrolls below fixed navbar */
@@ -52,18 +51,14 @@ html, body {
   top: 65px !important; /* navbar height */
   left: 0 !important;
   right: 0 !important;
-  bottom: 0 !important;
+  /* Stop above URL bar safe area */
+  bottom: env(safe-area-inset-bottom, 0) !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y !important;
   overscroll-behavior: contain;
-  background: #ffffff !important;
-  
-  /* Safe area for iOS devices - extend to bottom edge */
-  padding-bottom: env(safe-area-inset-bottom, 0);
-  padding-left: env(safe-area-inset-left, 0);
-  padding-right: env(safe-area-inset-right, 0);
+  /* background removed - set by inline style in each page */
   
   /* Flexbox to push footer to bottom */
   display: flex !important;
@@ -103,7 +98,7 @@ html, body {
 
 /* Glass Navbar */
 .glass-navbar {
-  background: rgba(255, 0, 0, 0.7);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
