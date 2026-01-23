@@ -41,6 +41,7 @@ html, body {
   height: 100% !important;
   margin: 0;
   padding: 0;
+  background: #ffffff !important;
 }
 
 /* Content area that scrolls below fixed navbar */
