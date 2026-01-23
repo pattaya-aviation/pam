@@ -47,16 +47,19 @@ html, body {
 /* Content area that scrolls below fixed navbar */
 .content-area {
   position: fixed !important;
-  top: 56px !important; /* navbar height */
+  top: 65px !important; /* navbar height */
   left: 0 !important;
   right: 0 !important;
-  height: calc(100vh - 56px) !important;
+  bottom: 0 !important; /* stretch to bottom instead of fixed height */
   overflow-y: auto !important;
   overflow-x: hidden !important;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y !important;
   overscroll-behavior: contain;
-  padding-bottom: 20px; /* extra space at bottom */
+  background: #ffffff !important;
+  
+  /* Safe area for iOS devices */
+  padding-bottom: env(safe-area-inset-bottom, 0);
   
   /* Flexbox to push footer to bottom */
   display: flex !important;
