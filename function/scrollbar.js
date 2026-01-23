@@ -33,7 +33,7 @@ function initScrollableContent() {
       top: ${navbarHeight}px;
       left: 0;
       right: 0;
-      bottom: 0;
+      bottom: env(safe-area-inset-bottom, 0); /* Stop above URL bar */
       overflow-y: scroll !important;
       overflow-x: hidden !important;
       -webkit-overflow-scrolling: touch;
