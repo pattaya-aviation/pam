@@ -29,7 +29,7 @@ function createSidebarHTML(currentPage = 'home') {
     <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-[60] hidden" onclick="toggleSidebar()"></div>
     
     <!-- Sidebar -->
-    <div id="sidebar" class="fixed top-0 left-0 h-full w-72 bg-white z-[60] transform -translate-x-full transition-transform duration-300 shadow-2xl" style="padding-bottom: env(safe-area-inset-bottom, 20px);">
+    <div id="sidebar" class="fixed top-0 left-0 w-72 bg-white z-[60] transform -translate-x-full transition-transform duration-300 shadow-2xl" style="height: 100%; min-height: 100vh; min-height: -webkit-fill-available; padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 80px);">
       <div class="p-6 border-b border-gray-200">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
