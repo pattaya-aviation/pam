@@ -26,7 +26,7 @@ function createSidebarHTML(currentPage = 'home') {
   
   return `
     <!-- Sidebar Overlay -->
-    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-[60] hidden" onclick="toggleSidebar()"></div>
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-[60] hidden" style="padding-bottom: env(safe-area-inset-bottom, 0);" onclick="toggleSidebar()"></div>
     
     <!-- Sidebar -->
     <div id="sidebar" class="fixed top-0 left-0 h-full w-72 bg-white z-[60] transform -translate-x-full transition-transform duration-300 shadow-2xl">
