@@ -31,136 +31,77 @@
             </p>
         </div>
         
-        <!-- Right: Login Form -->
-        <div class="w-full lg:w-[480px] lg:flex-shrink-0">
-            <form id="login-form" class="bg-white rounded-xl p-6 shadow-[0_0_60px_rgba(0,0,0,0.15)] border border-gray-100">
-                <!-- Company Selector -->
-                <div class="mb-4">
-                    <label class="block text-sm font-semibold mb-2 text-gray-600">Company / บริษัท</label>
-                    <div class="relative">
-                        <select id="company-selector" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 transition appearance-none bg-white font-medium text-gray-700 cursor-pointer">
-                            <option value="pro-aviation">Pro Aviation Management</option>
-                            <option value="pattaya-aviation">Pattaya Aviation</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                            <i class="fa-solid fa-chevron-down text-xs"></i>
-                        </div>
+        <!-- Right: Action Cards 2x2 -->
+        <div class="w-full lg:w-[520px] lg:flex-shrink-0">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                
+                <!-- Card 1: ร้องเรียน -->
+                <a href="voice for change.html" class="group bg-white rounded-2xl p-4 py-6 shadow-sm hover:shadow-md transition-all duration-300 flex items-center gap-4">
+                    <div class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
                     </div>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-semibold mb-2 text-gray-600">Username</label>
-                    <input type="text" id="username" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 transition" placeholder="รหัสพนักงาน" required autocomplete="off">
-                </div>
+                    <div class="flex-1">
+                        <h3 class="text-base font-semibold text-gray-900">ร้องเรียน</h3>
+                        <p class="text-xs text-gray-500 mt-1">แจ้งปัญหาที่พบเจอในการทำงาน</p>
+                    </div>
+                    <svg class="w-5 h-5 text-gray-300 group-hover:text-red-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
                 
-                <div class="mb-4">
-                    <label class="block text-sm font-semibold mb-2 text-gray-600">Password</label>
-                    <input type="password" id="password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 transition" placeholder="รหัสผ่าน" required autocomplete="off">
-                </div>
+                <!-- Card 2: ข้อเสนอแนะ -->
+                <a href="voice for change.html" class="group bg-white rounded-2xl p-4 py-6 shadow-sm hover:shadow-md transition-all duration-300 flex items-center gap-4">
+                    <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-base font-semibold text-gray-900">ข้อเสนอแนะ</h3>
+                        <p class="text-xs text-gray-500 mt-1">แจ้งข้อเสนอแนะเพื่อพัฒนาองค์กร</p>
+                    </div>
+                    <svg class="w-5 h-5 text-gray-300 group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
                 
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-md transition transform active:scale-95">
-                    เข้าสู่ระบบ
-                </button>
+                <!-- Card 3: ชมเชย -->
+                <a href="voice for change.html" class="group bg-white rounded-2xl p-4 py-6 shadow-sm hover:shadow-md transition-all duration-300 flex items-center gap-4">
+                    <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-base font-semibold text-gray-900">ชมเชย</h3>
+                        <p class="text-xs text-gray-500 mt-1">ส่งคำชมเชยให้กับบุคคลหรือทีม</p>
+                    </div>
+                    <svg class="w-5 h-5 text-gray-300 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
                 
-                <div class="mt-6 text-xs text-gray-400 text-center">
-                    <p>Please login with your employee ID and password</p>
-                </div>
-                <div class="mt-3 text-center">
-                    <p class="text-gray-500 text-xs">Pro Aviation Management System</p>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- ERROR MODAL -->
-    <div id="error-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden animate-fade-in-up p-6 text-center">
-            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fa-solid fa-circle-exclamation text-red-600 text-3xl"></i>
+                <!-- Card 4: ติดตามสถานะ -->
+                <a href="voice for change.html" class="group bg-white rounded-2xl p-4 py-6 shadow-sm hover:shadow-md transition-all duration-300 flex items-center gap-4">
+                    <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-base font-semibold text-gray-900">ติดตามสถานะ</h3>
+                        <p class="text-xs text-gray-500 mt-1">ตรวจสอบความคืบหน้าเรื่องที่แจ้ง</p>
+                    </div>
+                    <svg class="w-5 h-5 text-gray-300 group-hover:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                
             </div>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">เข้าสู่ระบบไม่สำเร็จ</h3>
-            <p id="error-message" class="text-gray-600 mb-6">Username หรือ Password ไม่ถูกต้อง</p>
-            <button onclick="closeErrorModal()" class="w-full bg-gray-800 hover:bg-gray-900 text-white font-bold py-2.5 rounded-lg shadow-md transition">
-                ลองใหม่
-            </button>
         </div>
     </div>
 
-    <!-- JavaScript Module -->
-    <script type="module">
-        import { authService, clearAllDataAndReload } from '../js/auth.js';
-
-        // Auto-login check
-        window.addEventListener('load', () => {
-            // Logo Logic
-            const savedCompany = localStorage.getItem('selectedCompany') || 'pro-aviation';
-            const companySelector = document.getElementById('company-selector');
-            const systemLogo = document.getElementById('system-logo');
-            
-            if (companySelector && systemLogo) {
-                companySelector.value = savedCompany;
-                updateLogo(savedCompany);
-
-                companySelector.addEventListener('change', (e) => {
-                    const selected = e.target.value;
-                    localStorage.setItem('selectedCompany', selected);
-                    updateLogo(selected);
-                });
-            }
-
-            function updateLogo(company) {
-                if (company === 'pattaya-aviation') {
-                    systemLogo.src = '../assets/Pattaya Aviation.png';
-                } else {
-                    systemLogo.src = '../assets/PAV_LOGO-1-01.png';
-                }
-            }
-
-            const user = authService.loadSavedUser();
-            if (user) {
-                console.log('✅ Auto-login:', user);
-                redirectToApp(user.role);
-            }
-        });
-
-        // Login form handler
-        document.getElementById('login-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
-            
-            const result = authService.login(username, password);
-            
-            if (result.success) {
-                redirectToApp(result.user.role);
-            } else {
-                showError(result.message);
-            }
-        });
-
-        window.showError = (msg) => {
-            document.getElementById('error-message').textContent = msg || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง';
-            document.getElementById('error-modal').classList.remove('hidden');
-        }
-
-        window.closeErrorModal = () => {
-            document.getElementById('error-modal').classList.add('hidden');
-        }
-
-        // Clear data button
-        document.getElementById('btn-clear').addEventListener('click', () => {
-            clearAllDataAndReload();
-        });
-
-        // Redirect to appropriate page
-        function redirectToApp(role) {
-            if (role === 'admin') {
-                window.location.href = 'admin.html';
-            } else {
-                window.location.href = 'user.html';
-            }
-        }
-    </script>
 </body>
 </html>
-
