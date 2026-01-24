@@ -140,6 +140,49 @@
                     </select>
                 </div>
                 
+                <!-- Station (Suggestion) -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">สถานีที่เกี่ยวข้อง</label>
+                    <select id="suggestionStationSelect" onchange="updateSuggestionDepartmentOptions()" class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                        <option value="">เลือกสถานี</option>
+                        <option value="สำนักงานใหญ่ (HDQ)">สำนักงานใหญ่ (HDQ)</option>
+                        <option value="สถานีสุวรรณภูมิ (BKK)">สถานีสุวรรณภูมิ (BKK)</option>
+                        <option value="สถานีสุวรรณภูมิ (BKK-VZ)">สถานีสุวรรณภูมิ (BKK-VZ)</option>
+                        <option value="สถานีสุวรรณภูมิ (BKK-PA)">สถานีสุวรรณภูมิ (BKK-PA)</option>
+                        <option value="สถานีเชียงราย (CEI)">สถานีเชียงราย (CEI)</option>
+                        <option value="สถานีเชียงใหม่ (CNX)">สถานีเชียงใหม่ (CNX)</option>
+                        <option value="สถานีหาดใหญ่ (HDY)">สถานีหาดใหญ่ (HDY)</option>
+                        <option value="สถานีสุราษฎร์ธานี (URT)">สถานีสุราษฎร์ธานี (URT)</option>
+                        <option value="สถานีขอนแก่น (KKC)">สถานีขอนแก่น (KKC)</option>
+                        <option value="สถานีอุบลราชธานี (UBP)">สถานีอุบลราชธานี (UBP)</option>
+                        <option value="สถานีอุดรธานี (UTH)">สถานีอุดรธานี (UTH)</option>
+                        <option value="สถานีอู่ตะเภา (UTP)">สถานีอู่ตะเภา (UTP)</option>
+                        <option value="สถานีภูเก็ต (HKT)">สถานีภูเก็ต (HKT)</option>
+                        <option value="สถานีดอนเมือง (DMK)">สถานีดอนเมือง (DMK)</option>
+                        <option value="ชุมพร (CJM)">ชุมพร (CJM)</option>
+                        <option value="สถานีกระบี่ (KBV)">สถานีกระบี่ (KBV)</option>
+                    </select>
+                </div>
+                
+                <!-- Department (Suggestion) -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">ฝ่ายที่เกี่ยวข้อง</label>
+                    <select id="suggestionDepartmentSelect" onchange="updateSuggestionSectionOptions()" class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                        <option value="">เลือกฝ่าย</option>
+                        <option value="BG">ฝ่ายปฏิบัติการภาคพื้น (BG)</option>
+                        <option value="BS">ฝ่ายมาตรฐาน (BS)</option>
+                        <option value="BI">ฝ่ายเทคโนโลยีสารสนเทศ (BI)</option>
+                    </select>
+                </div>
+                
+                <!-- Section (Suggestion) -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">แผนกที่เกี่ยวข้อง</label>
+                    <select id="suggestionSectionSelect" class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+                        <option value="">เลือกแผนก</option>
+                    </select>
+                </div>
+                
                 <!-- Details -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">รายละเอียดข้อเสนอแนะ</label>
@@ -376,6 +419,135 @@ function updateSectionOptions() {
             { value: 'LM', text: 'แผนกกฎหมาย (LM)' }
         ];
     } else if (selectedStation !== 'สำนักงานใหญ่ (HDQ)' && selectedStation !== 'สถานีสุวรรณภูมิ (BKK)' && selectedDepartment === 'BG') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'GF', text: 'แผนกบริการสถานี (GF)' }
+        ];
+    }
+    
+    sections.forEach(section => {
+        const option = document.createElement('option');
+        option.value = section.value;
+        option.textContent = section.text;
+        sectionSelect.appendChild(option);
+    });
+}
+
+// Suggestion Detail Section Functions
+function updateSuggestionDepartmentOptions() {
+    const stationSelect = document.getElementById('suggestionStationSelect');
+    const departmentSelect = document.getElementById('suggestionDepartmentSelect');
+    const selectedStation = stationSelect.value;
+    
+    const hdqDepartments = [
+        { value: '', text: 'เลือกฝ่าย' },
+        { value: 'BE', text: 'ฝ่ายสำนักเลขานุการ (BE)' },
+        { value: 'BF', text: 'ฝ่ายบัญชีและการเงิน (BF)' },
+        { value: 'BG', text: 'ฝ่ายปฏิบัติการภาคพื้น (BG)' },
+        { value: 'BH', text: 'ฝ่ายทรัพยากรบุคคล (BH)' },
+        { value: 'BI', text: 'ฝ่ายเทคโนโลยีสารสนเทศ (BI)' },
+        { value: 'BL', text: 'ฝ่ายกฎหมาย (BL)' },
+        { value: 'BD', text: 'ฝ่ายจัดซื้อ (BD)' },
+        { value: 'BS', text: 'ฝ่ายมาตรฐาน (BS)' },
+        { value: 'BR', text: 'ฝ่ายพัฒนาธุรกิจและลูกค้าสัมพันธ์ (BR)' }
+    ];
+    
+    const stationDepartments = [
+        { value: '', text: 'เลือกฝ่าย' },
+        { value: 'BG', text: 'ฝ่ายปฏิบัติการภาคพื้น (BG)' },
+        { value: 'BS', text: 'ฝ่ายมาตรฐาน (BS)' },
+        { value: 'BI', text: 'ฝ่ายเทคโนโลยีสารสนเทศ (BI)' }
+    ];
+    
+    departmentSelect.innerHTML = '';
+    const departments = selectedStation === 'สำนักงานใหญ่ (HDQ)' ? hdqDepartments : stationDepartments;
+    departments.forEach(dept => {
+        const option = document.createElement('option');
+        option.value = dept.value;
+        option.textContent = dept.text;
+        departmentSelect.appendChild(option);
+    });
+    
+    updateSuggestionSectionOptions();
+}
+
+function updateSuggestionSectionOptions() {
+    const stationSelect = document.getElementById('suggestionStationSelect');
+    const departmentSelect = document.getElementById('suggestionDepartmentSelect');
+    const sectionSelect = document.getElementById('suggestionSectionSelect');
+    const selectedStation = stationSelect.value;
+    const selectedDepartment = departmentSelect.value;
+    
+    const bkkBgSections = [
+        { value: '', text: 'เลือกแผนก' },
+        { value: 'GA', text: 'แผนกบริการผู้โดยสารภาคพื้น (GA)' },
+        { value: 'GB', text: 'แผนกควบคุมระวางบรรทุก (GB)' },
+        { value: 'GC', text: 'แผนกห้องรับรองพิเศษผู้โดยสาร (GC)' },
+        { value: 'GD', text: 'แผนกบริการลานจอด (GD)' },
+        { value: 'GE', text: 'แผนกบริการลูกค้า (GE)' },
+        { value: 'GF', text: 'แผนกบริการสถานี (GF)' }
+    ];
+    
+    const defaultSections = [
+        { value: '', text: 'เลือกแผนก' }
+    ];
+    
+    sectionSelect.innerHTML = '';
+    
+    let sections = defaultSections;
+    if (selectedStation === 'สถานีสุวรรณภูมิ (BKK)' && selectedDepartment === 'BG') {
+        sections = bkkBgSections;
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BG') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'BG-1', text: 'แผนกสนับสนุนปฏิบัติการภาคพื้น (BG-1)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BH') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'HC', text: 'แผนกทรัพยากรบุคคลส่วนกลาง (HC)' },
+            { value: 'HM', text: 'แผนกบริหารทรัพยากรบุคคล (HM)' },
+            { value: 'HO', text: 'แผนกสนับสนุนปฏิบัติการทรัพยากรบุคคล (HO)' },
+            { value: 'HW', text: 'แผนกสวัสดิการและสิทธิประโยชน์พนักงาน (HW)' },
+            { value: 'HD', text: 'แผนกวางแผนกลยุทธ์และพัฒนาทรัพยากรบุคคล (HD)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BF') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'FA', text: 'แผนกบัญชีและการเงิน (FA)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BS') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'ST', text: 'แผนกมาตรฐาน (ST)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BE') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'EA', text: 'แผนกเลขานุการผู้บริหาร (EA)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BR') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'RC', text: 'แผนกสื่อสารองค์กร (RC)' },
+            { value: 'RB', text: 'แผนกพัฒนาธุรกิจ (RB)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BD') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'DP', text: 'แผนกจัดซื้อ (DP)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BI') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'IM', text: 'แผนกเทคโนโลยีสารสนเทศ (IM)' }
+        ];
+    } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BL') {
+        sections = [
+            { value: '', text: 'เลือกแผนก' },
+            { value: 'LM', text: 'แผนกกฎหมาย (LM)' }
+        ];
+    } else if (selectedStation !== 'สำนักงานใหญ่ (HDQ)' && selectedStation !== 'สถานีสุวรรณภูมิ (BKK)' && selectedStation !== '' && selectedDepartment === 'BG') {
         sections = [
             { value: '', text: 'เลือกแผนก' },
             { value: 'GF', text: 'แผนกบริการสถานี (GF)' }
