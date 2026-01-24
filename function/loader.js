@@ -1,6 +1,5 @@
 // Component Loader - โหลด HTML components เข้ามาใน page
 
-// หา base path จาก script src
 function getBasePath() {
     const scripts = document.getElementsByTagName('script');
     for (let script of scripts) {
@@ -20,11 +19,9 @@ async function loadComponent(elementId, componentName) {
         if (!response.ok) throw new Error(`Failed to load ${componentPath}`);
         const html = await response.text();
         
-        // แยก HTML และ Script
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = html;
         
-        // เอา script ออกจาก HTML ก่อน
         const scripts = tempDiv.querySelectorAll('script');
         const scriptContents = [];
         scripts.forEach(script => {
@@ -32,10 +29,8 @@ async function loadComponent(elementId, componentName) {
             script.remove();
         });
         
-        // ใส่ HTML ลงใน placeholder
         document.getElementById(elementId).innerHTML = tempDiv.innerHTML;
         
-        // Execute scripts หลังจากใส่ HTML แล้ว
         scriptContents.forEach(content => {
             const newScript = document.createElement('script');
             newScript.textContent = content;
@@ -47,7 +42,6 @@ async function loadComponent(elementId, componentName) {
     }
 }
 
-// Auto-load navbar when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     const navbarPlaceholder = document.getElementById('navbar-placeholder');
     if (navbarPlaceholder) {
