@@ -3,11 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <!-- Mobile browser theme color - transparent/white status bar -->
-  <meta name="theme-color" content="#ffffff">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="mobile-web-app-capable" content="yes">
   <title>Voice for Change - เสียงแห่งการเปลี่ยนแปลง</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="../function/styles.css">
@@ -38,6 +33,17 @@
     .card-compliment:hover {
       border-color: #4ade80;
       box-shadow: 0 8px 30px rgba(74, 222, 128, 0.2);
+    }
+    
+    /* Scale up for large screens */
+    @media (min-width: 1024px) {
+      html {
+        zoom: 1.25;
+      }
+      /* Keep navbar at original size */
+      nav.fixed {
+        zoom: 0.8;
+      }
     }
   </style>
 </head>
@@ -95,10 +101,10 @@
     </script>
     
     <!-- Main Content -->
-    <div class="min-h-screen flex flex-col justify-center pt-16">
+    <div class="flex flex-col pt-16">
       
       <!-- Hero Section -->
-      <div class="flex-1 flex items-center">
+      <div class="flex items-center lg:items-start lg:pt-8">
         <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 md:px-10 lg:px-8 py-6">
           <div class="flex flex-col lg:flex-row lg:items-center lg:gap-12">
             
@@ -190,17 +196,21 @@
         </div>
       </div>
       
-      <!-- Disclaimer Footer -->
-      <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 md:px-10 lg:px-8 py-4">
+      <!-- Disclaimer -->
+      <div class="w-full max-w-[1400px] mx-auto px-6 sm:px-8 md:px-10 lg:px-8 py-4 pb-16">
         <div class="text-left">
           <p class="text-xs text-gray-400 leading-relaxed">
             ระบบนี้จัดทำขึ้นโดยมีวัตถุประสงค์เพื่อให้พนักงานทุกคนภายในบริษัทพัทยา เอวิเอชั่น จำกัด ใช้เป็นช่องทางในการสื่อสาร แลกเปลี่ยน ร้องเรียน โดยข้อมูลที่ได้จากแบบสอบถามนี้ ทางฝ่ายทรัพยากรบุคคลจะนำไปปรับปรุงนโยบาย การบริหารจัดการ ผลตอบแทน สวัสดิการ การพัฒนาความรู้ ความก้าวหน้า สภาพแวดล้อม ความปลอดภัย และเรื่องอื่น ๆ ในการทำงาน และข้อมูลที่ได้จากการสำรวจ บริษัทจะไม่มีการสืบค้นถึงตัวบุคคลผู้ให้ข้อมูลและไม่เปิดเผยข้อมูลไปยังบุคคลอื่น
           </p>
-          <p class="text-xs text-gray-400 mt-3">
-            Copyright © 2025 Pattaya Aviation Co., Ltd. All rights reserved.
-          </p>
         </div>
       </div>
+    </div>
+    
+    <!-- Copyright Footer (Fixed at bottom) -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-gray-100 py-2">
+      <p class="text-xs text-gray-400 text-center">
+        Copyright © 2025 Pattaya Aviation Co., Ltd. All rights reserved.
+      </p>
     </div>
   </div>
 </body>
