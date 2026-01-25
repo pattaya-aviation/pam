@@ -320,42 +320,36 @@ function updateFileName(input) {
 
 function updateDepartmentOptions() {
     const stationSelect = document.getElementById('stationSelect');
-    const departmentSelect = document.getElementById('departmentSelect');
     const selectedStation = stationSelect.value;
     
     // HDQ departments
     const hdqDepartments = [
-        { value: '', text: 'เลือกฝ่าย' },
-        { value: 'BE', text: 'ฝ่ายสำนักเลขานุการ (BE)' },
-        { value: 'BF', text: 'ฝ่ายบัญชีและการเงิน (BF)' },
-        { value: 'BG', text: 'ฝ่ายปฏิบัติการภาคพื้น (BG)' },
-        { value: 'BH', text: 'ฝ่ายทรัพยากรบุคคล (BH)' },
-        { value: 'BI', text: 'ฝ่ายเทคโนโลยีสารสนเทศ (BI)' },
-        { value: 'BL', text: 'ฝ่ายกฎหมาย (BL)' },
-        { value: 'BD', text: 'ฝ่ายจัดซื้อ (BD)' },
-        { value: 'BS', text: 'ฝ่ายมาตรฐาน (BS)' },
-        { value: 'BR', text: 'ฝ่ายพัฒนาธุรกิจและลูกค้าสัมพันธ์ (BR)' }
+        { value: '', label: 'เลือกฝ่าย', placeholder: true, disabled: true },
+        { value: 'BE', label: 'ฝ่ายสำนักเลขานุการ (BE)' },
+        { value: 'BF', label: 'ฝ่ายบัญชีและการเงิน (BF)' },
+        { value: 'BG', label: 'ฝ่ายปฏิบัติการภาคพื้น (BG)' },
+        { value: 'BH', label: 'ฝ่ายทรัพยากรบุคคล (BH)' },
+        { value: 'BI', label: 'ฝ่ายเทคโนโลยีสารสนเทศ (BI)' },
+        { value: 'BL', label: 'ฝ่ายกฎหมาย (BL)' },
+        { value: 'BD', label: 'ฝ่ายจัดซื้อ (BD)' },
+        { value: 'BS', label: 'ฝ่ายมาตรฐาน (BS)' },
+        { value: 'BR', label: 'ฝ่ายพัฒนาธุรกิจและลูกค้าสัมพันธ์ (BR)' }
     ];
     
     // Station departments
     const stationDepartments = [
-        { value: '', text: 'เลือกฝ่าย' },
-        { value: 'BG', text: 'ฝ่ายปฏิบัติการภาคพื้น (BG)' },
-        { value: 'BS', text: 'ฝ่ายมาตรฐาน (BS)' },
-        { value: 'BI', text: 'ฝ่ายเทคโนโลยีสารสนเทศ (BI)' }
+        { value: '', label: 'เลือกฝ่าย', placeholder: true, disabled: true },
+        { value: 'BG', label: 'ฝ่ายปฏิบัติการภาคพื้น (BG)' },
+        { value: 'BS', label: 'ฝ่ายมาตรฐาน (BS)' },
+        { value: 'BI', label: 'ฝ่ายเทคโนโลยีสารสนเทศ (BI)' }
     ];
     
-    // Clear current options
-    departmentSelect.innerHTML = '';
-    
-    // Add new options based on station
+    // Update Choices.js dropdown
     const departments = selectedStation === 'สำนักงานใหญ่ (HDQ)' ? hdqDepartments : stationDepartments;
-    departments.forEach(dept => {
-        const option = document.createElement('option');
-        option.value = dept.value;
-        option.textContent = dept.text;
-        departmentSelect.appendChild(option);
-    });
+    if (personalDepartmentChoices) {
+        personalDepartmentChoices.clearStore();
+        personalDepartmentChoices.setChoices(departments, 'value', 'label', true);
+    }
     
     // Reset section when department changes
     updateSectionOptions();
@@ -364,49 +358,45 @@ function updateDepartmentOptions() {
 function updateSectionOptions() {
     const stationSelect = document.getElementById('stationSelect');
     const departmentSelect = document.getElementById('departmentSelect');
-    const sectionSelect = document.getElementById('sectionSelect');
     const selectedStation = stationSelect.value;
     const selectedDepartment = departmentSelect.value;
     
     // BKK + BG sections
     const bkkBgSections = [
-        { value: '', text: 'เลือกแผนก' },
-        { value: 'GA', text: 'แผนกบริการผู้โดยสารภาคพื้น (GA)' },
-        { value: 'GB', text: 'แผนกควบคุมระวางบรรทุก (GB)' },
-        { value: 'GC', text: 'แผนกห้องรับรองพิเศษผู้โดยสาร (GC)' },
-        { value: 'GD', text: 'แผนกบริการลานจอด (GD)' },
-        { value: 'GE', text: 'แผนกบริการลูกค้า (GE)' },
-        { value: 'GF', text: 'แผนกบริการสถานี (GF)' }
+        { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+        { value: 'GA', label: 'แผนกบริการผู้โดยสารภาคพื้น (GA)' },
+        { value: 'GB', label: 'แผนกควบคุมระวางบรรทุก (GB)' },
+        { value: 'GC', label: 'แผนกห้องรับรองพิเศษผู้โดยสาร (GC)' },
+        { value: 'GD', label: 'แผนกบริการลานจอด (GD)' },
+        { value: 'GE', label: 'แผนกบริการลูกค้า (GE)' },
+        { value: 'GF', label: 'แผนกบริการสถานี (GF)' }
     ];
     
     // Default empty sections
     const defaultSections = [
-        { value: '', text: 'เลือกแผนก' }
+        { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true }
     ];
     
     // HDQ + BH (HR) sections
     const hdqBhSections = [
-        { value: '', text: 'เลือกแผนก' },
-        { value: 'HC', text: 'แผนกทรัพยากรบุคคลส่วนกลาง (HC)' },
-        { value: 'HM', text: 'แผนกบริหารทรัพยากรบุคคล (HM)' },
-        { value: 'HO', text: 'แผนกสนับสนุนปฏิบัติการทรัพยากรบุคคล (HO)' },
-        { value: 'HW', text: 'แผนกสวัสดิการและสิทธิประโยชน์พนักงาน (HW)' },
-        { value: 'HD', text: 'แผนกวางแผนกลยุทธ์และพัฒนาทรัพยากรบุคคล (HD)' }
+        { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+        { value: 'HC', label: 'แผนกทรัพยากรบุคคลส่วนกลาง (HC)' },
+        { value: 'HM', label: 'แผนกบริหารทรัพยากรบุคคล (HM)' },
+        { value: 'HO', label: 'แผนกสนับสนุนปฏิบัติการทรัพยากรบุคคล (HO)' },
+        { value: 'HW', label: 'แผนกสวัสดิการและสิทธิประโยชน์พนักงาน (HW)' },
+        { value: 'HD', label: 'แผนกวางแผนกลยุทธ์และพัฒนาทรัพยากรบุคคล (HD)' }
     ];
-    
-    // Clear current options
-    sectionSelect.innerHTML = '';
     
     // HDQ + BF (Finance) sections
     const hdqBfSections = [
-        { value: '', text: 'เลือกแผนก' },
-        { value: 'FA', text: 'แผนกบัญชีและการเงิน (FA)' }
+        { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+        { value: 'FA', label: 'แผนกบัญชีและการเงิน (FA)' }
     ];
     
     // HDQ + BG sections
     const hdqBgSections = [
-        { value: '', text: 'เลือกแผนก' },
-        { value: 'BG-1', text: 'แผนกสนับสนุนปฏิบัติการภาคพื้น (BG-1)' },
+        { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+        { value: 'BG-1', label: 'แผนกสนับสนุนปฏิบัติการภาคพื้น (BG-1)' }
     ];
     
     // Determine which sections to show
@@ -421,86 +411,80 @@ function updateSectionOptions() {
         sections = hdqBgSections;
     } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BS') {
         sections = [
-            { value: '', text: 'เลือกแผนก' },
-            { value: 'ST', text: 'แผนกมาตรฐาน (ST)' },
-            
+            { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+            { value: 'ST', label: 'แผนกมาตรฐาน (ST)' }
         ];
     } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BE') {
         sections = [
-            { value: '', text: 'เลือกแผนก' },
-            { value: 'EA', text: 'แผนกเลขานุการผู้บริหาร (EA)' }
+            { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+            { value: 'EA', label: 'แผนกเลขานุการผู้บริหาร (EA)' }
         ];
     } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BR') {
         sections = [
-            { value: '', text: 'เลือกแผนก' },
-            { value: 'RC', text: 'แผนกสื่อสารองค์กร (RC)' },
-            { value: 'RB', text: 'แผนกพัฒนาธุรกิจ (RB)' }
+            { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+            { value: 'RC', label: 'แผนกสื่อสารองค์กร (RC)' },
+            { value: 'RB', label: 'แผนกพัฒนาธุรกิจ (RB)' }
         ];
     } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BD') {
         sections = [
-            { value: '', text: 'เลือกแผนก' },
-            { value: 'DP', text: 'แผนกจัดซื้อ (DP)' }
+            { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+            { value: 'DP', label: 'แผนกจัดซื้อ (DP)' }
         ];
     } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BI') {
         sections = [
-            { value: '', text: 'เลือกแผนก' },
-            { value: 'IM', text: 'แผนกเทคโนโลยีสารสนเทศ (IM)' }
+            { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+            { value: 'IM', label: 'แผนกเทคโนโลยีสารสนเทศ (IM)' }
         ];
     } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BL') {
         sections = [
-            { value: '', text: 'เลือกแผนก' },
-            { value: 'LM', text: 'แผนกกฎหมาย (LM)' }
+            { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+            { value: 'LM', label: 'แผนกกฎหมาย (LM)' }
         ];
     } else if (selectedStation !== 'สำนักงานใหญ่ (HDQ)' && selectedStation !== 'สถานีสุวรรณภูมิ (BKK)' && selectedDepartment === 'BG') {
         // Other stations + BG
         sections = [
-            { value: '', text: 'เลือกแผนก' },
-            { value: 'GF', text: 'แผนกบริการสถานี (GF)' }
+            { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+            { value: 'GF', label: 'แผนกบริการสถานี (GF)' }
         ];
     }
     
-    sections.forEach(section => {
-        const option = document.createElement('option');
-        option.value = section.value;
-        option.textContent = section.text;
-        sectionSelect.appendChild(option);
-    });
+    // Update Choices.js dropdown
+    if (personalSectionChoices) {
+        personalSectionChoices.clearStore();
+        personalSectionChoices.setChoices(sections, 'value', 'label', true);
+    }
 }
 
 // Complaint Detail Section Functions
 function updateComplaintDepartmentOptions() {
     const stationSelect = document.getElementById('complaintStationSelect');
-    const departmentSelect = document.getElementById('complaintDepartmentSelect');
     const selectedStation = stationSelect.value;
     
     const hdqDepartments = [
-        { value: '', text: 'เลือกฝ่าย' },
-        { value: 'BE', text: 'ฝ่ายสำนักเลขานุการ (BE)' },
-        { value: 'BF', text: 'ฝ่ายบัญชีและการเงิน (BF)' },
-        { value: 'BG', text: 'ฝ่ายปฏิบัติการภาคพื้น (BG)' },
-        { value: 'BH', text: 'ฝ่ายทรัพยากรบุคคล (BH)' },
-        { value: 'BI', text: 'ฝ่ายเทคโนโลยีสารสนเทศ (BI)' },
-        { value: 'BL', text: 'ฝ่ายกฎหมาย (BL)' },
-        { value: 'BD', text: 'ฝ่ายจัดซื้อ (BD)' },
-        { value: 'BS', text: 'ฝ่ายมาตรฐาน (BS)' },
-        { value: 'BR', text: 'ฝ่ายพัฒนาธุรกิจและลูกค้าสัมพันธ์ (BR)' }
+        { value: '', label: 'เลือกฝ่าย', placeholder: true, disabled: true },
+        { value: 'BE', label: 'ฝ่ายสำนักเลขานุการ (BE)' },
+        { value: 'BF', label: 'ฝ่ายบัญชีและการเงิน (BF)' },
+        { value: 'BG', label: 'ฝ่ายปฏิบัติการภาคพื้น (BG)' },
+        { value: 'BH', label: 'ฝ่ายทรัพยากรบุคคล (BH)' },
+        { value: 'BI', label: 'ฝ่ายเทคโนโลยีสารสนเทศ (BI)' },
+        { value: 'BL', label: 'ฝ่ายกฎหมาย (BL)' },
+        { value: 'BD', label: 'ฝ่ายจัดซื้อ (BD)' },
+        { value: 'BS', label: 'ฝ่ายมาตรฐาน (BS)' },
+        { value: 'BR', label: 'ฝ่ายพัฒนาธุรกิจและลูกค้าสัมพันธ์ (BR)' }
     ];
     
     const stationDepartments = [
-        { value: '', text: 'เลือกฝ่าย' },
-        { value: 'BG', text: 'ฝ่ายปฏิบัติการภาคพื้น (BG)' },
-        { value: 'BS', text: 'ฝ่ายมาตรฐาน (BS)' },
-        { value: 'BI', text: 'ฝ่ายเทคโนโลยีสารสนเทศ (BI)' }
+        { value: '', label: 'เลือกฝ่าย', placeholder: true, disabled: true },
+        { value: 'BG', label: 'ฝ่ายปฏิบัติการภาคพื้น (BG)' },
+        { value: 'BS', label: 'ฝ่ายมาตรฐาน (BS)' },
+        { value: 'BI', label: 'ฝ่ายเทคโนโลยีสารสนเทศ (BI)' }
     ];
     
-    departmentSelect.innerHTML = '';
     const departments = selectedStation === 'สำนักงานใหญ่ (HDQ)' ? hdqDepartments : stationDepartments;
-    departments.forEach(dept => {
-        const option = document.createElement('option');
-        option.value = dept.value;
-        option.textContent = dept.text;
-        departmentSelect.appendChild(option);
-    });
+    if (complaintDepartmentChoices) {
+        complaintDepartmentChoices.clearStore();
+        complaintDepartmentChoices.setChoices(departments, 'value', 'label', true);
+    }
     
     updateComplaintSectionOptions();
 }
@@ -508,92 +492,87 @@ function updateComplaintDepartmentOptions() {
 function updateComplaintSectionOptions() {
     const stationSelect = document.getElementById('complaintStationSelect');
     const departmentSelect = document.getElementById('complaintDepartmentSelect');
-    const sectionSelect = document.getElementById('complaintSectionSelect');
     const selectedStation = stationSelect.value;
     const selectedDepartment = departmentSelect.value;
     
     const bkkBgSections = [
-        { value: '', text: 'เลือกแผนก' },
-        { value: 'GA', text: 'แผนกบริการผู้โดยสารภาคพื้น (GA)' },
-        { value: 'GB', text: 'แผนกควบคุมระวางบรรทุก (GB)' },
-        { value: 'GC', text: 'แผนกห้องรับรองพิเศษผู้โดยสาร (GC)' },
-        { value: 'GD', text: 'แผนกบริการลานจอด (GD)' },
-        { value: 'GE', text: 'แผนกบริการลูกค้า (GE)' },
-        { value: 'GF', text: 'แผนกบริการสถานี (GF)' }
+        { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+        { value: 'GA', label: 'แผนกบริการผู้โดยสารภาคพื้น (GA)' },
+        { value: 'GB', label: 'แผนกควบคุมระวางบรรทุก (GB)' },
+        { value: 'GC', label: 'แผนกห้องรับรองพิเศษผู้โดยสาร (GC)' },
+        { value: 'GD', label: 'แผนกบริการลานจอด (GD)' },
+        { value: 'GE', label: 'แผนกบริการลูกค้า (GE)' },
+        { value: 'GF', label: 'แผนกบริการสถานี (GF)' }
     ];
     
     const defaultSections = [
-        { value: '', text: 'เลือกแผนก' }
+        { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true }
     ];
-    
-    sectionSelect.innerHTML = '';
     
     let sections = defaultSections;
     if (selectedStation === 'สถานีสุวรรณภูมิ (BKK)' && selectedDepartment === 'BG') {
         sections = bkkBgSections;
     } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BG') {
         sections = [
-            { value: '', text: 'เลือกแผนก' },
-            { value: 'BG-1', text: 'แผนกสนับสนุนปฏิบัติการภาคพื้น (BG-1)' }
+            { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+            { value: 'BG-1', label: 'แผนกสนับสนุนปฏิบัติการภาคพื้น (BG-1)' }
         ];
     } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BH') {
         sections = [
-            { value: '', text: 'เลือกแผนก' },
-            { value: 'HC', text: 'แผนกทรัพยากรบุคคลส่วนกลาง (HC)' },
-            { value: 'HM', text: 'แผนกบริหารทรัพยากรบุคคล (HM)' },
-            { value: 'HO', text: 'แผนกสนับสนุนปฏิบัติการทรัพยากรบุคคล (HO)' },
-            { value: 'HW', text: 'แผนกสวัสดิการและสิทธิประโยชน์พนักงาน (HW)' },
-            { value: 'HD', text: 'แผนกวางแผนกลยุทธ์และพัฒนาทรัพยากรบุคคล (HD)' }
+            { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+            { value: 'HC', label: 'แผนกทรัพยากรบุคคลส่วนกลาง (HC)' },
+            { value: 'HM', label: 'แผนกบริหารทรัพยากรบุคคล (HM)' },
+            { value: 'HO', label: 'แผนกสนับสนุนปฏิบัติการทรัพยากรบุคคล (HO)' },
+            { value: 'HW', label: 'แผนกสวัสดิการและสิทธิประโยชน์พนักงาน (HW)' },
+            { value: 'HD', label: 'แผนกวางแผนกลยุทธ์และพัฒนาทรัพยากรบุคคล (HD)' }
         ];
     } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BF') {
         sections = [
-            { value: '', text: 'เลือกแผนก' },
-            { value: 'FA', text: 'แผนกบัญชีและการเงิน (FA)' }
+            { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+            { value: 'FA', label: 'แผนกบัญชีและการเงิน (FA)' }
         ];
     } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BS') {
         sections = [
-            { value: '', text: 'เลือกแผนก' },
-            { value: 'ST', text: 'แผนกมาตรฐาน (ST)' }
+            { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+            { value: 'ST', label: 'แผนกมาตรฐาน (ST)' }
         ];
     } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BE') {
         sections = [
-            { value: '', text: 'เลือกแผนก' },
-            { value: 'EA', text: 'แผนกเลขานุการผู้บริหาร (EA)' }
+            { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+            { value: 'EA', label: 'แผนกเลขานุการผู้บริหาร (EA)' }
         ];
     } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BR') {
         sections = [
-            { value: '', text: 'เลือกแผนก' },
-            { value: 'RC', text: 'แผนกสื่อสารองค์กร (RC)' },
-            { value: 'RB', text: 'แผนกพัฒนาธุรกิจ (RB)' }
+            { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+            { value: 'RC', label: 'แผนกสื่อสารองค์กร (RC)' },
+            { value: 'RB', label: 'แผนกพัฒนาธุรกิจ (RB)' }
         ];
     } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BD') {
         sections = [
-            { value: '', text: 'เลือกแผนก' },
-            { value: 'DP', text: 'แผนกจัดซื้อ (DP)' }
+            { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+            { value: 'DP', label: 'แผนกจัดซื้อ (DP)' }
         ];
     } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BI') {
         sections = [
-            { value: '', text: 'เลือกแผนก' },
-            { value: 'IM', text: 'แผนกเทคโนโลยีสารสนเทศ (IM)' }
+            { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+            { value: 'IM', label: 'แผนกเทคโนโลยีสารสนเทศ (IM)' }
         ];
     } else if (selectedStation === 'สำนักงานใหญ่ (HDQ)' && selectedDepartment === 'BL') {
         sections = [
-            { value: '', text: 'เลือกแผนก' },
-            { value: 'LM', text: 'แผนกกฎหมาย (LM)' }
+            { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+            { value: 'LM', label: 'แผนกกฎหมาย (LM)' }
         ];
     } else if (selectedStation !== 'สำนักงานใหญ่ (HDQ)' && selectedStation !== 'สถานีสุวรรณภูมิ (BKK)' && selectedStation !== '' && selectedDepartment === 'BG') {
         sections = [
-            { value: '', text: 'เลือกแผนก' },
-            { value: 'GF', text: 'แผนกบริการสถานี (GF)' }
+            { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+            { value: 'GF', label: 'แผนกบริการสถานี (GF)' }
         ];
     }
     
-    sections.forEach(section => {
-        const option = document.createElement('option');
-        option.value = section.value;
-        option.textContent = section.text;
-        sectionSelect.appendChild(option);
-    });
+    if (complaintSectionChoices) {
+        complaintSectionChoices.clearStore();
+        complaintSectionChoices.setChoices(sections, 'value', 'label', true);
+    }
 }
 
 function toggleAnonymous() {
@@ -674,9 +653,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Personal Info Section
     if (document.getElementById('stationSelect')) {
         personalStationChoices = new Choices('#stationSelect', choicesConfig);
+        document.getElementById('stationSelect').addEventListener('change', updateDepartmentOptions);
     }
     if (document.getElementById('departmentSelect')) {
         personalDepartmentChoices = new Choices('#departmentSelect', choicesConfig);
+        document.getElementById('departmentSelect').addEventListener('change', updateSectionOptions);
     }
     if (document.getElementById('sectionSelect')) {
         personalSectionChoices = new Choices('#sectionSelect', choicesConfig);
@@ -685,9 +666,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Complaint Details Section
     if (document.getElementById('complaintStationSelect')) {
         complaintStationChoices = new Choices('#complaintStationSelect', choicesConfig);
+        document.getElementById('complaintStationSelect').addEventListener('change', updateComplaintDepartmentOptions);
     }
     if (document.getElementById('complaintDepartmentSelect')) {
         complaintDepartmentChoices = new Choices('#complaintDepartmentSelect', choicesConfig);
+        document.getElementById('complaintDepartmentSelect').addEventListener('change', updateComplaintSectionOptions);
     }
     if (document.getElementById('complaintSectionSelect')) {
         complaintSectionChoices = new Choices('#complaintSectionSelect', choicesConfig);
