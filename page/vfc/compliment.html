@@ -13,6 +13,40 @@
     
     <!-- Fonts CSS -->
     <link rel="stylesheet" href="../../function/fonts.css">
+    
+    <!-- Choices.js for Searchable Dropdowns -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    
+    <style>
+        /* Custom Choices.js styling */
+        .choices__inner {
+            border-radius: 1.5rem !important;
+            padding: 0.5rem 1rem !important;
+            min-height: 48px !important;
+            border-color: #e5e7eb !important;
+            background: white !important;
+        }
+        .choices__list--dropdown {
+            border-radius: 1.5rem !important;
+            border-color: #e5e7eb !important;
+            z-index: 1000 !important;
+        }
+        .choices__list--dropdown .choices__item--selectable.is-highlighted {
+            background-color: #dcfce7 !important;
+            color: #16a34a !important;
+        }
+        .choices[data-type*="select-one"] .choices__input {
+            padding: 8px 16px !important;
+        }
+        .choices__list--dropdown .choices__item {
+            padding: 10px 16px !important;
+        }
+        /* Fix dropdown being cut off by parent container */
+        .space-y-4 {
+            overflow: visible !important;
+        }
+    </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
     
@@ -542,5 +576,41 @@ function updateComplimentSectionOptions() {
         sectionSelect.appendChild(option);
     });
 }
+
+// Initialize Choices.js for searchable dropdowns
+document.addEventListener('DOMContentLoaded', function() {
+    const choicesConfig = {
+        searchEnabled: true,
+        searchPlaceholderValue: 'พิมพ์เพื่อค้นหา...',
+        noResultsText: 'ไม่พบผลลัพธ์',
+        noChoicesText: 'ไม่มีตัวเลือก',
+        itemSelectText: '',
+        shouldSort: false,
+        searchFloor: 1,
+        searchResultLimit: 100
+    };
+    
+    // Personal Info Section
+    if (document.getElementById('stationSelect')) {
+        new Choices('#stationSelect', choicesConfig);
+    }
+    if (document.getElementById('departmentSelect')) {
+        new Choices('#departmentSelect', choicesConfig);
+    }
+    if (document.getElementById('sectionSelect')) {
+        new Choices('#sectionSelect', choicesConfig);
+    }
+    
+    // Compliment Details Section
+    if (document.getElementById('complimentStationSelect')) {
+        new Choices('#complimentStationSelect', choicesConfig);
+    }
+    if (document.getElementById('complimentDepartmentSelect')) {
+        new Choices('#complimentDepartmentSelect', choicesConfig);
+    }
+    if (document.getElementById('complimentSectionSelect')) {
+        new Choices('#complimentSectionSelect', choicesConfig);
+    }
+});
 </script>
 </html>
