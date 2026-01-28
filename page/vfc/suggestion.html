@@ -53,12 +53,174 @@
     <!-- Navbar -->
     <nav class="fixed top-0 left-0 right-0 z-50 h-16 bg-white/70 backdrop-blur-xl border-b border-gray-100/50">
         <div class="w-full px-4 h-full flex items-center justify-between">
-            <a href="vfc-home.html" class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors">
+            <!-- Left Side: Back Button (Mobile) / Logo + Menu (Desktop) -->
+            <div class="flex items-center gap-4">
+                <!-- Back Button (Mobile only) -->
+                <a href="vfc-home.html" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </a>
+                
+                <!-- Logo (Desktop only) -->
+                <img src="../../function/logo/Pattaya Aviation.png" alt="Logo" class="hidden lg:block h-10 object-contain">
+                
+                <!-- Desktop: Inline Menu (Next to Logo) -->
+                <div class="hidden lg:flex items-center gap-1">
+                <a href="../Home/pa-system.html" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                    <span class="text-gray-700 font-medium">หน้าหลัก</span>
+                </a>
+                
+                <!-- Voice for Change with Dropdown -->
+                <div class="relative group">
+                    <a href="vfc-home.html" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors">
+                        <svg class="w-5 h-5 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                        </svg>
+                        <span class="text-gray-700 font-medium">Voice for Change</span>
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+                    <!-- Dropdown Submenu -->
+                    <div class="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute top-full left-0 mt-1 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 transition-all duration-200 z-50">
+                        <a href="complaint.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
+                            <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                            <span class="text-gray-700">ร้องเรียน</span>
+                        </a>
+                        <a href="compliment.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
+                            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                            <span class="text-gray-700">ชมเชย</span>
+                        </a>
+                        <a href="suggestion.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
+                            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                            <span class="text-gray-700">เสนอแนะ</span>
+                        </a>
+                        <div class="h-px bg-gray-100 my-1"></div>
+                        <a href="track.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
+                            <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                            </svg>
+                            <span class="text-gray-700">ติดตามคำร้อง</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Tax with Dropdown -->
+                <div class="relative group">
+                    <a href="../tax/tax-home.html" class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors">
+                        <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span class="text-gray-700 font-medium">ภาษี</span>
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </a>
+                    <!-- Dropdown Submenu -->
+                    <div class="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute top-full left-0 mt-1 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 transition-all duration-200 z-50">
+                        <a href="../tax/tax-calculator.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
+                            <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                            <span class="text-gray-700">คำนวณภาษี</span>
+                        </a>
+                        <a href="../tax/pa-ly01.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
+                            <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <span class="text-gray-700">ลดหย่อนภาษี (ล.ย.01)</span>
+                        </a>
+                    </div>
+                </div>
+                </div>
+            </div>
+            
+            <!-- Right Side: Hamburger Button (Mobile only) -->
+            <button onclick="document.getElementById('dropdownMenu').classList.toggle('hidden')" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors">
                 <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
-            </a>
-            <img src="../../function/logo/Pattaya Aviation.png" alt="Logo" class="h-10 object-contain">
+            </button>
+        </div>
+        
+        <!-- Mobile: Dropdown Menu -->
+        <div id="dropdownMenu" class="hidden lg:hidden absolute top-16 left-0 right-0 z-[100] bg-white border-b border-gray-200 shadow-lg py-2 max-h-[calc(100vh-4rem)] overflow-y-auto">
+            <div class="flex flex-col">
+                <a href="../Home/pa-system.html" class="flex items-center gap-3 px-6 py-3 hover:bg-gray-50">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                    <span class="text-gray-800">หน้าหลัก</span>
+                </a>
+                
+                <!-- Voice for Change Section -->
+                <div class="border-t border-gray-100 mt-1 pt-1">
+                    <a href="vfc-home.html" class="flex items-center gap-3 px-6 py-3 hover:bg-gray-50">
+                        <svg class="w-5 h-5 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                        </svg>
+                        <span class="text-gray-800 font-medium">Voice for Change</span>
+                    </a>
+                    <!-- VFC Submenu -->
+                    <a href="complaint.html" class="flex items-center gap-3 px-10 py-2.5 hover:bg-gray-50">
+                        <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                        <span class="text-gray-600 text-sm">ร้องเรียน</span>
+                    </a>
+                    <a href="compliment.html" class="flex items-center gap-3 px-10 py-2.5 hover:bg-gray-50">
+                        <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                        <span class="text-gray-600 text-sm">ชมเชย</span>
+                    </a>
+                    <a href="suggestion.html" class="flex items-center gap-3 px-10 py-2.5 hover:bg-gray-50">
+                        <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                        <span class="text-gray-600 text-sm">เสนอแนะ</span>
+                    </a>
+                    <a href="track.html" class="flex items-center gap-3 px-10 py-2.5 hover:bg-gray-50">
+                        <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                        </svg>
+                        <span class="text-gray-600 text-sm">ติดตามคำร้อง</span>
+                    </a>
+                </div>
+                
+                <!-- Tax Section -->
+                <div class="border-t border-gray-100 mt-1 pt-1">
+                    <a href="../tax/tax-home.html" class="flex items-center gap-3 px-6 py-3 hover:bg-gray-50">
+                        <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span class="text-gray-800 font-medium">ภาษี</span>
+                    </a>
+                    <!-- Tax Submenu -->
+                    <a href="../tax/tax-calculator.html" class="flex items-center gap-3 px-10 py-2.5 hover:bg-gray-50">
+                        <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="text-gray-600 text-sm">คำนวณภาษี</span>
+                    </a>
+                    <a href="../tax/pa-ly01.html" class="flex items-center gap-3 px-10 py-2.5 hover:bg-gray-50">
+                        <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span class="text-gray-600 text-sm">ลดหย่อนภาษี (ล.ย.01)</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </nav>
     
