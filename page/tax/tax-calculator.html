@@ -173,7 +173,7 @@
                         </svg>
                     </a>
                     <!-- Dropdown Submenu -->
-                    <div class="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute top-full left-0 mt-1 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 transition-all duration-200 z-50">
+                    <div class="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute top-full left-0 mt-1 w-56 bg-white rounded-3xl shadow-lg border border-gray-100 py-2 transition-all duration-200 z-50">
                         <a href="../vfc/complaint.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
                             <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
@@ -214,7 +214,7 @@
                         </svg>
                     </a>
                     <!-- Dropdown Submenu -->
-                    <div class="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute top-full left-0 mt-1 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 transition-all duration-200 z-50">
+                    <div class="invisible group-hover:visible opacity-0 group-hover:opacity-100 absolute top-full left-0 mt-1 w-56 bg-white rounded-3xl shadow-lg border border-gray-100 py-2 transition-all duration-200 z-50">
                         <a href="tax-calculator.html" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
                             <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
@@ -317,7 +317,7 @@
         <!-- Header -->
         <div class="mb-8">
             <div class="flex items-center gap-4 mb-4">
-                <div class="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center">
+                <div class="w-14 h-14 bg-emerald-100 rounded-3xl flex items-center justify-center">
                     <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                     </svg>
@@ -331,21 +331,22 @@
         
         <!-- Income Section Card -->
         <div class="bg-white rounded-[2.5rem] shadow-lg p-6 lg:p-8 mb-6">
-            <h2 class="text-lg font-semibold text-emerald-600 mb-4">รายได้</h2>
+            <h2 class="text-lg font-semibold text-emerald-600 mb-4 pb-2 border-b border-emerald-200">รายได้</h2>
             
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">เงินเดือน (ต่อปี)</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">เงินเดือน (ต่อเดือน)</label>
                     <div class="relative">
-                        <input type="number" id="salary" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" >
+                        <input type="number" id="salaryMonthly" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" onchange="updateTotalYearlyIncome()">
                         <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
                     </div>
+                    <input type="hidden" id="salary" value="0">
                 </div>
                 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">โบนัส (ต่อปี)</label>
                     <div class="relative">
-                        <input type="number" id="bonus" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" >
+                        <input type="number" id="bonus" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" onchange="updateTotalYearlyIncome()">
                         <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
                     </div>
                 </div>
@@ -353,23 +354,31 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">รายได้อื่นๆ (ต่อปี)</label>
                     <div class="relative">
-                        <input type="number" id="otherIncome" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" >
+                        <input type="number" id="otherIncome" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" onchange="updateTotalYearlyIncome()">
                         <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
                     </div>
+                </div>
+            </div>
+            
+            <!-- Total Yearly Income Display -->
+            <div class="bg-emerald-50 rounded-3xl p-4 border border-emerald-200">
+                <div class="flex items-center justify-between">
+                    <span class="text-emerald-700 font-medium">รายได้รวมต่อปี</span>
+                    <span class="text-2xl font-bold text-emerald-600"><span id="totalYearlyIncomeDisplay">0</span> บาท</span>
                 </div>
             </div>
         </div>
         
         <!-- Deductions Section Card -->
         <div class="deduction-card bg-white rounded-[2.5rem] shadow-lg p-6 lg:p-8 mb-6">
-            <h2 class="text-lg font-semibold text-emerald-600 mb-4">รายการลดหย่อน</h2>
+            <h2 class="text-lg font-semibold text-emerald-600 mb-4 pb-2 border-b border-emerald-200">รายการลดหย่อน</h2>
             
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <!-- Expense Deduction -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">หักค่าใช้จ่าย</label>
                     <div class="relative">
-                        <input type="number" id="expenseDeduction" value="100000" class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50" readonly>
+                        <input type="text" id="expenseDeduction" value="100,000" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50" readonly>
                         <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
                     </div>
                 </div>
@@ -378,16 +387,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">ค่าลดหย่อนส่วนตัว</label>
                     <div class="relative">
-                        <input type="number" id="personalDeduction" value="60000" class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50" readonly>
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
-                    </div>
-                </div>
-                
-                <!-- Social Security Contribution -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">เงินสมทบประกันสังคม</label>
-                    <div class="relative">
-                        <input type="number" id="socialSecurityContribution" value="10500" class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50" readonly>
+                        <input type="text" id="personalDeduction" value="60,000" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50" readonly>
                         <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
                     </div>
                 </div>
@@ -397,19 +397,30 @@
                 <!-- Marital Status -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">สถานภาพ</label>
-                    <select id="maritalStatus" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" onchange="updateSpouseDeduction()">
-                        <option value="single">โสด</option>
-                        <option value="divorced">หย่า</option>
-                        <option value="married_income">คู่สมรส มีเงินได้</option>
-                        <option value="married_no_income">คู่สมรส ไม่มีเงินได้</option>
-                    </select>
+                    <input type="hidden" id="maritalStatus" value="single">
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" onclick="selectMaritalStatus('single')" id="btn-single" class="marital-pill px-4 py-2 rounded-full border-2 transition-all text-sm font-medium border-emerald-500 bg-emerald-500 text-white">
+                            โสด
+                        </button>
+                        <button type="button" onclick="selectMaritalStatus('divorced')" id="btn-divorced" class="marital-pill px-4 py-2 rounded-full border-2 transition-all text-sm font-medium border-gray-300 bg-white text-gray-600 hover:border-emerald-400">
+                            หย่า
+                        </button>
+                        <button type="button" onclick="selectMaritalStatus('married_income')" id="btn-married_income" class="marital-pill px-4 py-2 rounded-full border-2 transition-all text-sm font-medium border-gray-300 bg-white text-gray-600 hover:border-emerald-400">
+                            คู่สมรส มีเงินได้
+                        </button>
+                        <button type="button" onclick="selectMaritalStatus('married_no_income')" id="btn-married_no_income" class="marital-pill px-4 py-2 rounded-full border-2 transition-all text-sm font-medium border-gray-300 bg-white text-gray-600 hover:border-emerald-400">
+                            คู่สมรส ไม่มีเงินได้
+                        </button>
+                    </div>
                 </div>
-                
+            </div>
+            
+            <div class="space-y-4 mt-4">
                 <!-- Spouse Deduction (hidden by default) -->
                 <div id="spouseDeductionDiv" class="hidden">
                     <label class="block text-sm font-medium text-gray-700 mb-2">ค่าลดหย่อนคู่สมรส</label>
                     <div class="relative">
-                        <input type="number" id="spouseDeduction" value="60000" class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50" readonly>
+                        <input type="number" id="spouseDeduction" value="60000" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50" readonly>
                         <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
                     </div>
                 </div>
@@ -420,11 +431,11 @@
                         ค่าลดหย่อนฝากครรภ์และคลอดบุตร
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">สูงสุด 60,000 บาท ต่อการตั้งครรภ์</span>
+                            <span class="tooltip-content">ค่าลดหย่อนฝากครรภ์และคลอดบุตร สูงสุด 60,000 บาท ต่อการตั้งครรภ์</span>
                         </span>
                     </label>
                     <div class="relative">
-                        <input type="number" id="pregnancyDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"  max="60000">
+                        <input type="number" id="pregnancyDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"  max="60000">
                         <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
                     </div>
                 </div>
@@ -435,16 +446,16 @@
                         ค่าลดหย่อนบุตร
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">คนละ 30,000 บาท</span>
+                            <span class="tooltip-content">ค่าลดหย่อนบุตร คนละ 30,000 บาท</span>
                         </span>
                     </label>
                     <div class="flex items-center gap-3">
                         <div class="relative flex-1">
-                            <input type="number" id="childCount" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"  min="0" onchange="updateChildDeduction()">
+                            <input type="number" id="childCount" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"  min="0" onchange="updateChildDeduction()">
                             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">คน</span>
                         </div>
                         <div class="relative flex-1">
-                            <input type="number" id="childDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50" readonly>
+                            <input type="number" id="childDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50" readonly>
                             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
                         </div>
                     </div>
@@ -456,16 +467,16 @@
                         บุตรคนที่ 2 เป็นต้นไปที่เกิดตั้งแต่ปี 2561
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ลดหย่อนได้คนละ 60,000 บาท</span>
+                            <span class="tooltip-content">บุตรคนที่ 2 เป็นต้นไปที่เกิดตั้งแต่ปี 2561 ลดหย่อนได้คนละ 60,000 บาท</span>
                         </span>
                     </label>
                     <div class="flex items-center gap-3">
                         <div class="relative flex-1">
-                            <input type="number" id="child2561Count" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"  min="0" onchange="updateChild2561Deduction()">
+                            <input type="number" id="child2561Count" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"  min="0" onchange="updateChild2561Deduction()">
                             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">คน</span>
                         </div>
                         <div class="relative flex-1">
-                            <input type="number" id="child2561Deduction" class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50" readonly>
+                            <input type="number" id="child2561Deduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50" readonly>
                             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
                         </div>
                     </div>
@@ -477,16 +488,16 @@
                         ค่าลดหย่อนบิดา-มารดา
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">คนละ 30,000 บาท (สูงสุด 4 คน)</span>
+                            <span class="tooltip-content">ค่าลดหย่อนบิดา-มารดา คนละ 30,000 บาท (สูงสุด 4 คน)</span>
                         </span>
                     </label>
                     <div class="flex items-center gap-3">
                         <div class="relative flex-1">
-                            <input type="number" id="parentCount" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"  min="0" max="4" onchange="updateParentDeduction()">
+                            <input type="number" id="parentCount" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"  min="0" max="4" onchange="updateParentDeduction()">
                             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">คน</span>
                         </div>
                         <div class="relative flex-1">
-                            <input type="number" id="parentDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50" readonly>
+                            <input type="number" id="parentDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50" readonly>
                             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
                         </div>
                     </div>
@@ -498,16 +509,16 @@
                         ค่าลดหย่อน อุปการะผู้พิการ-ทุพพลภาพ
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">คนละ 60,000 บาท</span>
+                            <span class="tooltip-content">ค่าลดหย่อน อุปการะผู้พิการ-ทุพพลภาพ คนละ 60,000 บาท</span>
                         </span>
                     </label>
                     <div class="flex items-center gap-3">
                         <div class="relative flex-1">
-                            <input type="number" id="disabledCount" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"  min="0" onchange="updateDisabledDeduction()">
+                            <input type="number" id="disabledCount" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"  min="0" onchange="updateDisabledDeduction()">
                             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">คน</span>
                         </div>
                         <div class="relative flex-1">
-                            <input type="number" id="disabledDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50" readonly>
+                            <input type="number" id="disabledDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50" readonly>
                             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
                         </div>
                     </div>
@@ -517,7 +528,7 @@
         
         <!-- Economic Stimulus Card -->
         <div class="deduction-card bg-white rounded-[2.5rem] shadow-lg p-6 lg:p-8 mb-6">
-            <h2 class="text-lg font-semibold text-blue-600 mb-4">กลุ่มกระตุ้นเศรษฐกิจ</h2>
+            <h2 class="text-lg font-semibold text-emerald-600 mb-4 pb-2 border-b border-emerald-200">กลุ่มกระตุ้นเศรษฐกิจ</h2>
             
             <div class="space-y-4">
                 <!-- Easy E-Receipt -->
@@ -526,12 +537,18 @@
                         Easy E-Receipt
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ไม่เกิน 50,000 บาท</span>
+                            <span class="tooltip-content">Easy E-Receipt ไม่เกิน 50,000 บาท</span>
                         </span>
                     </label>
-                    <div class="relative">
-                        <input type="number" id="easyEReceipt" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"  max="50000">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input type="number" id="easyEReceipt" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" max="50000" onchange="updateEconomicDeduction('easyEReceipt', 'easyEReceiptDeduction', 50000)">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="easyEReceiptDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50 text-gray-600 font-medium" readonly>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -541,12 +558,18 @@
                         ดอกเบี้ยที่อยู่อาศัย
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ไม่เกิน 100,000 บาท</span>
+                            <span class="tooltip-content">ดอกเบี้ยที่อยู่อาศัย ไม่เกิน 100,000 บาท</span>
                         </span>
                     </label>
-                    <div class="relative">
-                        <input type="number" id="housingInterest" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"  max="100000">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input type="number" id="housingInterest" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" max="100000" onchange="updateEconomicDeduction('housingInterest', 'housingInterestDeduction', 100000)">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="housingInterestDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50 text-gray-600 font-medium" readonly>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -556,12 +579,18 @@
                         ค่าสร้างบ้านใหม่ 2567 - 2568
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ไม่เกิน 100,000 บาท</span>
+                            <span class="tooltip-content">ค่าสร้างบ้านใหม่ 2567 - 2568 ไม่เกิน 100,000 บาท</span>
                         </span>
                     </label>
-                    <div class="relative">
-                        <input type="number" id="newHomeConstruction" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"  max="100000">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input type="number" id="newHomeConstruction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" max="100000" onchange="updateEconomicDeduction('newHomeConstruction', 'newHomeConstructionDeduction', 100000)">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="newHomeConstructionDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50 text-gray-600 font-medium" readonly>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -571,12 +600,18 @@
                         ค่าติดตั้งโซล่าเซลล์สำหรับที่อยู่อาศัย
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ไม่เกิน 200,000 บาท</span>
+                            <span class="tooltip-content">ค่าติดตั้งโซล่าเซลล์สำหรับที่อยู่อาศัย ไม่เกิน 200,000 บาท</span>
                         </span>
                     </label>
-                    <div class="relative">
-                        <input type="number" id="solarCellInstallation" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"  max="200000">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input type="number" id="solarCellInstallation" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" max="200000" onchange="updateEconomicDeduction('solarCellInstallation', 'solarCellInstallationDeduction', 200000)">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="solarCellInstallationDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50 text-gray-600 font-medium" readonly>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -586,12 +621,18 @@
                         ค่าซื้องานศิลปะด้านทัศนศิลป์
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ไม่เกิน 100,000 บาท</span>
+                            <span class="tooltip-content">ค่าซื้องานศิลปะด้านทัศนศิลป์ ไม่เกิน 100,000 บาท</span>
                         </span>
                     </label>
-                    <div class="relative">
-                        <input type="number" id="visualArtPurchase" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"  max="100000">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input type="number" id="visualArtPurchase" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" max="100000" onchange="updateEconomicDeduction('visualArtPurchase', 'visualArtPurchaseDeduction', 100000)">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="visualArtPurchaseDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50 text-gray-600 font-medium" readonly>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -599,7 +640,7 @@
         
         <!-- Life Insurance Card -->
         <div class="deduction-card bg-white rounded-[2.5rem] shadow-lg p-6 lg:p-8 mb-6">
-            <h2 class="text-lg font-semibold text-purple-600 mb-4">กลุ่มประกันชีวิต</h2>
+            <h2 class="text-lg font-semibold text-emerald-600 mb-4 pb-2 border-b border-emerald-200">กลุ่มประกันชีวิต</h2>
             
             <div class="space-y-4">
                 <!-- General Life Insurance -->
@@ -608,12 +649,18 @@
                         ประกันชีวิตทั่วไป/ประกันสะสมทรัพย์
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ไม่เกิน 100,000 บาท</span>
+                            <span class="tooltip-content">ประกันชีวิตทั่วไป/ประกันสะสมทรัพย์ ไม่เกิน 100,000 บาท</span>
                         </span>
                     </label>
-                    <div class="relative">
-                        <input type="number" id="lifeInsurance" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"  max="100000">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input type="number" id="lifeInsurance" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" max="100000" onchange="updateInsuranceDeduction('lifeInsurance', 'lifeInsuranceDeduction', 100000)">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="lifeInsuranceDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50 text-gray-600 font-medium" readonly>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -623,12 +670,18 @@
                         ประกันสุขภาพตัวเอง
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ลดหย่อนได้ 25,000 บาท (รวมประกันชีวิตไม่เกิน 100,000 บาท)</span>
+                            <span class="tooltip-content">ประกันสุขภาพตัวเอง ลดหย่อนได้ 25,000 บาท (รวมประกันชีวิตไม่เกิน 100,000 บาท)</span>
                         </span>
                     </label>
-                    <div class="relative">
-                        <input type="number" id="healthInsurance" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"  max="25000">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input type="number" id="healthInsurance" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" max="25000" onchange="updateInsuranceDeduction('healthInsurance', 'healthInsuranceDeduction', 25000)">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="healthInsuranceDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50 text-gray-600 font-medium" readonly>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -638,12 +691,18 @@
                         ประกันสุขภาพบิดามารดา
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ไม่เกิน 15,000 บาท</span>
+                            <span class="tooltip-content">ประกันสุขภาพบิดามารดา ไม่เกิน 15,000 บาท</span>
                         </span>
                     </label>
-                    <div class="relative">
-                        <input type="number" id="parentHealthInsurance" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"  max="15000">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input type="number" id="parentHealthInsurance" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" max="15000" onchange="updateInsuranceDeduction('parentHealthInsurance', 'parentHealthInsuranceDeduction', 15000)">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="parentHealthInsuranceDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50 text-gray-600 font-medium" readonly>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -653,12 +712,18 @@
                         ประกันชีวิตคู่สมรส
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ไม่เกิน 10,000 บาท</span>
+                            <span class="tooltip-content">ประกันชีวิตคู่สมรส ไม่เกิน 10,000 บาท</span>
                         </span>
                     </label>
-                    <div class="relative">
-                        <input type="number" id="spouseLifeInsurance" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"  max="10000">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input type="number" id="spouseLifeInsurance" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" max="10000" onchange="updateInsuranceDeduction('spouseLifeInsurance', 'spouseLifeInsuranceDeduction', 10000)">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="spouseLifeInsuranceDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50 text-gray-600 font-medium" readonly>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -668,12 +733,18 @@
                         ประกันสังคม
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ไม่เกิน 9,000 บาท</span>
+                            <span class="tooltip-content">ประกันสังคม ไม่เกิน 10,500 บาท</span>
                         </span>
                     </label>
-                    <div class="relative">
-                        <input type="number" id="socialSecurity" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"  max="9000">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input type="number" id="socialSecurity" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" max="10500" onchange="updateInsuranceDeduction('socialSecurity', 'socialSecurityDeduction', 10500)">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="socialSecurityDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50 text-gray-600 font-medium" readonly>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -681,22 +752,30 @@
         
         <!-- Investment Group Card -->
         <div class="deduction-card bg-white rounded-[2.5rem] shadow-lg p-6 lg:p-8 mb-6">
-            <h2 class="text-lg font-semibold text-orange-600 mb-2">กลุ่มการลงทุน</h2>
-            <p class="text-xs text-orange-500 mb-4">เมื่อรวมกับประกันชีวิตแบบบำนาญแล้ว ไม่เกิน 500,000.00 บาท</p>
+            <div class="mb-4 pb-2 border-b border-emerald-200">
+                <h2 class="text-lg font-semibold text-emerald-600">กลุ่มการลงทุน</h2>
+                <p class="text-xs text-gray-500 mt-1">เมื่อรวมกับประกันชีวิตแบบบำนาญแล้ว ไม่เกิน 500,000.00 บาท</p>
+            </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="space-y-4">
                 <!-- PVD Fund -->
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
                         กองทุน PVD, สงเคราะห์ครู
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ไม่เกิน 15% ของรายได้ สูงสุด 500,000 บาท</span>
+                            <span class="tooltip-content">กองทุน PVD, สงเคราะห์ครู ไม่เกิน 15% ของรายได้ สูงสุด 500,000 บาท</span>
                         </span>
                     </label>
-                    <div class="relative">
-                        <input type="number" id="pvdFund" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"  max="500000">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input type="number" id="pvdFund" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" max="500000" onchange="updateInvestmentDeduction('pvdFund', 'pvdFundDeduction', 500000, 15)">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="pvdFundDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50 text-gray-600 font-medium" readonly>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -706,12 +785,18 @@
                         กบข.
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ไม่เกิน 30% ของรายได้ สูงสุด 500,000 บาท</span>
+                            <span class="tooltip-content">กบข. ไม่เกิน 30% ของรายได้ สูงสุด 500,000 บาท</span>
                         </span>
                     </label>
-                    <div class="relative">
-                        <input type="number" id="gpfFund" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"  max="500000">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input type="number" id="gpfFund" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" max="500000" onchange="updateInvestmentDeduction('gpfFund', 'gpfFundDeduction', 500000, 30)">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="gpfFundDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50 text-gray-600 font-medium" readonly>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -721,12 +806,18 @@
                         ประกันบำนาญ
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ไม่เกิน 15% ของรายได้ สูงสุด 200,000 บาท</span>
+                            <span class="tooltip-content">ประกันบำนาญ ไม่เกิน 15% ของรายได้ สูงสุด 200,000 บาท</span>
                         </span>
                     </label>
-                    <div class="relative">
-                        <input type="number" id="annuityInsurance" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"  max="200000">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input type="number" id="annuityInsurance" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" max="200000" onchange="updateInvestmentDeduction('annuityInsurance', 'annuityInsuranceDeduction', 200000, 15)">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="annuityInsuranceDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50 text-gray-600 font-medium" readonly>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -736,12 +827,18 @@
                         กองทุนการออมเงินแห่งชาติ
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ไม่เกิน 30,000 บาท</span>
+                            <span class="tooltip-content">กองทุนการออมเงินแห่งชาติ ไม่เกิน 30,000 บาท</span>
                         </span>
                     </label>
-                    <div class="relative">
-                        <input type="number" id="nsfFund" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"  max="30000">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input type="number" id="nsfFund" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" max="30000" onchange="updateInvestmentDeduction('nsfFund', 'nsfFundDeduction', 30000)">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="nsfFundDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50 text-gray-600 font-medium" readonly>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -751,12 +848,18 @@
                         กองทุน RMF
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ไม่เกิน 30% ของรายได้ สูงสุด 500,000 บาท</span>
+                            <span class="tooltip-content">กองทุน RMF ไม่เกิน 30% ของรายได้ สูงสุด 500,000 บาท</span>
                         </span>
                     </label>
-                    <div class="relative">
-                        <input type="number" id="rmfFund" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"  max="500000">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input type="number" id="rmfFund" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" max="500000" onchange="updateInvestmentDeduction('rmfFund', 'rmfFundDeduction', 500000, 30)">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="rmfFundDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50 text-gray-600 font-medium" readonly>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -766,12 +869,18 @@
                         เงินลงทุนธุรกิจ Social Enterprise
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ไม่เกิน 100,000 บาท</span>
+                            <span class="tooltip-content">เงินลงทุนธุรกิจ Social Enterprise ไม่เกิน 100,000 บาท</span>
                         </span>
                     </label>
-                    <div class="relative">
-                        <input type="number" id="socialEnterprise" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"  max="100000">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input type="number" id="socialEnterprise" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" max="100000" onchange="updateInvestmentDeduction('socialEnterprise', 'socialEnterpriseDeduction', 100000)">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="socialEnterpriseDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50 text-gray-600 font-medium" readonly>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -781,12 +890,18 @@
                         กองทุน ThaiESG
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ไม่เกิน 30% ของรายได้ สูงสุด 300,000 บาท</span>
+                            <span class="tooltip-content">กองทุน ThaiESG ไม่เกิน 30% ของรายได้ สูงสุด 300,000 บาท</span>
                         </span>
                     </label>
-                    <div class="relative">
-                        <input type="number" id="thaiEsgFund" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"  max="300000">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input type="number" id="thaiEsgFund" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" max="300000" onchange="updateInvestmentDeduction('thaiEsgFund', 'thaiEsgFundDeduction', 300000, 30)">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="thaiEsgFundDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50 text-gray-600 font-medium" readonly>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -794,7 +909,7 @@
         
         <!-- Donation Group Card -->
         <div class="deduction-card bg-white rounded-[2.5rem] shadow-lg p-6 lg:p-8 mb-6">
-            <h2 class="text-lg font-semibold text-pink-600 mb-4">กลุ่มเงินบริจาค</h2>
+            <h2 class="text-lg font-semibold text-emerald-600 mb-4 pb-2 border-b border-emerald-200">กลุ่มเงินบริจาค</h2>
             
             <div class="space-y-4">
                 <!-- Political Party Donation -->
@@ -803,12 +918,18 @@
                         พรรคการเมือง
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ไม่เกิน 10,000 บาท</span>
+                            <span class="tooltip-content">พรรคการเมือง ไม่เกิน 10,000 บาท</span>
                         </span>
                     </label>
-                    <div class="relative">
-                        <input type="number" id="politicalDonation" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"  max="10000">
-                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input type="number" id="politicalDonation" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" max="10000" onchange="updateDonationDeduction('politicalDonation', 'politicalDonationDeduction', 10000)">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                        <div class="relative">
+                            <input type="text" id="politicalDonationDeduction" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50 text-gray-600 font-medium" readonly>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -818,16 +939,16 @@
                         การศึกษา กีฬา พัฒนาสังคม โรงพยาบาลรัฐ
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ไม่เกิน 10% ของรายได้หลังหักค่าลดหย่อน (2 เท่า)</span>
+                            <span class="tooltip-content">การศึกษา กีฬา พัฒนาสังคม โรงพยาบาลรัฐ ไม่เกิน 10% ของรายได้หลังหักค่าลดหย่อน (2 เท่า)</span>
                         </span>
                     </label>
                     <div class="flex items-center gap-3">
                         <div class="relative flex-1">
-                            <input type="number" id="educationDonation" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"  onchange="updateEducationDeduction()">
+                            <input type="number" id="educationDonation" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"  onchange="updateEducationDeduction()">
                             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
                         </div>
                         <div class="relative flex-1">
-                            <input type="number" id="educationDeductionAmount" class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50" readonly>
+                            <input type="number" id="educationDeductionAmount" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50" readonly>
                             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
                         </div>
                     </div>
@@ -839,16 +960,16 @@
                         เงินบริจาคทั่วไป
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ไม่เกิน 10% ของรายได้หลังหักค่าลดหย่อน (ตามที่จ่ายจริง)</span>
+                            <span class="tooltip-content">เงินบริจาคทั่วไป ไม่เกิน 10% ของรายได้หลังหักค่าลดหย่อน (ตามที่จ่ายจริง)</span>
                         </span>
                     </label>
                     <div class="flex items-center gap-3">
                         <div class="relative flex-1">
-                            <input type="number" id="generalDonation" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all" >
+                            <input type="number" id="generalDonation" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" onchange="updateGeneralDonationDeduction()">
                             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
                         </div>
                         <div class="relative flex-1">
-                            <input type="number" id="generalDonationAmount" class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50" readonly >
+                            <input type="number" id="generalDonationAmount" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50" readonly >
                             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
                         </div>
                     </div>
@@ -857,19 +978,19 @@
                 <!-- e-Donation -->
                 <div>
                     <label class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-2">
-                        เงินบริจาคผ่านระบบบริจาคอิเล็กทรอนิกส์ (e-Donation)
+                        เงินบริจาคผ่านระบบบริจาคอิเล็กทรอนิกส์
                         <span class="tooltip-trigger">
                             <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                            <span class="tooltip-content">ลดหย่อนได้ 2 เท่าของเงินบริจาค</span>
+                            <span class="tooltip-content">เงินบริจาคผ่านระบบบริจาคอิเล็กทรอนิกส์ (e-Donation) ลดหย่อนได้ 2 เท่าของเงินบริจาค</span>
                         </span>
                     </label>
                     <div class="flex items-center gap-3">
                         <div class="relative flex-1">
-                            <input type="number" id="eDonation" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"  onchange="updateEDonationDeduction()">
+                            <input type="number" id="eDonation" class="w-full px-4 py-3 border border-gray-200 rounded-3xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"  onchange="updateEDonationDeduction()">
                             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
                         </div>
                         <div class="relative flex-1">
-                            <input type="number" id="eDonationAmount" class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50" readonly>
+                            <input type="number" id="eDonationAmount" class="w-full px-4 py-3 border border-gray-200 rounded-3xl bg-gray-50" readonly>
                             <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
                         </div>
                     </div>
@@ -878,13 +999,13 @@
         </div>
         
         <!-- Calculate Button -->
-        <button onclick="calculateTax()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-4 rounded-xl transition-colors shadow-lg shadow-emerald-200 mb-6">
+        <button onclick="calculateTax()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-4 rounded-3xl transition-colors shadow-lg shadow-emerald-200 mb-6">
             คำนวณภาษี
         </button>
         
         <!-- Results Section Card -->
         <div id="results" class="hidden bg-white rounded-[2.5rem] shadow-lg p-6 lg:p-8">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">ผลการคำนวณ</h3>
+            <h3 class="text-lg font-semibold text-emerald-600 mb-4 pb-2 border-b border-emerald-200">ผลการคำนวณ</h3>
             
             <div class="space-y-3">
                 <div class="flex justify-between">
@@ -914,6 +1035,86 @@
     </main>
     
     <script>
+        // Helper function to format number with commas
+        function formatNumber(num) {
+            return num.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 2});
+        }
+        
+        // Helper function to parse number with commas
+        function parseNumber(str) {
+            if (typeof str === 'number') return str;
+            return parseFloat(String(str).replace(/,/g, '')) || 0;
+        }
+        
+        // Format input field value with commas
+        function formatInput(input) {
+            const value = parseNumber(input.value);
+            if (value > 0) {
+                input.value = formatNumber(value);
+            }
+        }
+        
+        // Update investment deduction display
+        function updateInvestmentDeduction(inputId, outputId, maxValue, percentLimit) {
+            const inputValue = parseNumber(document.getElementById(inputId).value);
+            const yearlySalary = parseNumber(document.getElementById('salary').value);
+            
+            // Calculate max based on percentage of salary if provided
+            let maxByPercent = maxValue;
+            if (percentLimit) {
+                maxByPercent = yearlySalary * (percentLimit / 100);
+            }
+            
+            // Take the minimum of: input, percentage limit, and absolute max
+            const actualMax = Math.min(maxByPercent, maxValue);
+            const deduction = Math.min(inputValue, actualMax);
+            document.getElementById(outputId).value = deduction > 0 ? formatNumber(deduction) : '';
+        }
+        
+        // Initialize formatting for all number inputs on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const numberInputs = document.querySelectorAll('input[type="number"], input[type="text"].format-number');
+            numberInputs.forEach(function(input) {
+                // Change type from number to text for formatting
+                if (input.type === 'number') {
+                    input.type = 'text';
+                    input.inputMode = 'numeric';
+                }
+                
+                // Format on blur
+                input.addEventListener('blur', function() {
+                    formatInput(this);
+                });
+                
+                // Format on input (allow typing but format when done)
+                input.addEventListener('input', function() {
+                    // Remove non-numeric characters except comma and dot
+                    this.value = this.value.replace(/[^\d.,]/g, '');
+                });
+            });
+        });
+        
+        // Update economic stimulus deduction display
+        function updateEconomicDeduction(inputId, outputId, maxValue) {
+            const inputValue = parseNumber(document.getElementById(inputId).value);
+            const deduction = Math.min(inputValue, maxValue);
+            document.getElementById(outputId).value = deduction > 0 ? formatNumber(deduction) : '';
+        }
+        
+        // Update insurance deduction display
+        function updateInsuranceDeduction(inputId, outputId, maxValue) {
+            const inputValue = parseNumber(document.getElementById(inputId).value);
+            const deduction = Math.min(inputValue, maxValue);
+            document.getElementById(outputId).value = deduction > 0 ? formatNumber(deduction) : '';
+        }
+        
+        // Update donation deduction display
+        function updateDonationDeduction(inputId, outputId, maxValue) {
+            const inputValue = parseNumber(document.getElementById(inputId).value);
+            const deduction = Math.min(inputValue, maxValue);
+            document.getElementById(outputId).value = deduction > 0 ? formatNumber(deduction) : '';
+        }
+        
         function updateSpouseDeduction() {
             const maritalStatus = document.getElementById('maritalStatus').value;
             const spouseDeductionDiv = document.getElementById('spouseDeductionDiv');
@@ -925,86 +1126,242 @@
             }
         }
         
+        function selectMaritalStatus(status) {
+            // Update hidden input value
+            document.getElementById('maritalStatus').value = status;
+            
+            // Remove active state from all pills
+            document.querySelectorAll('.marital-pill').forEach(btn => {
+                btn.classList.remove('border-emerald-500', 'bg-emerald-500', 'text-white');
+                btn.classList.add('border-gray-300', 'bg-white', 'text-gray-600');
+            });
+            
+            // Add active state to selected pill
+            const selectedBtn = document.getElementById('btn-' + status);
+            if (selectedBtn) {
+                selectedBtn.classList.remove('border-gray-300', 'bg-white', 'text-gray-600');
+                selectedBtn.classList.add('border-emerald-500', 'bg-emerald-500', 'text-white');
+            }
+            
+            // Trigger spouse deduction update
+            updateSpouseDeduction();
+        }
+        
         function updateChildDeduction() {
             const count = parseInt(document.getElementById('childCount').value) || 0;
             const deduction = count * 30000;
-            document.getElementById('childDeduction').value = deduction;
+            document.getElementById('childDeduction').value = formatNumber(deduction);
         }
         
         function updateChild2561Deduction() {
             const count = parseInt(document.getElementById('child2561Count').value) || 0;
             const deduction = count * 60000;
-            document.getElementById('child2561Deduction').value = deduction;
+            document.getElementById('child2561Deduction').value = formatNumber(deduction);
+        }
+        
+        function updateTotalYearlyIncome() {
+            const monthly = parseNumber(document.getElementById('salaryMonthly').value);
+            const yearlySalary = monthly * 12;
+            const bonus = parseNumber(document.getElementById('bonus').value);
+            const otherIncome = parseNumber(document.getElementById('otherIncome').value);
+            
+            // Update hidden salary field
+            document.getElementById('salary').value = yearlySalary;
+            
+            // Calculate total yearly income
+            const totalYearlyIncome = yearlySalary + bonus + otherIncome;
+            document.getElementById('totalYearlyIncomeDisplay').textContent = formatNumber(totalYearlyIncome);
         }
         
         function updateParentDeduction() {
             const count = Math.min(parseInt(document.getElementById('parentCount').value) || 0, 4);
             const deduction = count * 30000;
-            document.getElementById('parentDeduction').value = deduction;
+            document.getElementById('parentDeduction').value = formatNumber(deduction);
         }
         
         function updateDisabledDeduction() {
             const count = parseInt(document.getElementById('disabledCount').value) || 0;
             const deduction = count * 60000;
-            document.getElementById('disabledDeduction').value = deduction;
+            document.getElementById('disabledDeduction').value = formatNumber(deduction);
         }
         
         function updateEducationDeduction() {
-            const donation = parseFloat(document.getElementById('educationDonation').value) || 0;
-            const deduction = donation * 2; // 2 times of donation
-            document.getElementById('educationDeductionAmount').value = deduction;
+            const donation = parseNumber(document.getElementById('educationDonation').value);
+            const doubledDeduction = donation * 2; // 2 times of donation
+            
+            // Get all income values
+            const salary = parseNumber(document.getElementById('salary').value);
+            const bonus = parseNumber(document.getElementById('bonus').value);
+            const otherIncome = parseNumber(document.getElementById('otherIncome').value);
+            const totalIncome = salary + bonus + otherIncome;
+            const expenseDeduction = 100000;
+            
+            // Personal deductions
+            const personalDeduction = 60000;
+            const maritalStatus = document.getElementById('maritalStatus').value;
+            const spouseDeduction = (maritalStatus === 'married_no_income') ? 60000 : 0;
+            const pregnancyDeduction = Math.min(parseNumber(document.getElementById('pregnancyDeduction').value), 60000);
+            const childDeduction = parseNumber(document.getElementById('childDeduction').value);
+            const child2561Deduction = parseNumber(document.getElementById('child2561Deduction').value);
+            const parentDeduction = parseNumber(document.getElementById('parentDeduction').value);
+            const disabledDeduction = parseNumber(document.getElementById('disabledDeduction').value);
+            
+            // Economic stimulus deductions
+            const easyEReceipt = Math.min(parseNumber(document.getElementById('easyEReceipt').value), 50000);
+            const housingInterest = Math.min(parseNumber(document.getElementById('housingInterest').value), 100000);
+            const newHomeConstruction = Math.min(parseNumber(document.getElementById('newHomeConstruction').value), 100000);
+            const solarCellInstallation = Math.min(parseNumber(document.getElementById('solarCellInstallation').value), 200000);
+            const visualArtPurchase = Math.min(parseNumber(document.getElementById('visualArtPurchase').value), 100000);
+            
+            // Insurance deductions
+            const lifeInsurance = Math.min(parseNumber(document.getElementById('lifeInsurance').value), 100000);
+            const healthInsurance = Math.min(parseNumber(document.getElementById('healthInsurance').value), 25000);
+            const parentHealthInsurance = Math.min(parseNumber(document.getElementById('parentHealthInsurance').value), 15000);
+            const spouseLifeInsurance = Math.min(parseNumber(document.getElementById('spouseLifeInsurance').value), 10000);
+            const socialSecurity = Math.min(parseNumber(document.getElementById('socialSecurity').value), 9000);
+            const socialSecurityContribution = 10500;
+            
+            // Investment deductions
+            const pvdFund = Math.min(parseNumber(document.getElementById('pvdFund').value), 500000);
+            const gpfFund = Math.min(parseNumber(document.getElementById('gpfFund').value), 500000);
+            const annuityInsurance = Math.min(parseNumber(document.getElementById('annuityInsurance').value), 200000);
+            const nsfFund = Math.min(parseNumber(document.getElementById('nsfFund').value), 30000);
+            const rmfFund = Math.min(parseNumber(document.getElementById('rmfFund').value), 500000);
+            const socialEnterprise = Math.min(parseNumber(document.getElementById('socialEnterprise').value), 100000);
+            const thaiEsgFund = Math.min(parseNumber(document.getElementById('thaiEsgFund').value), 300000);
+            
+            // Political donation
+            const politicalDonation = Math.min(parseNumber(document.getElementById('politicalDonation').value), 10000);
+            
+            // Calculate basic deductions (not including general donation)
+            const basicDeductions = personalDeduction + spouseDeduction + pregnancyDeduction + childDeduction + child2561Deduction + parentDeduction + disabledDeduction + easyEReceipt + housingInterest + newHomeConstruction + solarCellInstallation + visualArtPurchase + lifeInsurance + healthInsurance + parentHealthInsurance + spouseLifeInsurance + socialSecurity + socialSecurityContribution;
+            
+            // Combined investment deduction cap (cannot exceed 500,000)
+            const totalInvestmentRaw = pvdFund + gpfFund + annuityInsurance + nsfFund + rmfFund + thaiEsgFund;
+            const totalInvestment = Math.min(totalInvestmentRaw, 500000) + socialEnterprise;
+            
+            // Calculate income after all deductions (not including general donation)
+            const incomeAfterDeductions = Math.max(totalIncome - expenseDeduction - basicDeductions - totalInvestment - politicalDonation, 0);
+            
+            // 10% limit
+            const donationLimit = incomeAfterDeductions * 0.10;
+            const cappedDeduction = Math.min(doubledDeduction, donationLimit);
+            document.getElementById('educationDeductionAmount').value = formatNumber(cappedDeduction);
         }
         
         function updateEDonationDeduction() {
             const donation = parseFloat(document.getElementById('eDonation').value) || 0;
             const deduction = donation * 2; // 2 times of donation
-            document.getElementById('eDonationAmount').value = deduction;
+            document.getElementById('eDonationAmount').value = formatNumber(deduction);
+        }
+        
+        function updateGeneralDonationDeduction() {
+            const donation = parseNumber(document.getElementById('generalDonation').value);
+            
+            // Get all income values
+            const salary = parseNumber(document.getElementById('salary').value);
+            const bonus = parseNumber(document.getElementById('bonus').value);
+            const otherIncome = parseNumber(document.getElementById('otherIncome').value);
+            const totalIncome = salary + bonus + otherIncome;
+            const expenseDeduction = 100000;
+            
+            // Personal deductions
+            const personalDeduction = 60000;
+            const maritalStatus = document.getElementById('maritalStatus').value;
+            const spouseDeduction = (maritalStatus === 'married_no_income') ? 60000 : 0;
+            const pregnancyDeduction = Math.min(parseNumber(document.getElementById('pregnancyDeduction').value), 60000);
+            const childDeduction = parseNumber(document.getElementById('childDeduction').value);
+            const child2561Deduction = parseNumber(document.getElementById('child2561Deduction').value);
+            const parentDeduction = parseNumber(document.getElementById('parentDeduction').value);
+            const disabledDeduction = parseNumber(document.getElementById('disabledDeduction').value);
+            
+            // Economic stimulus deductions
+            const easyEReceipt = Math.min(parseNumber(document.getElementById('easyEReceipt').value), 50000);
+            const housingInterest = Math.min(parseNumber(document.getElementById('housingInterest').value), 100000);
+            const newHomeConstruction = Math.min(parseNumber(document.getElementById('newHomeConstruction').value), 100000);
+            const solarCellInstallation = Math.min(parseNumber(document.getElementById('solarCellInstallation').value), 200000);
+            const visualArtPurchase = Math.min(parseNumber(document.getElementById('visualArtPurchase').value), 100000);
+            
+            // Insurance deductions
+            const lifeInsurance = Math.min(parseNumber(document.getElementById('lifeInsurance').value), 100000);
+            const healthInsurance = Math.min(parseNumber(document.getElementById('healthInsurance').value), 25000);
+            const parentHealthInsurance = Math.min(parseNumber(document.getElementById('parentHealthInsurance').value), 15000);
+            const spouseLifeInsurance = Math.min(parseNumber(document.getElementById('spouseLifeInsurance').value), 10000);
+            const socialSecurity = Math.min(parseNumber(document.getElementById('socialSecurity').value), 10500);
+            
+            // Investment deductions
+            const pvdFund = Math.min(parseNumber(document.getElementById('pvdFund').value), 500000);
+            const gpfFund = Math.min(parseNumber(document.getElementById('gpfFund').value), 500000);
+            const annuityInsurance = Math.min(parseNumber(document.getElementById('annuityInsurance').value), 200000);
+            const nsfFund = Math.min(parseNumber(document.getElementById('nsfFund').value), 30000);
+            const rmfFund = Math.min(parseNumber(document.getElementById('rmfFund').value), 500000);
+            const socialEnterprise = Math.min(parseNumber(document.getElementById('socialEnterprise').value), 100000);
+            const thaiEsgFund = Math.min(parseNumber(document.getElementById('thaiEsgFund').value), 300000);
+            
+            // Political donation
+            const politicalDonation = Math.min(parseNumber(document.getElementById('politicalDonation').value), 10000);
+            
+            const basicDeductions = personalDeduction + spouseDeduction + pregnancyDeduction + childDeduction + child2561Deduction + parentDeduction + disabledDeduction + easyEReceipt + housingInterest + newHomeConstruction + solarCellInstallation + visualArtPurchase + lifeInsurance + healthInsurance + parentHealthInsurance + spouseLifeInsurance + socialSecurity;
+            
+            // Combined investment deduction cap (cannot exceed 500,000)
+            const totalInvestmentRaw = pvdFund + gpfFund + annuityInsurance + nsfFund + rmfFund + thaiEsgFund;
+            const totalInvestment = Math.min(totalInvestmentRaw, 500000) + socialEnterprise;
+            
+            // Get education donation deduction (which comes before general donation)
+            const educationDeductionAmount = parseNumber(document.getElementById('educationDeductionAmount').value);
+            
+            // Calculate income after all deductions for donation limit (including education donation)
+            const incomeAfterDeductions = Math.max(totalIncome - expenseDeduction - basicDeductions - totalInvestment - politicalDonation - educationDeductionAmount, 0);
+            
+            // 10% limit
+            const donationLimit = incomeAfterDeductions * 0.10;
+            const cappedDonation = Math.min(donation, donationLimit);
+            document.getElementById('generalDonationAmount').value = formatNumber(cappedDonation);
         }
         
         function calculateTax() {
             // Get input values
-            const salary = parseFloat(document.getElementById('salary').value) || 0;
-            const bonus = parseFloat(document.getElementById('bonus').value) || 0;
-            const otherIncome = parseFloat(document.getElementById('otherIncome').value) || 0;
+            const salary = parseNumber(document.getElementById('salary').value);
+            const bonus = parseNumber(document.getElementById('bonus').value);
+            const otherIncome = parseNumber(document.getElementById('otherIncome').value);
             const expenseDeduction = 100000; // Fixed expense deduction
             const personalDeduction = 60000;
-            const pregnancyDeduction = Math.min(parseFloat(document.getElementById('pregnancyDeduction').value) || 0, 60000);
-            const childDeduction = parseFloat(document.getElementById('childDeduction').value) || 0;
-            const child2561Deduction = parseFloat(document.getElementById('child2561Deduction').value) || 0;
-            const parentDeduction = parseFloat(document.getElementById('parentDeduction').value) || 0;
-            const disabledDeduction = parseFloat(document.getElementById('disabledDeduction').value) || 0;
+            const pregnancyDeduction = Math.min(parseNumber(document.getElementById('pregnancyDeduction').value), 60000);
+            const childDeduction = parseNumber(document.getElementById('childDeduction').value);
+            const child2561Deduction = parseNumber(document.getElementById('child2561Deduction').value);
+            const parentDeduction = parseNumber(document.getElementById('parentDeduction').value);
+            const disabledDeduction = parseNumber(document.getElementById('disabledDeduction').value);
             
             // Economic stimulus deductions
-            const easyEReceipt = Math.min(parseFloat(document.getElementById('easyEReceipt').value) || 0, 50000);
-            const housingInterest = Math.min(parseFloat(document.getElementById('housingInterest').value) || 0, 100000);
-            const newHomeConstruction = Math.min(parseFloat(document.getElementById('newHomeConstruction').value) || 0, 100000);
-            const solarCellInstallation = Math.min(parseFloat(document.getElementById('solarCellInstallation').value) || 0, 200000);
-            const visualArtPurchase = Math.min(parseFloat(document.getElementById('visualArtPurchase').value) || 0, 100000);
+            const easyEReceipt = Math.min(parseNumber(document.getElementById('easyEReceipt').value), 50000);
+            const housingInterest = Math.min(parseNumber(document.getElementById('housingInterest').value), 100000);
+            const newHomeConstruction = Math.min(parseNumber(document.getElementById('newHomeConstruction').value), 100000);
+            const solarCellInstallation = Math.min(parseNumber(document.getElementById('solarCellInstallation').value), 200000);
+            const visualArtPurchase = Math.min(parseNumber(document.getElementById('visualArtPurchase').value), 100000);
             
             // Life insurance deductions
-            const lifeInsurance = Math.min(parseFloat(document.getElementById('lifeInsurance').value) || 0, 100000);
-            const healthInsurance = Math.min(parseFloat(document.getElementById('healthInsurance').value) || 0, 25000);
-            const parentHealthInsurance = Math.min(parseFloat(document.getElementById('parentHealthInsurance').value) || 0, 15000);
-            const spouseLifeInsurance = Math.min(parseFloat(document.getElementById('spouseLifeInsurance').value) || 0, 10000);
-            const socialSecurity = Math.min(parseFloat(document.getElementById('socialSecurity').value) || 0, 9000);
+            const lifeInsurance = Math.min(parseNumber(document.getElementById('lifeInsurance').value), 100000);
+            const healthInsurance = Math.min(parseNumber(document.getElementById('healthInsurance').value), 25000);
+            const parentHealthInsurance = Math.min(parseNumber(document.getElementById('parentHealthInsurance').value), 15000);
+            const spouseLifeInsurance = Math.min(parseNumber(document.getElementById('spouseLifeInsurance').value), 10000);
+            const socialSecurity = Math.min(parseNumber(document.getElementById('socialSecurity').value), 10500);
             
             // Investment deductions
-            const pvdFund = Math.min(parseFloat(document.getElementById('pvdFund').value) || 0, 500000);
-            const gpfFund = Math.min(parseFloat(document.getElementById('gpfFund').value) || 0, 500000);
-            const annuityInsurance = Math.min(parseFloat(document.getElementById('annuityInsurance').value) || 0, 200000);
-            const nsfFund = Math.min(parseFloat(document.getElementById('nsfFund').value) || 0, 30000);
-            const rmfFund = Math.min(parseFloat(document.getElementById('rmfFund').value) || 0, 500000);
-            const socialEnterprise = Math.min(parseFloat(document.getElementById('socialEnterprise').value) || 0, 100000);
-            const thaiEsgFund = Math.min(parseFloat(document.getElementById('thaiEsgFund').value) || 0, 300000);
+            const pvdFund = Math.min(parseNumber(document.getElementById('pvdFund').value), 500000);
+            const gpfFund = Math.min(parseNumber(document.getElementById('gpfFund').value), 500000);
+            const annuityInsurance = Math.min(parseNumber(document.getElementById('annuityInsurance').value), 200000);
+            const nsfFund = Math.min(parseNumber(document.getElementById('nsfFund').value), 30000);
+            const rmfFund = Math.min(parseNumber(document.getElementById('rmfFund').value), 500000);
+            const socialEnterprise = Math.min(parseNumber(document.getElementById('socialEnterprise').value), 100000);
+            const thaiEsgFund = Math.min(parseNumber(document.getElementById('thaiEsgFund').value), 300000);
             
             // Donation deductions
-            const politicalDonation = Math.min(parseFloat(document.getElementById('politicalDonation').value) || 0, 10000);
-            const educationDeductionAmount = parseFloat(document.getElementById('educationDeductionAmount').value) || 0;
-            const generalDonation = parseFloat(document.getElementById('generalDonation').value) || 0;
-            const eDonationAmount = parseFloat(document.getElementById('eDonationAmount').value) || 0;
+            const politicalDonation = Math.min(parseNumber(document.getElementById('politicalDonation').value), 10000);
+            const educationDeductionAmount = parseNumber(document.getElementById('educationDeductionAmount').value);
+            const generalDonationAmount = parseNumber(document.getElementById('generalDonationAmount').value);
+            const eDonationAmount = parseNumber(document.getElementById('eDonationAmount').value);
             
-            // Social security contribution (fixed)
-            const socialSecurityContribution = 10500;
+            // Note: socialSecurity is now the only social security deduction (no fixed contribution)
             
             // Spouse deduction (only if married with no income spouse)
             const maritalStatus = document.getElementById('maritalStatus').value;
@@ -1014,7 +1371,7 @@
             const totalIncome = salary + bonus + otherIncome;
             
             // Calculate basic deductions first (for donation limit calculation)
-            const basicDeductions = personalDeduction + spouseDeduction + pregnancyDeduction + childDeduction + child2561Deduction + parentDeduction + disabledDeduction + easyEReceipt + housingInterest + newHomeConstruction + solarCellInstallation + visualArtPurchase + lifeInsurance + healthInsurance + parentHealthInsurance + spouseLifeInsurance + socialSecurity + socialSecurityContribution;
+            const basicDeductions = personalDeduction + spouseDeduction + pregnancyDeduction + childDeduction + child2561Deduction + parentDeduction + disabledDeduction + easyEReceipt + housingInterest + newHomeConstruction + solarCellInstallation + visualArtPurchase + lifeInsurance + healthInsurance + parentHealthInsurance + spouseLifeInsurance + socialSecurity;
             
             // Combined investment deduction cap (PVD + GPF + Annuity + RMF + NSF + ThaiESG cannot exceed 500,000)
             const totalInvestmentRaw = pvdFund + gpfFund + annuityInsurance + nsfFund + rmfFund + thaiEsgFund;
@@ -1026,7 +1383,7 @@
             // Donation limits (10% of income after deductions)
             const donationLimit = incomeAfterBasicDeduction * 0.10;
             const educationDeductionCapped = Math.min(educationDeductionAmount, donationLimit);
-            const generalDonationCapped = Math.min(generalDonation, donationLimit);
+            const generalDonationCapped = Math.min(generalDonationAmount, donationLimit);
             const eDonationCapped = Math.min(eDonationAmount, donationLimit);
             
             const totalDeduction = basicDeductions + totalInvestment + politicalDonation + educationDeductionCapped + generalDonationCapped + eDonationCapped;
