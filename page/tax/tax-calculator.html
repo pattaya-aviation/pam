@@ -46,72 +46,112 @@
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
-        .tooltip-content {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 100%;
-            margin-bottom: 8px;
-            padding: 8px 12px;
+        /* Desktop: positioned tooltip */
+        @media (min-width: 1024px) {
+            .tooltip-content {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                bottom: 100%;
+                margin-bottom: 8px;
+                padding: 8px 12px;
+                background: #1f2937;
+                color: white;
+                font-size: 12px;
+                border-radius: 8px;
+                white-space: nowrap;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.2s, visibility 0.2s;
+                z-index: 50;
+                pointer-events: none;
+            }
+            .tooltip-content::after {
+                content: '';
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                border: 6px solid transparent;
+                border-top-color: #1f2937;
+            }
+            .tooltip-trigger:hover .tooltip-content {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+        /* Mobile: hide default tooltip content */
+        @media (max-width: 1023px) {
+            .tooltip-content {
+                display: none;
+            }
+        }
+        /* Mobile tooltip modal */
+        .tooltip-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .tooltip-modal.active {
+            display: flex;
+        }
+        .tooltip-modal-content {
             background: #1f2937;
             color: white;
-            font-size: 12px;
-            border-radius: 8px;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s, visibility 0.2s;
-            z-index: 50;
-            pointer-events: none;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            max-width: 90%;
+            text-align: center;
+            animation: tooltipFadeIn 0.2s ease;
         }
-        .tooltip-content::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 6px solid transparent;
-            border-top-color: #1f2937;
-        }
-        /* Show on hover (desktop) */
-        .tooltip-trigger:hover .tooltip-content {
-            opacity: 1;
-            visibility: visible;
-        }
-        /* Show when active (mobile tap) */
-        .tooltip-trigger.active .tooltip-content {
-            opacity: 1;
-            visibility: visible;
+        @keyframes tooltipFadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
     </style>
     
     <script>
-        // Touch-friendly tooltip toggle
         document.addEventListener('DOMContentLoaded', function() {
+            // Create tooltip modal for mobile
+            var modal = document.createElement('div');
+            modal.className = 'tooltip-modal';
+            modal.innerHTML = '<div class="tooltip-modal-content"></div>';
+            document.body.appendChild(modal);
+            
+            var modalContent = modal.querySelector('.tooltip-modal-content');
+            
+            // Check if mobile
+            function isMobile() {
+                return window.innerWidth < 1024;
+            }
+            
+            // Handle tooltip trigger clicks
             document.querySelectorAll('.tooltip-trigger').forEach(function(trigger) {
                 trigger.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     
-                    // Close all other tooltips
-                    document.querySelectorAll('.tooltip-trigger.active').forEach(function(other) {
-                        if (other !== trigger) {
-                            other.classList.remove('active');
-                        }
-                    });
-                    
-                    // Toggle this tooltip
-                    this.classList.toggle('active');
+                    if (isMobile()) {
+                        // Show modal on mobile
+                        var tooltipText = this.querySelector('.tooltip-content').textContent;
+                        modalContent.textContent = tooltipText;
+                        modal.classList.add('active');
+                    }
                 });
             });
             
-            // Close tooltip when tapping elsewhere
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('.tooltip-trigger')) {
-                    document.querySelectorAll('.tooltip-trigger.active').forEach(function(trigger) {
-                        trigger.classList.remove('active');
-                    });
-                }
+            // Close modal when clicking outside or on modal
+            modal.addEventListener('click', function() {
+                modal.classList.remove('active');
             });
         });
     </script>
