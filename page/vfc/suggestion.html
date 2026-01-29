@@ -19,6 +19,11 @@
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     
     <style>
+        /* Prevent horizontal scrolling */
+        html, body {
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
         /* Custom Choices.js styling */
         .choices__inner {
             border-radius: 1.5rem !important;
@@ -225,7 +230,7 @@
     </nav>
     
     <!-- Main Content -->
-    <div class="pt-24 pb-8 px-4 max-w-2xl mx-auto">
+    <div class="pt-24 pb-8 px-4 max-w-2xl lg:max-w-6xl mx-auto">
         
         <!-- Header -->
         <div class="flex items-center gap-4 mb-8">
