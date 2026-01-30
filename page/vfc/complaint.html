@@ -24,6 +24,27 @@
             overflow-x: hidden;
             max-width: 100vw;
         }
+        body {
+            background-image: url('../../function/walpaper/bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        /* Hide navbar in fullscreen mode */
+        :fullscreen nav,
+        :-webkit-full-screen nav,
+        :-moz-full-screen nav,
+        :-ms-fullscreen nav {
+            display: none !important;
+        }
+        :fullscreen body,
+        :-webkit-full-screen body,
+        :-moz-full-screen body,
+        :-ms-fullscreen body {
+            padding-top: 1.5rem !important;
+        }
         /* Custom Choices.js styling */
         .choices__inner {
             border-radius: 1.5rem !important;
