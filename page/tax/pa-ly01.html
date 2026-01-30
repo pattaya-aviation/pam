@@ -159,17 +159,19 @@
                 
                 <!-- Voice for Change Section -->
                 <div class="border-t border-gray-100 mt-1 pt-1">
-                    <button onclick="toggleSubmenu('vfcSubmenu', 'vfcArrow')" class="w-full flex items-center justify-between px-6 py-3 hover:bg-gray-50">
-                        <div class="flex items-center gap-3">
+                    <div class="flex items-center justify-between hover:bg-gray-50">
+                        <a href="../vfc/vfc-home.html" class="flex-1 flex items-center gap-3 px-6 py-3">
                             <svg class="w-5 h-5 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
                             </svg>
                             <span class="text-gray-800 font-medium">Voice for Change</span>
-                        </div>
-                        <svg id="vfcArrow" class="w-4 h-4 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </button>
+                        </a>
+                        <button onclick="toggleSubmenu('vfcSubmenu', 'vfcArrow')" class="px-4 py-3">
+                            <svg id="vfcArrow" class="w-4 h-4 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                    </div>
                     <!-- VFC Submenu -->
                     <div id="vfcSubmenu" class="hidden">
                         <a href="../vfc/complaint.html" class="flex items-center gap-3 px-10 py-2.5 hover:bg-gray-50">
@@ -201,17 +203,19 @@
                 
                 <!-- Tax Section -->
                 <div class="border-t border-gray-100 mt-1 pt-1">
-                    <button onclick="toggleSubmenu('taxSubmenu', 'taxArrow')" class="w-full flex items-center justify-between px-6 py-3 hover:bg-gray-50">
-                        <div class="flex items-center gap-3">
+                    <div class="flex items-center justify-between hover:bg-gray-50">
+                        <a href="tax-home.html" class="flex-1 flex items-center gap-3 px-6 py-3">
                             <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
                             <span class="text-gray-800 font-medium">ภาษี</span>
-                        </div>
-                        <svg id="taxArrow" class="w-4 h-4 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </button>
+                        </a>
+                        <button onclick="toggleSubmenu('taxSubmenu', 'taxArrow')" class="px-4 py-3">
+                            <svg id="taxArrow" class="w-4 h-4 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                    </div>
                     <!-- Tax Submenu -->
                     <div id="taxSubmenu" class="hidden">
                         <a href="tax-calculator.html" class="flex items-center gap-3 px-10 py-2.5 hover:bg-gray-50">
