@@ -158,9 +158,9 @@
             </div>
             
             <!-- Login Button -->
-            <a href="${paths.login}" class="ml-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors font-medium text-sm">
+            <button onclick="openLoginModal()" class="ml-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors font-medium text-sm">
                 เข้าสู่ระบบ
-            </a>
+            </button>
         </div>
     </nav>
     
@@ -172,15 +172,23 @@
                 <img src="${paths.logo}" alt="Logo" class="h-8 object-contain" id="navbarLogo">
             </a>
             
-            <!-- Hamburger Button -->
-            <button id="menuToggle" onclick="toggleMobileMenu()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100/70 transition-colors">
-                <svg id="hamburgerIcon" class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-                <svg id="closeIcon" class="w-5 h-5 text-gray-700 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
+            <!-- Right Side Buttons -->
+            <div class="flex items-center gap-2">
+                <!-- Login Button -->
+                <button onclick="openLoginModal()" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-colors font-medium text-sm">
+                    เข้าสู่ระบบ
+                </button>
+                
+                <!-- Hamburger Button -->
+                <button id="menuToggle" onclick="toggleMobileMenu()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100/70 transition-colors">
+                    <svg id="hamburgerIcon" class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                    <svg id="closeIcon" class="w-5 h-5 text-gray-700 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
         </div>
         
         <!-- Mobile Dropdown Menu -->
@@ -268,16 +276,96 @@
                         </a>
                     </div>
                 </div>
-                
-                <!-- Login Button -->
-                <div class="border-t border-gray-100/50 mt-2 pt-2 mx-2">
-                    <a href="${paths.login}" class="flex items-center justify-center px-5 py-3 bg-blue-500 hover:bg-blue-600 rounded-xl mx-2 transition-colors">
-                        <span class="text-white font-medium">เข้าสู่ระบบ</span>
-                    </a>
-                </div>
             </div>
         </div>
     </nav>
+    
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 z-[100] hidden">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeLoginModal()"></div>
+        
+        <!-- Modal Content -->
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white/90 backdrop-blur-xl rounded-[2.5rem] p-8 w-full max-w-md border border-gray-200 relative">
+                <!-- Close Button -->
+                <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 p-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                
+                <!-- Logo -->
+                <div class="text-center mb-8">
+                    <img src="${paths.logo}" alt="Pattaya Aviation" class="h-14 mx-auto mb-4">
+                    <h2 class="text-xl font-bold text-gray-900">เข้าสู่ระบบ PA-System</h2>
+                </div>
+                
+                <!-- Login Form -->
+                <form id="modalLoginForm" class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">อีเมล</label>
+                        <input type="email" id="modalEmail" required
+                            class="w-full px-4 py-3 rounded-2xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white/50"
+                            placeholder="example@pattayaaviation.com">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">รหัสผ่าน</label>
+                        <div class="relative">
+                            <input type="password" id="modalPassword" required
+                                class="w-full px-4 py-3 rounded-2xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white/50"
+                                placeholder="••••••••">
+                            <button type="button" onclick="toggleModalPassword()" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                <svg id="modalEyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                <svg id="modalEyeOffIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500">
+                            <span class="text-sm text-gray-600">จดจำฉัน</span>
+                        </label>
+                        <a href="#" class="text-sm text-blue-500 hover:text-blue-600">ลืมรหัสผ่าน?</a>
+                    </div>
+                    
+                    <button type="submit" class="w-full py-3 px-4 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-2xl transition-all duration-200">
+                        เข้าสู่ระบบ
+                    </button>
+                </form>
+                
+                <!-- Divider -->
+                <div class="flex items-center gap-4 my-5">
+                    <div class="flex-1 h-px bg-gray-300"></div>
+                    <span class="text-gray-500 text-sm">หรือ</span>
+                    <div class="flex-1 h-px bg-gray-300"></div>
+                </div>
+                
+                <!-- Microsoft Sign In -->
+                <button onclick="signInWithMicrosoft()" 
+                    class="w-full py-3 px-4 bg-white hover:bg-gray-50 text-gray-700 font-medium rounded-2xl transition-all duration-200 border border-gray-300 flex items-center justify-center gap-3">
+                    <svg class="w-5 h-5" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+                        <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+                        <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+                        <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+                    </svg>
+                    เข้าสู่ระบบด้วย Microsoft
+                </button>
+                
+                <!-- Messages -->
+                <div id="modalErrorMessage" class="hidden mt-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm text-center"></div>
+                <div id="modalSuccessMessage" class="hidden mt-4 p-3 bg-green-50 border border-green-200 rounded-xl text-green-600 text-sm text-center"></div>
+            </div>
+        </div>
+    </div>
 `;
     }
 
@@ -310,6 +398,164 @@
             arrow.classList.toggle('rotate-180');
         }
     };
+
+    // Login Modal Functions
+    window.openLoginModal = function() {
+        const modal = document.getElementById('loginModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+    };
+
+    window.closeLoginModal = function() {
+        const modal = document.getElementById('loginModal');
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+            // Reset form and messages
+            const form = document.getElementById('modalLoginForm');
+            const errorMsg = document.getElementById('modalErrorMessage');
+            const successMsg = document.getElementById('modalSuccessMessage');
+            if (form) form.reset();
+            if (errorMsg) errorMsg.classList.add('hidden');
+            if (successMsg) successMsg.classList.add('hidden');
+        }
+    };
+
+    window.toggleModalPassword = function() {
+        const passwordInput = document.getElementById('modalPassword');
+        const eyeIcon = document.getElementById('modalEyeIcon');
+        const eyeOffIcon = document.getElementById('modalEyeOffIcon');
+        
+        if (passwordInput && eyeIcon && eyeOffIcon) {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.add('hidden');
+                eyeOffIcon.classList.remove('hidden');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('hidden');
+                eyeOffIcon.classList.add('hidden');
+            }
+        }
+    };
+
+    // MSAL Configuration for Microsoft Login
+    let msalInstance = null;
+
+    function initMSAL() {
+        if (typeof msal === 'undefined') {
+            console.log('MSAL not loaded yet');
+            return;
+        }
+        
+        const msalConfig = {
+            auth: {
+                clientId: "478683b2-7ba3-4fee-98b7-02c15ae1b798",
+                authority: "https://login.microsoftonline.com/b8ae9d92-ae64-4dfc-8861-6b09242355ae",
+                redirectUri: window.location.origin + window.location.pathname
+            },
+            cache: {
+                cacheLocation: "sessionStorage",
+                storeAuthStateInCookie: false
+            }
+        };
+
+        msalInstance = new msal.PublicClientApplication(msalConfig);
+        
+        // Handle redirect response
+        msalInstance.handleRedirectPromise().then(response => {
+            if (response) {
+                handleMSLoginSuccess(response.account);
+            }
+        }).catch(error => {
+            console.error("Redirect error:", error);
+        });
+    }
+
+    window.signInWithMicrosoft = async function() {
+        if (!msalInstance) {
+            showModalError("กรุณารอสักครู่ กำลังโหลด...");
+            return;
+        }
+
+        const loginRequest = {
+            scopes: ["openid", "profile", "email"]
+        };
+
+        try {
+            const response = await msalInstance.loginPopup(loginRequest);
+            handleMSLoginSuccess(response.account);
+        } catch (error) {
+            console.error("Login error:", error);
+            if (error.errorCode === "popup_window_error") {
+                msalInstance.loginRedirect(loginRequest);
+            } else {
+                showModalError("เกิดข้อผิดพลาด: " + error.message);
+            }
+        }
+    };
+
+    function handleMSLoginSuccess(account) {
+        sessionStorage.setItem('user', JSON.stringify({
+            name: account.name,
+            email: account.username,
+            id: account.localAccountId
+        }));
+
+        showModalSuccess("ยินดีต้อนรับ " + account.name + "!");
+        
+        setTimeout(() => {
+            closeLoginModal();
+            location.reload();
+        }, 1500);
+    }
+
+    function showModalError(message) {
+        const errorDiv = document.getElementById('modalErrorMessage');
+        if (errorDiv) {
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+        }
+    }
+
+    function showModalSuccess(message) {
+        const successDiv = document.getElementById('modalSuccessMessage');
+        if (successDiv) {
+            successDiv.textContent = message;
+            successDiv.classList.remove('hidden');
+        }
+    }
+
+    // Load MSAL script dynamically
+    function loadMSAL() {
+        if (typeof msal !== 'undefined') {
+            initMSAL();
+            return;
+        }
+        
+        const script = document.createElement('script');
+        script.src = 'https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js';
+        script.onload = initMSAL;
+        document.head.appendChild(script);
+    }
+
+    // Initialize on DOM ready
+    document.addEventListener('DOMContentLoaded', function() {
+        loadMSAL();
+        
+        // Handle modal form submit
+        setTimeout(() => {
+            const form = document.getElementById('modalLoginForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    showModalError("กรุณาใช้ปุ่ม 'เข้าสู่ระบบด้วย Microsoft' แทน");
+                });
+            }
+        }, 500);
+    });
 
     // Main render function
     window.renderNavbar = function(options = {}) {
