@@ -262,6 +262,49 @@
                     </div>
                 </div>
                 
+                <!-- หมวดหมู่ (Category Pills) -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">หมวดหมู่</label>
+                    <div class="flex flex-wrap gap-2" id="categoryPills">
+                        <button type="button" onclick="selectCategory(this, 'work_environment')" class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-red-300">
+                            สภาพแวดล้อมในการทำงาน
+                        </button>
+                        <button type="button" onclick="selectCategory(this, 'management')" class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-red-300">
+                            การบริหารจัดการ
+                        </button>
+                        <button type="button" onclick="selectCategory(this, 'hr_welfare')" class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-red-300">
+                            สวัสดิการและทรัพยากรบุคคล
+                        </button>
+                        <button type="button" onclick="selectCategory(this, 'equipment')" class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-red-300">
+                            อุปกรณ์และเครื่องมือ
+                        </button>
+                        <button type="button" onclick="selectCategory(this, 'safety')" class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-red-300">
+                            ความปลอดภัย
+                        </button>
+                        <button type="button" onclick="selectCategory(this, 'communication')" class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-red-300">
+                            การสื่อสารภายในองค์กร
+                        </button>
+                        <button type="button" onclick="selectCategory(this, 'process')" class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-red-300">
+                            กระบวนการทำงาน
+                        </button>
+                        <button type="button" onclick="selectCategory(this, 'colleague')" class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-red-300">
+                            เพื่อนร่วมงาน
+                        </button>
+                        <button type="button" onclick="selectCategory(this, 'supervisor')" class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-red-300">
+                            หัวหน้างาน
+                        </button>
+                        <button type="button" onclick="selectCategory(this, 'other')" class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-red-300">
+                            อื่นๆ
+                        </button>
+                    </div>
+                    <input type="hidden" id="selectedCategory" name="category" value="">
+                    <!-- Other Category Input -->
+                    <div id="otherCategoryContainer" class="mt-3 hidden">
+                        <input type="text" id="otherCategoryInput" name="otherCategory" placeholder="กรุณาระบุหมวดหมู่อื่นๆ"
+                            class="w-full px-4 py-3 rounded-3xl border border-gray-200 focus:border-red-400 focus:ring-2 focus:ring-red-100 outline-none transition-all">
+                    </div>
+                </div>
+                
                 <!-- Details -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">รายละเอียดของเรื่องร้องเรียน</label>
@@ -360,6 +403,31 @@ function addFileItem() {
 function updateFileName(input) {
     const fileName = input.files[0] ? input.files[0].name : 'ยังไม่ได้เลือกไฟล์';
     input.closest('.file-item').querySelector('.file-name').textContent = fileName;
+}
+
+// Category Pill Selection
+function selectCategory(btn, value) {
+    // Remove active state from all pills
+    document.querySelectorAll('.category-pill').forEach(pill => {
+        pill.classList.remove('bg-red-500', 'text-white', 'border-red-500');
+        pill.classList.add('bg-white', 'text-gray-600', 'border-gray-200');
+    });
+    // Add active state to selected pill
+    btn.classList.remove('bg-white', 'text-gray-600', 'border-gray-200');
+    btn.classList.add('bg-red-500', 'text-white', 'border-red-500');
+    // Update hidden input
+    document.getElementById('selectedCategory').value = value;
+    
+    // Show/hide other category input
+    const otherContainer = document.getElementById('otherCategoryContainer');
+    const otherInput = document.getElementById('otherCategoryInput');
+    if (value === 'other') {
+        otherContainer.classList.remove('hidden');
+        otherInput.focus();
+    } else {
+        otherContainer.classList.add('hidden');
+        otherInput.value = '';
+    }
 }
 
 function updateDepartmentOptions() {
