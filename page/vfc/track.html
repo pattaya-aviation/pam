@@ -22,13 +22,33 @@
         body {
             background-image: url('../../function/walpaper/cosmos-beauty-flowers.jpg');
             background-size: cover;
-            background-position: center top;
+            background-position: center center;
             background-repeat: no-repeat;
-            background-attachment: scroll;
+            background-attachment: fixed;
             min-height: 100vh;
             min-height: 100dvh;
+            position: relative;
         }
-        /* Background stretches with content */
+        /* Frosted Glass Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: -1;
+        }
+        /* Mobile optimization */
+        @media (max-width: 768px) {
+            body {
+                background-attachment: scroll;
+            }
+        }
+        /* iOS Safari fix */
         @supports (-webkit-touch-callout: none) {
             body {
                 background-attachment: scroll;
