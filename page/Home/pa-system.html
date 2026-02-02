@@ -27,6 +27,20 @@
             background-attachment: fixed;
             min-height: 100vh;
             min-height: 100dvh;
+            position: relative;
+        }
+        /* Frosted Glass Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: -1;
         }
         /* Mobile optimization */
         @media (max-width: 768px) {
