@@ -23,32 +23,31 @@
 </head>
 <body class="bg-white min-h-screen">
     
-    <!-- Floating Pill Navbar - Left: [≡ | Logo | Profile Info] -->
+    <!-- Floating Pill Navbar - Left: Hamburger Circle + [Logo | Profile Info] -->
     <div class="fixed top-4 left-4 z-50">
-        <!-- Combined Hamburger + Logo + Profile Pill -->
-        <div class="flex items-center bg-white/80 backdrop-blur-xl rounded-full border border-gray-200 h-14">
-            <!-- Hamburger Menu Button -->
-            <button onclick="toggleMenu()" class="flex items-center justify-center w-14 h-14 hover:bg-gray-50 rounded-l-full transition-colors">
+        <div class="flex items-center gap-3">
+            <!-- Hamburger Menu Button (Separate Circle) -->
+            <button onclick="toggleMenu()" class="flex items-center justify-center w-14 h-14 bg-white/80 backdrop-blur-xl rounded-full border border-gray-200 hover:bg-gray-50 transition-colors shrink-0">
                 <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
             </button>
             
-            <!-- Divider -->
-            <div class="w-px h-8 bg-gray-200"></div>
-            
-            <!-- Logo -->
-            <div class="flex items-center justify-center w-12 h-12 p-1.5">
-                <img src="../../function/logo/Pattaya Aviation.png" alt="Logo" class="h-full w-full object-contain">
-            </div>
-            
-            <!-- Divider -->
-            <div class="w-px h-8 bg-gray-200"></div>
-            
-            <!-- Profile Info -->
-            <div class="text-left px-4">
-                <p class="text-sm font-medium text-gray-900" id="userName">Loading...</p>
-                <p class="text-xs text-gray-500" id="userEmail">...</p>
+            <!-- Logo + Profile Pill -->
+            <div class="flex items-center bg-white/80 backdrop-blur-xl rounded-full border border-gray-200 h-14">
+                <!-- Logo -->
+                <div class="flex items-center justify-center w-12 h-12 p-1.5 ml-1">
+                    <img src="../../function/logo/Pattaya Aviation.png" alt="Logo" class="h-full w-full object-contain">
+                </div>
+                
+                <!-- Divider -->
+                <div class="w-px h-8 bg-gray-200"></div>
+                
+                <!-- Profile Info -->
+                <div class="text-left px-4">
+                    <p class="text-sm font-medium text-gray-900" id="userName">Loading...</p>
+                    <p class="text-xs text-gray-500" id="userEmail">...</p>
+                </div>
             </div>
         </div>
         
