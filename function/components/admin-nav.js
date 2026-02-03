@@ -10,6 +10,7 @@ const adminMenuItems = [
         id: 'home',
         href: 'index.html',
         label: 'หน้าหลัก',
+        hoverWidth: '140px',
         icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
         </svg>`,
@@ -19,6 +20,7 @@ const adminMenuItems = [
         id: 'vfc',
         href: 'vfc-admin.html',
         label: 'Voice for Change',
+        hoverWidth: '195px',
         icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
         </svg>`,
@@ -28,6 +30,7 @@ const adminMenuItems = [
         id: 'tax',
         href: 'tax-admin.html',
         label: 'Tax System',
+        hoverWidth: '155px',
         icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
         </svg>`,
@@ -63,14 +66,17 @@ const adminNavStyles = `
         border: 1px solid rgba(229, 231, 235, 0.8);
         box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.08);
         overflow: hidden;
-        transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
                     box-shadow 0.3s ease,
-                    background-color 0.2s ease;
+                    background-color 0.2s ease,
+                    padding 0.3s ease;
         cursor: pointer;
         text-decoration: none;
+        --hover-width: 180px;
     }
     .menu-item:hover {
-        width: 180px;
+        width: var(--hover-width);
+        padding-right: 16px;
         box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.12);
     }
     .menu-item.active {
@@ -139,7 +145,7 @@ function renderDesktopMenu(currentPage) {
     adminMenuItems.forEach(item => {
         const isActive = currentPage === item.id;
         html += `
-            <a href="${item.href}" class="menu-item ${isActive ? 'active' : ''}">
+            <a href="${item.href}" class="menu-item ${isActive ? 'active' : ''}" style="--hover-width: ${item.hoverWidth}">
                 <div class="icon-wrapper">
                     <span class="${item.iconColor}">${item.icon}</span>
                 </div>
@@ -151,7 +157,7 @@ function renderDesktopMenu(currentPage) {
     // Add divider and logout
     html += `
         <div class="menu-divider"></div>
-        <button onclick="logout()" class="menu-item">
+        <button onclick="logout()" class="menu-item" style="--hover-width: 165px">
             <div class="icon-wrapper">
                 <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
