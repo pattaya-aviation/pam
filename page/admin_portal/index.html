@@ -19,143 +19,13 @@
             transform: translateY(0);
             visibility: visible;
         }
-        
-        /* Floating menu items */
-        .floating-menu {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .menu-item {
-            display: flex;
-            align-items: center;
-            width: 56px;
-            height: 56px;
-            padding: 0;
-            border-radius: 9999px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(229, 231, 235, 0.8);
-            box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                        box-shadow 0.3s ease,
-                        background-color 0.2s ease;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        .menu-item:hover {
-            width: 180px;
-            box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.12);
-        }
-        .menu-item.active {
-            background: rgba(243, 244, 246, 0.9);
-        }
-        .menu-item .icon-wrapper {
-            width: 56px;
-            height: 56px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        .menu-item .menu-text {
-            white-space: nowrap;
-            opacity: 0;
-            transform: translateX(-10px);
-            transition: opacity 0.2s ease-out, transform 0.2s ease-out;
-            padding-right: 16px;
-        }
-        .menu-item:hover .menu-text {
-            opacity: 1;
-            transform: translateX(0);
-            transition-delay: 0.15s;
-        }
-        .menu-divider {
-            width: 40px;
-            height: 1px;
-            background: rgba(229, 231, 235, 0.8);
-            margin: 4px auto;
-        }
     </style>
+    <script src="../../function/components/admin-nav.js"></script>
 </head>
 <body class="bg-white min-h-screen">
     
-    <!-- Floating Menu Items -->
-    <nav class="floating-menu fixed top-4 left-4 z-40 hidden lg:flex">
-        <a href="index.html" class="menu-item active">
-            <div class="icon-wrapper">
-                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                </svg>
-            </div>
-            <span class="menu-text text-gray-900 font-medium">หน้าหลัก</span>
-        </a>
-        <a href="vfc-admin.html" class="menu-item">
-            <div class="icon-wrapper">
-                <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
-                </svg>
-            </div>
-            <span class="menu-text text-gray-700">Voice for Change</span>
-        </a>
-        <a href="tax-admin.html" class="menu-item">
-            <div class="icon-wrapper">
-                <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                </svg>
-            </div>
-            <span class="menu-text text-gray-700">Tax System</span>
-        </a>
-        <div class="menu-divider"></div>
-        <button onclick="logout()" class="menu-item">
-            <div class="icon-wrapper">
-                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                </svg>
-            </div>
-            <span class="menu-text text-gray-500">ออกจากระบบ</span>
-        </button>
-    </nav>
-    
-    <!-- Floating Hamburger Button -->
-    <div class="fixed top-4 left-4 z-50 lg:hidden">
-        <button onclick="toggleMenu()" class="flex items-center justify-center w-14 h-14 bg-white/80 backdrop-blur-xl rounded-full border border-gray-200 hover:bg-gray-50 transition-colors">
-            <svg id="menuIcon" class="w-6 h-6 text-gray-700 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-            </svg>
-        </button>
-        <!-- Mobile Menu Dropdown -->
-        <div id="mobileMenu" class="hidden absolute top-16 left-0 w-56 bg-white/95 backdrop-blur-xl rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
-            <nav class="py-2">
-                <a href="index.html" class="flex items-center gap-3 px-4 py-3 bg-gray-100 text-gray-900 font-medium">
-                    <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                    </svg>
-                    หน้าหลัก
-                </a>
-                <a href="vfc-admin.html" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-gray-700">
-                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
-                    </svg>
-                    Voice for Change
-                </a>
-                <a href="tax-admin.html" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-gray-700">
-                    <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                    </svg>
-                    Tax System
-                </a>
-                <div class="border-t border-gray-100 my-2"></div>
-                <button onclick="logout()" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-gray-500 w-full text-left">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                    </svg>
-                    ออกจากระบบ
-                </button>
-            </nav>
-        </div>
-    </div>
+    <!-- Admin Navigation (rendered by component) -->
+    <div id="adminNavContainer" data-admin-nav="home"></div>
     
     <!-- Floating Navbar - Right: Search Circle + Bell Circle -->
     <div class="fixed top-4 right-4 z-50">
@@ -263,14 +133,6 @@
         function logout() {
             sessionStorage.removeItem('user');
             window.location.href = '../Home/pa-system.html';
-        }
-        
-        function toggleMenu() {
-            // Mobile sidebar toggle
-            const mobileMenu = document.getElementById('mobileMenu');
-            if (mobileMenu) {
-                mobileMenu.classList.toggle('hidden');
-            }
         }
         
         function toggleSearch() {
