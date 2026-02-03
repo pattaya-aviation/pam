@@ -23,7 +23,7 @@
 </head>
 <body class="bg-white min-h-screen">
     
-    <!-- Floating Pill Navbar - Left: Hamburger Circle + [Logo | Profile Info] -->
+    <!-- Floating Pill Navbar - Left: Hamburger Circle -->
     <div class="fixed top-4 left-4 z-50">
         <div class="flex items-center gap-3">
             <!-- Hamburger Menu Button (Separate Circle) -->
@@ -32,23 +32,6 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
             </button>
-            
-            <!-- Logo + Profile Pill -->
-            <div class="flex items-center bg-white/80 backdrop-blur-xl rounded-full border border-gray-200 h-14">
-                <!-- Logo -->
-                <div class="flex items-center justify-center w-12 h-12 p-1.5 ml-1">
-                    <img src="../../function/logo/Pattaya Aviation.png" alt="Logo" class="h-full w-full object-contain">
-                </div>
-                
-                <!-- Divider -->
-                <div class="w-px h-8 bg-gray-200"></div>
-                
-                <!-- Profile Info -->
-                <div class="text-left px-4">
-                    <p class="text-sm font-medium text-gray-900" id="userName">Loading...</p>
-                    <p class="text-xs text-gray-500" id="userEmail">...</p>
-                </div>
-            </div>
         </div>
         
         <!-- Dropdown Menu -->
@@ -78,15 +61,25 @@
         </div>
     </div>
     
-    <!-- Floating Pill Navbar - Right: Bell -->
+    <!-- Floating Navbar - Right: Search Circle + Bell Circle -->
     <div class="fixed top-4 right-4 z-50">
-        <button class="flex items-center justify-center w-14 h-14 bg-white/80 backdrop-blur-xl rounded-full border border-gray-200 hover:bg-gray-50 transition-colors relative">
-            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-            </svg>
-            <!-- Notification Badge -->
-            <span class="absolute top-3 right-3 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
-        </button>
+        <div class="flex items-center gap-3">
+            <!-- Search Button (Circle) -->
+            <button onclick="toggleSearch()" class="flex items-center justify-center w-14 h-14 bg-white/80 backdrop-blur-xl rounded-full border border-gray-200 hover:bg-gray-50 transition-colors">
+                <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+            </button>
+            
+            <!-- Bell Button (Circle) -->
+            <button class="flex items-center justify-center w-14 h-14 bg-white/80 backdrop-blur-xl rounded-full border border-gray-200 hover:bg-gray-50 transition-colors relative">
+                <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+                <!-- Notification Badge -->
+                <span class="absolute top-3 right-3 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+            </button>
+        </div>
     </div>
 
     <!-- Main Content -->
@@ -101,10 +94,6 @@
         const user = sessionStorage.getItem('user');
         if (!user) {
             window.location.href = '../Home/pa-system.html';
-        } else {
-            const userData = JSON.parse(user);
-            document.getElementById('userName').textContent = userData.name || 'User';
-            document.getElementById('userEmail').textContent = userData.email || '';
         }
         
         function logout() {
@@ -115,6 +104,12 @@
         function toggleMenu() {
             const dropdown = document.getElementById('dropdownMenu');
             dropdown.classList.toggle('open');
+        }
+        
+        function toggleSearch() {
+            // TODO: Implement search functionality
+            console.log('Search clicked');
+            alert('ฟังก์ชันค้นหา - Coming soon!');
         }
         
         // Close dropdown when clicking outside
