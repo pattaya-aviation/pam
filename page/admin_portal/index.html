@@ -6,15 +6,84 @@
     <title>Admin Portal - PA System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../../function/fonts.css">
+    <style>
+        /* Dropdown transition */
+        .dropdown-menu {
+            opacity: 0;
+            transform: translateY(-10px);
+            visibility: hidden;
+            transition: all 0.2s ease;
+        }
+        .dropdown-menu.open {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
+    </style>
 </head>
 <body class="bg-white min-h-screen">
     
-    <!-- Floating Pill Navbar -->
+    <!-- Floating Pill Navbar - Left (Hamburger Menu) -->
+    <div class="fixed top-4 left-4 z-50">
+        <button onclick="toggleMenu()" class="flex items-center justify-center w-12 h-12 bg-white/80 backdrop-blur-xl rounded-full border border-gray-200 hover:bg-gray-50 transition-colors">
+            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
+        
+        <!-- Dropdown Menu -->
+        <div id="dropdownMenu" class="dropdown-menu absolute top-16 left-0 w-72 bg-white/95 backdrop-blur-xl rounded-2xl border border-gray-200 overflow-hidden">
+            <nav class="py-2">
+                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 py-2">Voice for Change</p>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+                    <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <span class="text-gray-700">ข้อร้องเรียน</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                    </svg>
+                    <span class="text-gray-700">ข้อเสนอแนะ</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+                    <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                    <span class="text-gray-700">ข้อชมเชย</span>
+                </a>
+                
+                <div class="border-t border-gray-100 my-2"></div>
+                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-4 py-2">Tax System</p>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+                    <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span class="text-gray-700">ข้อมูลพนักงาน</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors">
+                    <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <span class="text-gray-700">ล.ย.01</span>
+                </a>
+                
+                <div class="border-t border-gray-100 my-2"></div>
+                <button onclick="logout()" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors w-full text-left">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                    </svg>
+                    <span class="text-gray-500">ออกจากระบบ</span>
+                </button>
+            </nav>
+        </div>
+    </div>
+    
+    <!-- Floating Pill Navbar - Right (Profile) -->
     <div class="fixed top-4 right-4 z-50">
         <div class="flex items-center gap-3 bg-white/80 backdrop-blur-xl px-4 py-2 rounded-full border border-gray-200">
-            <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm -ml-1" id="userAvatar">
-                ?
-            </div>
+            <img src="../../function/logo/Pattaya Aviation.png" alt="Pattaya Aviation" class="h-10 -ml-1">
             <div class="text-left">
                 <p class="text-sm font-medium text-gray-900" id="userName">Loading...</p>
                 <p class="text-xs text-gray-500" id="userEmail">...</p>
@@ -38,13 +107,27 @@
             const userData = JSON.parse(user);
             document.getElementById('userName').textContent = userData.name || 'User';
             document.getElementById('userEmail').textContent = userData.email || '';
-            document.getElementById('userAvatar').textContent = (userData.name || 'U').charAt(0).toUpperCase();
         }
         
         function logout() {
             sessionStorage.removeItem('user');
             window.location.href = '../Home/pa-system.html';
         }
+        
+        function toggleMenu() {
+            const dropdown = document.getElementById('dropdownMenu');
+            dropdown.classList.toggle('open');
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('dropdownMenu');
+            const menuButton = e.target.closest('button[onclick="toggleMenu()"]');
+            
+            if (!menuButton && !e.target.closest('#dropdownMenu')) {
+                dropdown.classList.remove('open');
+            }
+        });
     </script>
 
 </body>
