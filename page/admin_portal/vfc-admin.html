@@ -150,68 +150,30 @@
         }
       }
 
-      /* Swipe-to-reveal actions */
-      .message-item-wrapper {
-        position: relative;
-        overflow: hidden;
+      /* Bigger fonts & icons in message list */
+      .message-item .text-sm {
+        font-size: 15px;
       }
-      .message-item-wrapper .swipe-actions {
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        display: flex;
-        align-items: stretch;
-        transform: translateX(100%);
-        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 10;
+      .message-item .text-xs {
+        font-size: 13px;
       }
-      .message-item-wrapper.swiped .swipe-actions {
-        transform: translateX(0);
+      .message-item svg {
+        width: 20px !important;
+        height: 20px !important;
       }
-      .message-item-wrapper .swipe-content {
-        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        z-index: 5;
-        background: inherit;
+      .message-item {
+        padding-top: 16px !important;
+        padding-bottom: 16px !important;
       }
-      .message-item-wrapper.swiped .swipe-content {
-        transform: translateX(-120px);
+      .message-item .mb-1 {
+        margin-bottom: 6px !important;
       }
-      .swipe-action-btn {
-        width: 60px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 2px;
-        border: none;
-        cursor: pointer;
-        font-size: 10px;
-        font-weight: 500;
-        color: white;
+      .message-item .font-medium.text-gray-900.text-sm {
+        display: none;
       }
-      .swipe-action-btn svg {
-        width: 20px;
-        height: 20px;
-      }
-      .swipe-action-btn.btn-unread {
-        background: #3b82f6;
-      }
-      .swipe-action-btn.btn-pin {
-        background: #f59e0b;
-      }
-      .swipe-action-btn.btn-pin.pinned {
-        background: #ef4444;
-      }
-      /* Hide swipe actions on desktop */
-      @media (min-width: 1024px) {
-        .swipe-actions { display: none !important; }
-        .message-item-wrapper.swiped .swipe-content { transform: none !important; }
-      }
-      /* Hide inline icons on mobile */
-      @media (max-width: 1023px) {
-        .inline-action-icons { display: none !important; }
+      .message-item .rounded-full[class*="bg-"][class*="text-[10px]"] {
+        font-size: 12px !important;
+        padding: 3px 8px !important;
       }
     </style>
     <script src="../../../function/components/admin-nav.js"></script>
@@ -1946,40 +1908,16 @@
 
         const dateText = dateSpan.textContent.trim();
 
-        // Replace date with inline action icons (desktop) + swipe actions (mobile)
+        // Replace date with action icons (unread toggle + pin)
         const msgId = item.getAttribute('onclick').match(/\d+/)[0];
-        dateSpan.outerHTML = `<div class="inline-action-icons flex items-center gap-1.5 shrink-0">
-          <svg class="w-4 h-4 text-gray-300 cursor-pointer hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" onclick="event.stopPropagation(); toggleUnread(${msgId}, this)" title="อ่านแล้ว/ยังไม่อ่าน">
+        dateSpan.outerHTML = `<div class="flex items-center gap-1 shrink-0">
+          <svg class="w-3.5 h-3.5 text-gray-300 cursor-pointer hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" onclick="event.stopPropagation(); toggleUnread(${msgId}, this)" title="อ่านแล้ว/ยังไม่อ่าน">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76"/>
           </svg>
-          <svg class="w-4 h-4 text-gray-300 cursor-pointer hover:text-blue-500 transition-colors pin-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" onclick="event.stopPropagation(); togglePin(${msgId}, this)" title="ปักมุด">
+          <svg class="w-3.5 h-3.5 text-gray-300 cursor-pointer hover:text-blue-500 transition-colors pin-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" onclick="event.stopPropagation(); togglePin(${msgId}, this)" title="ปักมุด">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
           </svg>
         </div>`;
-
-        // Wrap message item for swipe-to-reveal on mobile
-        const wrapper = document.createElement('div');
-        wrapper.className = 'message-item-wrapper';
-        item.parentNode.insertBefore(wrapper, item);
-        
-        const swipeContent = document.createElement('div');
-        swipeContent.className = 'swipe-content';
-        wrapper.appendChild(swipeContent);
-        swipeContent.appendChild(item);
-        
-        const swipeActions = document.createElement('div');
-        swipeActions.className = 'swipe-actions';
-        swipeActions.innerHTML = `
-          <button class="swipe-action-btn btn-unread" onclick="event.stopPropagation(); toggleUnread(${msgId}, this); closeSwipe(this);" title="อ่านแล้ว/ยังไม่อ่าน">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76"/></svg>
-            <span>อ่านแล้ว</span>
-          </button>
-          <button class="swipe-action-btn btn-pin" onclick="event.stopPropagation(); togglePin(${msgId}, this); closeSwipe(this);" title="ปักมุด">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
-            <span>ปักมุด</span>
-          </button>
-        `;
-        wrapper.appendChild(swipeActions);
 
         // Find the last <p> (preview text) and wrap it with date
         const contentDiv = headerRow.parentElement;
@@ -2111,101 +2049,6 @@
             });
             list.insertBefore(header, item);
             lastSection = section;
-          }
-        });
-      })();
-
-      // Toggle unread status
-      function toggleUnread(msgId, el) {
-        const item = document.querySelector(`.message-item[onclick="selectMessage(${msgId})"]`);
-        if (!item) return;
-        const dot = item.querySelector('.dot-indicator');
-        if (dot) {
-          const existing = dot.querySelector('.w-2.h-2.bg-blue-500');
-          if (existing) {
-            existing.remove();
-            el.classList.remove('text-blue-500');
-            el.classList.add('text-gray-300');
-          } else {
-            dot.innerHTML = '<div class="w-2 h-2 bg-blue-500 rounded-full"></div>';
-            el.classList.add('text-blue-500');
-            el.classList.remove('text-gray-300');
-          }
-        }
-      }
-
-      // Toggle pin status
-      function togglePin(msgId, el) {
-        const item = document.querySelector(`.message-item[onclick="selectMessage(${msgId})"]`);
-        if (!item) return;
-        const isPinned = item.dataset.pinned === 'true';
-        item.dataset.pinned = isPinned ? 'false' : 'true';
-
-        // Update inline icon
-        const pinIcon = item.querySelector('.pin-icon');
-        if (pinIcon) {
-          if (!isPinned) {
-            pinIcon.classList.remove('text-gray-300');
-            pinIcon.classList.add('text-blue-500');
-            pinIcon.setAttribute('fill', 'currentColor');
-          } else {
-            pinIcon.classList.add('text-gray-300');
-            pinIcon.classList.remove('text-blue-500');
-            pinIcon.setAttribute('fill', 'none');
-          }
-        }
-
-        // Move to/from pinned section
-        const pinnedHeader = document.getElementById('pinnedSectionHeader');
-        const list = item.closest('.flex-1.overflow-y-auto');
-        if (!isPinned && pinnedHeader && list) {
-          pinnedHeader.style.display = '';
-          const wrapper = item.closest('.message-item-wrapper') || item;
-          pinnedHeader.after(wrapper);
-        }
-      }
-
-      // Close swipe on a wrapper
-      function closeSwipe(el) {
-        const wrapper = el.closest('.message-item-wrapper');
-        if (wrapper) wrapper.classList.remove('swiped');
-      }
-
-      // Swipe gesture handling for mobile
-      (function() {
-        let startX = 0;
-        let currentWrapper = null;
-        const THRESHOLD = 50;
-
-        document.addEventListener('touchstart', function(e) {
-          const wrapper = e.target.closest('.message-item-wrapper');
-          if (!wrapper) return;
-          startX = e.touches[0].clientX;
-          currentWrapper = wrapper;
-        }, { passive: true });
-
-        document.addEventListener('touchmove', function(e) {
-          if (!currentWrapper) return;
-          const diffX = startX - e.touches[0].clientX;
-          if (diffX > 20) {
-            // Swiping left - show actions
-            currentWrapper.classList.add('swiped');
-          } else if (diffX < -20) {
-            // Swiping right - hide actions
-            currentWrapper.classList.remove('swiped');
-          }
-        }, { passive: true });
-
-        document.addEventListener('touchend', function() {
-          currentWrapper = null;
-        });
-
-        // Close all swiped items when clicking elsewhere
-        document.addEventListener('click', function(e) {
-          if (!e.target.closest('.message-item-wrapper')) {
-            document.querySelectorAll('.message-item-wrapper.swiped').forEach(w => {
-              w.classList.remove('swiped');
-            });
           }
         });
       })();
