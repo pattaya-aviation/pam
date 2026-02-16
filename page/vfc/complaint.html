@@ -38,7 +38,7 @@
             right: 0;
             bottom: 0;
             z-index: -2;
-            background-image: url('../../function/walpaper/cosmos-beauty-flowers.jpg');
+            background-image: url('../../function/walpaper/poppy-flowers-5k-3840x2160-16346.jpg');
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
@@ -98,6 +98,16 @@
         .space-y-4 {
             overflow: visible !important;
         }
+        /* Ensure Personal Info card is above all other cards so dropdown is not hidden */
+        .personal-info-card {
+            position: relative;
+            z-index: 10;
+            overflow: visible !important;
+        }
+        .form-card {
+            position: relative;
+            z-index: 1;
+        }
     </style>
 </head>
 <body class="min-h-screen">
@@ -132,7 +142,7 @@
         </div>
         
         <!-- Personal Info Card -->
-        <div class="bg-white/70 backdrop-blur-xl rounded-[2.5rem] p-6 shadow-md border border-gray-200 mb-4">
+        <div class="personal-info-card bg-white/70 backdrop-blur-xl rounded-[2.5rem] p-6 shadow-md border border-gray-200 mb-4">
             <div class="flex items-center justify-between mb-2">
                 <h2 class="text-lg font-semibold text-red-500">ข้อมูลส่วนตัว</h2>
                 <div class="flex items-center gap-2">
@@ -209,7 +219,7 @@
         </div>
         
         <!-- Form Card -->
-        <div class="bg-white/70 backdrop-blur-xl rounded-[2.5rem] p-6 shadow-md border border-gray-200">
+        <div class="form-card bg-white/70 backdrop-blur-xl rounded-[2.5rem] p-6 shadow-md border border-gray-200">
             <h2 class="text-lg font-semibold text-red-500 mb-2">รายละเอียดการร้องเรียน</h2>
             <p class="text-sm text-gray-500 mb-3">รายละเอียดจะช่วยให้เราดำเนินการได้รวดเร็วขึ้น</p>
             <div class="h-px bg-gray-200 mb-4"></div>
