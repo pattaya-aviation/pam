@@ -171,9 +171,12 @@
       .message-item .font-medium.text-gray-900.text-sm {
         display: none;
       }
-      .message-item .rounded-full[class*="bg-"][class*="text-[10px]"] {
-        font-size: 12px !important;
-        padding: 3px 8px !important;
+      .message-item .flex.items-center.gap-2 > span[class*="rounded-full"] {
+        font-size: 13px !important;
+        padding: 3px 10px !important;
+      }
+      .message-item .flex.items-center.gap-2 > span.text-xs.text-gray-400 {
+        font-size: 13px !important;
       }
     </style>
     <script src="../../../function/components/admin-nav.js"></script>
@@ -1919,20 +1922,13 @@
           </svg>
         </div>`;
 
-        // Find the last <p> (preview text) and wrap it with date
-        const contentDiv = headerRow.parentElement;
-        const paragraphs = contentDiv.querySelectorAll('p');
-        if (paragraphs.length >= 2) {
-          const lastP = paragraphs[paragraphs.length - 1];
-          const wrapper = document.createElement('div');
-          wrapper.className = 'flex items-center justify-between mt-0.5';
-          lastP.classList.remove('mt-0.5');
-          lastP.parentNode.insertBefore(wrapper, lastP);
-          wrapper.appendChild(lastP);
+        // Add date next to the category badge
+        const badgeSpan = headerRow.querySelector('.flex.items-center.gap-2 span[class*="rounded-full"]');
+        if (badgeSpan) {
           const dateEl = document.createElement('span');
-          dateEl.className = 'text-[10px] text-gray-400 shrink-0 ml-2';
+          dateEl.className = 'text-xs text-gray-400 ml-1';
           dateEl.textContent = dateText;
-          wrapper.appendChild(dateEl);
+          badgeSpan.parentElement.appendChild(dateEl);
         }
 
         // Replace profile circle with dot indicator
