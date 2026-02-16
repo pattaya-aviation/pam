@@ -244,6 +244,8 @@ const VFCForm = (function() {
             label.textContent = 'ระบุตัวตน';
             label.className = 'text-sm text-gray-900 font-medium';
             
+            fields.style.visibility = 'visible';
+            fields.style.pointerEvents = 'auto';
             fields.style.maxHeight = fields.scrollHeight + 'px';
             fields.style.opacity = '1';
             fields.style.marginTop = '0';
@@ -263,6 +265,8 @@ const VFCForm = (function() {
                 fields.style.maxHeight = '0';
                 fields.style.opacity = '0';
                 fields.style.marginTop = '-16px';
+                fields.style.pointerEvents = 'none';
+                fields.style.visibility = 'hidden';
             }, 10);
         }
     }
