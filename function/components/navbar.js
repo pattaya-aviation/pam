@@ -626,29 +626,6 @@
             if (subtitleElement && container.dataset.pageSubtitle) {
                 subtitleElement.textContent = container.dataset.pageSubtitle;
             }
-            
-            // Setup scroll listener for floating navbar
-            const navbar = document.getElementById('subPageNavbar');
-            const navbarInner = document.getElementById('subPageNavbarInner');
-            
-            if (navbar && navbarInner) {
-                function updateNavbarOnScroll() {
-                    const scrollY = window.scrollY;
-                    
-                    if (scrollY > 50) {
-                        // Floating style
-                        navbar.className = 'fixed top-4 left-4 right-4 lg:left-1/2 lg:right-auto lg:-translate-x-1/2 z-50 transition-all duration-300';
-                        navbarInner.className = 'bg-white/70 backdrop-blur-xl rounded-3xl px-4 py-3 flex items-center gap-3 border border-gray-200/50 transition-all duration-300';
-                    } else {
-                        // Static style
-                        navbar.className = 'relative z-50 transition-all duration-300';
-                        navbarInner.className = 'bg-white/70 backdrop-blur-xl px-4 py-3 flex items-center gap-3 border-b border-gray-200/50 transition-all duration-300';
-                    }
-                }
-                
-                window.addEventListener('scroll', updateNavbarOnScroll, { passive: true });
-                updateNavbarOnScroll(); // Initial check
-            }
         }
     };
 

@@ -29,7 +29,7 @@ const adminMenuItems = [
     },
     {
         id: 'vfc',
-        href: adminNavBasePath + 'vfc-admin.html',
+        href: adminNavBasePath + 'vfc-admin/index.html',
         label: 'Voice for Change',
         hoverWidth: '195px',
         icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
