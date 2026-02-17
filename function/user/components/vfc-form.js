@@ -13,124 +13,116 @@ const VFCForm = (function() {
     'use strict';
 
     // ========================================
-    // Organization Data (Single Source of Truth)
+    // Organization Data (from Supabase)
     // ========================================
     
-    const HDQ_DEPARTMENTS = [
-        { value: '', label: 'เลือกฝ่าย', placeholder: true, disabled: true },
-        { value: 'BE', label: 'ฝ่ายสำนักเลขานุการ (BE)' },
-        { value: 'BF', label: 'ฝ่ายบัญชีและการเงิน (BF)' },
-        { value: 'BG', label: 'ฝ่ายปฏิบัติการภาคพื้น (BG)' },
-        { value: 'BH', label: 'ฝ่ายทรัพยากรบุคคล (BH)' },
-        { value: 'BI', label: 'ฝ่ายเทคโนโลยีสารสนเทศ (BI)' },
-        { value: 'BL', label: 'ฝ่ายกฎหมาย (BL)' },
-        { value: 'BD', label: 'ฝ่ายจัดซื้อ (BD)' },
-        { value: 'BS', label: 'ฝ่ายมาตรฐาน (BS)' },
-        { value: 'BR', label: 'ฝ่ายพัฒนาธุรกิจและลูกค้าสัมพันธ์ (BR)' }
-    ];
-    
-    const STATION_DEPARTMENTS = [
-        { value: '', label: 'เลือกฝ่าย', placeholder: true, disabled: true },
-        { value: 'BG', label: 'ฝ่ายปฏิบัติการภาคพื้น (BG)' },
-        { value: 'BS', label: 'ฝ่ายมาตรฐาน (BS)' },
-        { value: 'BI', label: 'ฝ่ายเทคโนโลยีสารสนเทศ (BI)' }
-    ];
-    
-    const DEFAULT_SECTIONS = [
-        { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true }
-    ];
-    
-    const BKK_BG_SECTIONS = [
-        { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
-        { value: '-', label: '-' },
-        { value: 'GA', label: 'แผนกบริการผู้โดยสารภาคพื้น (GA)' },
-        { value: 'GB', label: 'แผนกควบคุมระวางบรรทุก (GB)' },
-        { value: 'GC', label: 'แผนกห้องรับรองพิเศษผู้โดยสาร (GC)' },
-        { value: 'GD', label: 'แผนกบริการลานจอด (GD)' },
-        { value: 'GE', label: 'แผนกบริการลูกค้า (GE)' },
-        { value: 'GF', label: 'แผนกบริการสถานี (GF)' }
-    ];
-    
-    const HDQ_BH_SECTIONS = [
-        { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
-        { value: '-', label: '-' },
-        { value: 'HM-S', label: 'ส่วนงานเงินเดือนและค่าตอบแทน (HM-S)' },
-        { value: 'HM-E', label: 'ส่วนงานแรงงานสัมพันธ์ (HM-E)' },
-        { value: 'HM-I', label: 'ส่วนงานสารสนเทศทรัพยากรบุคคล (HM-I)' },
-        { value: 'HO-R', label: 'ส่วนงานสรรหาและว่าจ้าง (HO-R)' },
-        { value: 'HO-E', label: 'ส่วนงานประสานงานด้านการศึกษา (HO-E)' },
-        { value: 'HO-B', label: 'ส่วนงานสนับสนุนและประสานงานสถานีกรุงเทพ (HO-B)' },
-        { value: 'HW-G', label: 'ส่วนงานสวัสดิการทั่วไป (HW-G)' },
-        { value: 'HW-U', label: 'ส่วนงานเครื่องแบบพนักงาน (HW-U)' },
-        { value: 'HW-E', label: 'ส่วนงานบริการพนักงาน (HW-E)' },
-        { value: 'HD-S', label: 'ส่วนงานวางแผนกลยุทธ์ทรัพยากรบุคคล (HD-S)' },
-        { value: 'HD-D', label: 'ส่วนงานพัฒนาองค์กร (HD-D)' }
-    ];
-    
-    const HDQ_BF_SECTIONS = [
-        { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
-        { value: '-', label: '-' },
-        { value: 'FA-R', label: 'ส่วนงานบัญชีลูกหนี้ (FA-R)' },
-        { value: 'FA-P', label: 'ส่วนงานบัญชีเจ้าหนี้ (FA-P)' }
-    ];
-    
-    const HDQ_BG_SECTIONS = [
-        { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
-        { value: '-', label: '-' },
-        { value: 'GS-T1', label: 'ส่วนงานสนับสนุนปฏิบัติการภาคพื้น ทีม 1' },
-        { value: 'GS-T2', label: 'ส่วนงานสนับสนุนปฏิบัติการภาคพื้น ทีม 2' },
-        { value: 'GS-T3', label: 'ส่วนงานสนับสนุนปฏิบัติการภาคพื้น ทีม 3' },
-        { value: 'GS-T4', label: 'ส่วนงานสนับสนุนปฏิบัติการภาคพื้น ทีม 4' },
-        { value: 'GS-T5', label: 'ส่วนงานสนับสนุนปฏิบัติการภาคพื้น ทีม 5' },
-        { value: 'GS-T6', label: 'ส่วนงานสนับสนุนปฏิบัติการภาคพื้น ทีม 6' }
-    ];
+    // Cache to avoid repeated API calls
+    let _stationsCache = null;
+    let _departmentsCache = null;
+    let _sectionsCache = null;
 
-    const HDQ_BS_SECTIONS = [
-        { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
-        { value: '-', label: '-' },
-        { value: 'ST-C', label: 'ส่วนงานมาตรฐานการรักษาความปลอดภัยการบิน (ST-C)' },
-        { value: 'ST-D', label: 'ส่วนงานควบคุมเอกสารและงานธุรการ (ST-D)' },
-        { value: 'ST-F', label: 'ส่วนงานนิรภัยการบิน (ST-F)' },
-        { value: 'ST-H', label: 'ส่วนงานอาชีวอนามัยและความปลอดภัย (ST-H)' },
-        { value: 'ST-Q', label: 'ส่วนงานประกันคุณภาพ (ST-Q)' }
-    ];
+    const sb = () => window.supabaseClient;
 
-    const HDQ_BE_SECTIONS = [
-        { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
-        { value: '-', label: '-' },
-        { value: 'EA', label: 'แผนกเลขานุการผู้บริหาร (EA)' }
-    ];
+    /**
+     * Fetch all stations from Supabase
+     */
+    async function fetchStations() {
+        if (_stationsCache) return _stationsCache;
+        const { data, error } = await sb()
+            .from('stations')
+            .select('value, label')
+            .order('sort_order');
+        if (error) { console.error('fetchStations error:', error); return []; }
+        _stationsCache = data || [];
+        return _stationsCache;
+    }
 
-    const HDQ_BR_SECTIONS = [
-        { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
-        { value: '-', label: '-' },
-        { value: 'RC', label: 'แผนกสื่อสารองค์กร (RC)' },
-        { value: 'RB', label: 'แผนกพัฒนาธุรกิจ (RB)' }
-    ];
+    /**
+     * Fetch all departments from Supabase
+     */
+    async function fetchAllDepartments() {
+        if (_departmentsCache) return _departmentsCache;
+        const { data, error } = await sb()
+            .from('departments')
+            .select('station_type, value, label')
+            .order('sort_order');
+        if (error) { console.error('fetchDepartments error:', error); return []; }
+        _departmentsCache = data || [];
+        return _departmentsCache;
+    }
 
-    const HDQ_BD_SECTIONS = [
-        { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
-        { value: '-', label: '-' },
-        { value: 'DP', label: 'แผนกจัดซื้อ (DP)' }
-    ];
+    /**
+     * Fetch all sections from Supabase
+     */
+    async function fetchAllSections() {
+        if (_sectionsCache) return _sectionsCache;
+        const { data, error } = await sb()
+            .from('sections')
+            .select('station_value, department_value, value, label')
+            .order('sort_order');
+        if (error) { console.error('fetchSections error:', error); return []; }
+        _sectionsCache = data || [];
+        return _sectionsCache;
+    }
 
-    const HDQ_BI_SECTIONS = [
-        { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
-        { value: '-', label: '-' },
-        { value: 'IM', label: 'แผนกเทคโนโลยีสารสนเทศ (IM)' }
-    ];
+    /**
+     * Get departments based on selected station
+     */
+    async function getDepartments(station) {
+        const allDepts = await fetchAllDepartments();
+        const type = (station === 'สำนักงานใหญ่ (HDQ)') ? 'HDQ' : 'STATION';
+        const filtered = allDepts.filter(d => d.station_type === type);
+        return [
+            { value: '', label: 'เลือกฝ่าย', placeholder: true, disabled: true },
+            ...filtered
+        ];
+    }
 
-    const HDQ_BL_SECTIONS = [
-        { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
-        { value: '-', label: '-' },
-        { value: 'LM', label: 'แผนกกฎหมาย (LM)' }
-    ];
+    /**
+     * Get sections based on selected station + department
+     */
+    async function getSections(station, department) {
+        const allSections = await fetchAllSections();
+        let filtered;
 
-    const OTHER_STATION_BG_SECTIONS = [
-        { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
-        { value: '-', label: '-' },
-        { value: 'GF', label: 'แผนกบริการสถานี (GF)' }
-    ];
+        if (station === 'สำนักงานใหญ่ (HDQ)') {
+            filtered = allSections.filter(s => s.station_value === 'สำนักงานใหญ่ (HDQ)' && s.department_value === department);
+        } else if (station === 'สถานีสุวรรณภูมิ (BKK)' && department === 'BG') {
+            filtered = allSections.filter(s => s.station_value === 'สถานีสุวรรณภูมิ (BKK)' && s.department_value === 'BG');
+        } else if (station && department === 'BG') {
+            // Other stations + BG
+            filtered = allSections.filter(s => s.station_value === 'OTHER' && s.department_value === 'BG');
+        } else {
+            filtered = [];
+        }
+
+        if (filtered.length === 0) {
+            return [{ value: '', label: 'เลือกแผนก', placeholder: true, disabled: true }];
+        }
+
+        return [
+            { value: '', label: 'เลือกแผนก', placeholder: true, disabled: true },
+            { value: '-', label: '-' },
+            ...filtered
+        ];
+    }
+
+    /**
+     * Populate a station <select> with data from Supabase
+     */
+    async function populateStationSelect(selectId) {
+        const el = document.getElementById(selectId);
+        if (!el) return;
+        const stations = await fetchStations();
+        // Keep placeholder option, add stations
+        el.innerHTML = '<option value="">เลือกสถานี</option>';
+        stations.forEach(s => {
+            const opt = document.createElement('option');
+            opt.value = s.value;
+            opt.textContent = s.label;
+            el.appendChild(opt);
+        });
+    }
 
     // ========================================
     // Shared Choices.js Config
@@ -150,38 +142,6 @@ const VFCForm = (function() {
     // ========================================
     // Core Logic Functions
     // ========================================
-    
-    /**
-     * Get departments based on selected station
-     */
-    function getDepartments(station) {
-        return station === 'สำนักงานใหญ่ (HDQ)' ? HDQ_DEPARTMENTS : STATION_DEPARTMENTS;
-    }
-
-    /**
-     * Get sections based on selected station + department
-     */
-    function getSections(station, department) {
-        if (station === 'สถานีสุวรรณภูมิ (BKK)' && department === 'BG') return BKK_BG_SECTIONS;
-        if (station === 'สำนักงานใหญ่ (HDQ)') {
-            switch (department) {
-                case 'BH': return HDQ_BH_SECTIONS;
-                case 'BF': return HDQ_BF_SECTIONS;
-                case 'BG': return HDQ_BG_SECTIONS;
-                case 'BS': return HDQ_BS_SECTIONS;
-                case 'BE': return HDQ_BE_SECTIONS;
-                case 'BR': return HDQ_BR_SECTIONS;
-                case 'BD': return HDQ_BD_SECTIONS;
-                case 'BI': return HDQ_BI_SECTIONS;
-                case 'BL': return HDQ_BL_SECTIONS;
-            }
-        }
-        // Other stations + BG
-        if (station && station !== 'สำนักงานใหญ่ (HDQ)' && station !== 'สถานีสุวรรณภูมิ (BKK)' && department === 'BG') {
-            return OTHER_STATION_BG_SECTIONS;
-        }
-        return DEFAULT_SECTIONS;
-    }
 
     /**
      * Create a dropdown group handler (station -> department -> section cascade)
@@ -189,20 +149,20 @@ const VFCForm = (function() {
     function createDropdownGroup(stationId, departmentId, sectionId) {
         let stationChoices, departmentChoices, sectionChoices;
 
-        function updateDept() {
+        async function updateDept() {
             const station = document.getElementById(stationId).value;
-            const departments = getDepartments(station);
+            const departments = await getDepartments(station);
             if (departmentChoices) {
                 departmentChoices.clearStore();
                 departmentChoices.setChoices(departments, 'value', 'label', true);
             }
-            updateSec();
+            await updateSec();
         }
 
-        function updateSec() {
+        async function updateSec() {
             const station = document.getElementById(stationId).value;
             const department = document.getElementById(departmentId).value;
-            const sections = getSections(station, department);
+            const sections = await getSections(station, department);
             if (sectionChoices) {
                 sectionChoices.clearStore();
                 sectionChoices.setChoices(sections, 'value', 'label', true);
@@ -210,7 +170,10 @@ const VFCForm = (function() {
         }
 
         // Initialize Choices.js
-        function initChoices() {
+        async function initChoices() {
+            // Populate station options from Supabase first
+            await populateStationSelect(stationId);
+
             if (document.getElementById(stationId)) {
                 stationChoices = new Choices('#' + stationId, CHOICES_CONFIG);
                 document.getElementById(stationId).addEventListener('change', updateDept);
@@ -473,10 +436,10 @@ const VFCForm = (function() {
     function init(options = {}) {
         const prefix = options.detailPrefix || 'suggestion';
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             // Personal Info dropdown group
             const personalGroup = createDropdownGroup('stationSelect', 'departmentSelect', 'sectionSelect');
-            personalGroup.initChoices();
+            await personalGroup.initChoices();
 
             // Make personal group functions accessible for inline onchange
             window.updateDepartmentOptions = personalGroup.updateDept;
@@ -489,7 +452,7 @@ const VFCForm = (function() {
 
             if (document.getElementById(detailStationId)) {
                 const detailGroup = createDropdownGroup(detailStationId, detailDeptId, detailSectionId);
-                detailGroup.initChoices();
+                await detailGroup.initChoices();
 
                 // Make detail group functions accessible  
                 const capPrefix = prefix.charAt(0).toUpperCase() + prefix.slice(1);
