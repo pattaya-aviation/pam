@@ -192,7 +192,7 @@
         </div>
         
         <!-- Mobile Dropdown Menu -->
-        <div id="dropdownMenu" class="hidden mx-4 mt-2 bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl border border-gray-200/50 py-3 max-h-[calc(100vh-6rem)] overflow-y-auto">
+        <div id="dropdownMenu" class="hidden bg-white/40 backdrop-blur-2xl rounded-b-3xl shadow-xl border-x border-b border-white/30 py-3 max-h-[calc(100vh-4rem)] overflow-y-auto">
             <div class="flex flex-col">
                 <a href="${paths.home}" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-50/70 rounded-xl mx-2 transition-colors">
                     <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -360,15 +360,7 @@
                     เข้าสู่ระบบด้วย Microsoft
                 </button>
                 
-                <!-- LINE Sign In -->
-                <button onclick="signInWithLine()" 
-                    class="w-full py-3 px-4 bg-[#06C755] hover:bg-[#05b34c] text-white font-medium rounded-2xl transition-all duration-200 border border-[#06C755] flex items-center justify-center gap-3 mt-3">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2C6.48 2 2 5.83 2 10.5c0 4.08 3.42 7.5 8.05 8.32.31.07.74.21.85.48.1.25.06.63.03.88l-.14.82c-.04.24-.2.95.83.52s5.52-3.27 7.53-5.6C21.08 13.72 22 12.18 22 10.5 22 5.83 17.52 2 12 2zm-3.34 11.24h-2.4a.56.56 0 01-.56-.56V8.92c0-.31.25-.56.56-.56s.56.25.56.56v3.2h1.84c.31 0 .56.25.56.56s-.25.56-.56.56zm1.62-.56a.56.56 0 01-1.12 0V8.92a.56.56 0 011.12 0v3.76zm4.14 0a.56.56 0 01-.44.55.56.56 0 01-.56-.21l-2.1-2.86v2.52a.56.56 0 01-1.12 0V8.92a.56.56 0 01.44-.55.56.56 0 01.56.21l2.1 2.86V8.92a.56.56 0 011.12 0v3.76zm3.16-2.64a.56.56 0 010 1.12h-1.84v1.28h1.84a.56.56 0 010 1.12h-2.4a.56.56 0 01-.56-.56V8.92c0-.31.25-.56.56-.56h2.4a.56.56 0 010 1.12h-1.84v.56h1.84z"/>
-                    </svg>
-                    เข้าสู่ระบบด้วย LINE
-                </button>
-                
+
                 <!-- Messages -->
                 <div id="modalErrorMessage" class="hidden mt-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm text-center"></div>
                 <div id="modalSuccessMessage" class="hidden mt-4 p-3 bg-green-50 border border-green-200 rounded-xl text-green-600 text-sm text-center"></div>
@@ -506,10 +498,7 @@
         }
     };
 
-    // LINE Login
-    window.signInWithLine = function() {
-        showModalError("ฟังก์ชันเข้าสู่ระบบด้วย LINE - กำลังพัฒนา (Coming soon!)");
-    };
+
 
     function handleMSLoginSuccess(account) {
         sessionStorage.setItem('user', JSON.stringify({
