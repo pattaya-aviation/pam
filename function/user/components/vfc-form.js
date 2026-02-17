@@ -308,13 +308,12 @@ const VFCForm = (function() {
     // ========================================
 
     function generateTrackingNumber(prefix) {
-        const now = new Date();
-        const y = now.getFullYear();
-        const m = String(now.getMonth() + 1).padStart(2, '0');
-        const d = String(now.getDate()).padStart(2, '0');
-        const seq = String(Math.floor(1000 + Math.random() * 9000));
-        const typeCode = prefix === 'complaint' ? 'CP' : prefix === 'compliment' ? 'CM' : 'SG';
-        return `VFC-${typeCode}-${y}${m}${d}-${seq}`;
+        // Random 8-char alphanumeric code (unguessable)
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        const arr = new Uint8Array(8);
+        crypto.getRandomValues(arr);
+        const code = Array.from(arr, b => chars[b % chars.length]).join('');
+        return `VFC-${code}`;
     }
 
     function createTrackingModal() {
