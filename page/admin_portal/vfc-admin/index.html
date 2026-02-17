@@ -325,49 +325,59 @@
     .tab-btn.active { color: #2563eb; border-bottom-color: #2563eb; font-weight: 600; }
     .tab-btn.active:hover { color: #1d4ed8; border-bottom-color: #1d4ed8; }
 
-    /* Mobile: connected circle buttons */
+    /* Mobile: iOS 18 floating tab bar */
     @media (max-width: 640px) {
       .tab-bar {
         position: fixed;
-        bottom: 8px;
+        bottom: 10px;
         left: 0; right: 0;
         margin: 0 auto;
-        width: fit-content;
+        width: auto;
+        max-width: fit-content;
         z-index: 50;
         border-bottom: none;
-        background: rgba(255,255,255,0.9);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        border-top: none;
         border-radius: 999px;
-        border: 1px solid rgba(229,231,235,0.6);
-        box-shadow: 0 2px 16px rgba(0,0,0,0.1);
-        padding: 4px;
-        gap: 2px;
+        background: rgba(240,240,240,0.75);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        border: none;
+        box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        padding: 4px 6px;
+        gap: 4px;
         justify-content: center;
         margin-bottom: 0;
       }
       .tab-btn {
-        width: 52px;
-        height: 52px;
-        padding: 0;
-        font-size: 0;
-        gap: 0;
+        padding: 6px 14px;
+        font-size: 0.625rem;
+        gap: 3px;
         border: none;
         border-bottom: none;
         margin-bottom: 0;
-        border-radius: 50%;
+        border-radius: 999px;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         flex: none;
+        min-width: 0;
         background: transparent;
+        color: #6b6b6b;
+        font-weight: 500;
+        transition: all 0.25s ease;
       }
-      .tab-btn svg { width: 20px; height: 20px; }
+      .tab-btn:hover { color: #6b6b6b; }
+      .tab-btn svg { width: 20px; height: 20px; transition: all 0.25s ease; }
       .tab-btn.active {
-        background: rgba(37,99,235,0.12);
+        background: rgba(255,255,255,0.85);
+        color: #1c1c1e;
         border-bottom: none;
+        padding: 8px 18px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        font-weight: 600;
       }
-      .admin-content { padding-bottom: 72px !important; }
+      .tab-btn.active svg { width: 26px; height: 26px; }
+      .admin-content { padding-bottom: 80px !important; }
     }
     .tab-placeholder {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
