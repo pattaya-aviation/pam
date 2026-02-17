@@ -1,1217 +1,1292 @@
 <!doctype html>
 <html lang="th">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Voice for Change Admin - PA System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../../../function/shared/css/fonts.css" />
-    <!-- Admin Portal CSS -->
-    <link rel="stylesheet" href="../../../function/admin/css/admin-base.css" />
-    <!-- VFC Admin Page CSS -->
-    <link rel="stylesheet" href="../../../function/admin/css/vfc-admin.css" />
-    <script src="../../../function/admin/components/admin-nav.js"></script>
-  </head>
-  <body class="bg-gray-100 min-h-screen">
-    <!-- Admin Navigation (rendered by component) -->
-    <div id="adminNavContainer" data-admin-nav="vfc"></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VFC Admin - Voice for Change</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../../../function/shared/css/fonts.css" />
+  <link rel="stylesheet" href="../../../function/admin/css/admin-base.css" />
+  <script src="../../../function/admin/components/admin-nav.js"></script>
 
-    <!-- Floating Navbar - Right: Search + Bell Icons -->
-    <div class="fixed top-4 right-4 z-50">
-      <div class="flex items-center gap-2 lg:gap-1">
-        <!-- Search Button (Circle on mobile, icon only on desktop) -->
-        <button
-          onclick="toggleSearch()"
-          class="flex items-center justify-center w-14 h-14 lg:w-10 lg:h-10 bg-white/80 lg:bg-transparent backdrop-blur-xl lg:backdrop-blur-none rounded-full border border-gray-200 lg:border-0 hover:bg-gray-50 lg:hover:bg-gray-100 transition-colors"
-        >
-          <svg
-            class="w-6 h-6 lg:w-5 lg:h-5 text-gray-700"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../../../function/shared/js/supabase-config.js"></script>
+
+  <style>
+    /* Layout */
+    .admin-content {
+      margin-left: 80px;
+      padding: 24px 32px;
+      min-height: 100vh;
+    }
+    @media (max-width: 1023px) {
+      .admin-content {
+        margin-left: 0;
+        padding: 80px 16px 24px;
+      }
+    }
+
+    /* Stats */
+    .stat-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px 24px;
+      border: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: box-shadow 0.2s;
+    }
+    .stat-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+    .stat-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .stat-val { font-size: 1.5rem; font-weight: 700; color: #111827; line-height: 1; }
+    .stat-lbl { font-size: 0.75rem; color: #9ca3af; margin-top: 2px; }
+
+    /* Table card */
+    .tbl-card {
+      background: white;
+      border-radius: 20px;
+      border: 1px solid #e5e7eb;
+      overflow: hidden;
+    }
+    .tbl-head {
+      padding: 16px 24px;
+      border-bottom: 1px solid #f3f4f6;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+
+    /* Filters */
+    .f-select {
+      padding: 7px 12px; border-radius: 10px;
+      border: 1px solid #e5e7eb; font-size: 0.8125rem;
+      color: #374151; background: white; outline: none;
+      cursor: pointer;
+    }
+    .f-select:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+    .f-search {
+      padding: 7px 12px 7px 34px; border-radius: 10px;
+      border: 1px solid #e5e7eb; font-size: 0.8125rem;
+      outline: none; width: 200px; background: white;
+    }
+    .f-search:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+
+    /* Table */
+    .dtbl { width: 100%; border-collapse: collapse; }
+    .dtbl thead th {
+      padding: 10px 16px; text-align: left;
+      font-size: 0.6875rem; font-weight: 600; color: #9ca3af;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      border-bottom: 1px solid #f3f4f6; white-space: nowrap;
+    }
+    .dtbl tbody tr {
+      border-bottom: 1px solid #f9fafb;
+      transition: background 0.15s; cursor: pointer;
+    }
+    .dtbl tbody tr:hover { background: #f9fafb; }
+    .dtbl tbody td {
+      padding: 12px 16px; font-size: 0.8125rem;
+      color: #374151; vertical-align: middle;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 999px;
+      font-size: 0.6875rem; font-weight: 500; white-space: nowrap;
+    }
+    .b-complaint { background: #fef2f2; color: #dc2626; }
+    .b-compliment { background: #f0fdf4; color: #16a34a; }
+    .b-suggestion { background: #eff6ff; color: #2563eb; }
+
+    .s-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 10px; border-radius: 999px;
+      font-size: 0.6875rem; font-weight: 500; white-space: nowrap;
+    }
+    .s-badge .dot { width: 6px; height: 6px; border-radius: 50%; }
+    .s-pending { background: #fffbeb; color: #d97706; }
+    .s-pending .dot { background: #f59e0b; }
+    .s-in_progress { background: #eff6ff; color: #2563eb; }
+    .s-in_progress .dot { background: #3b82f6; }
+    .s-resolved { background: #f0fdf4; color: #16a34a; }
+    .s-resolved .dot { background: #22c55e; }
+    .s-closed { background: #f3f4f6; color: #6b7280; }
+    .s-closed .dot { background: #9ca3af; }
+
+    /* Tracking */
+    .trk { font-family: 'SF Mono','Fira Code',monospace; font-size: 0.75rem; color: #6366f1; font-weight: 500; }
+    .txt-trunc { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
+
+    /* Unread indicator */
+    .row-unread { background: #f8faff; font-weight: 500; }
+    .row-unread:hover { background: #f0f4ff; }
+
+    /* Pin */
+    .row-pinned { background: #fffbeb; }
+    .row-pinned:hover { background: #fef3c7; }
+    .row-pinned.row-unread { background: #fef9e7; }
+    .pin-icon { color: #d97706; font-size: 0.75rem; }
+
+    /* Action btns */
+    .act-btn {
+      width: 28px; height: 28px; border-radius: 6px;
+      border: none; background: transparent; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: background 0.15s; color: #9ca3af;
+    }
+    .act-btn:hover { background: #f3f4f6; color: #374151; }
+    .act-btn.pinned { color: #d97706; }
+    .act-btn svg { width: 14px; height: 14px; }
+
+    /* Modal actions */
+    .modal-actions {
+      display: flex; gap: 8px; padding: 16px 24px;
+      border-top: 1px solid #f3f4f6;
+    }
+    .m-act-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 7px 14px; border-radius: 8px; border: 1px solid #e5e7eb;
+      font-size: 0.75rem; color: #374151; background: white;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .m-act-btn:hover { background: #f3f4f6; }
+    .m-act-btn.active { background: #fffbeb; border-color: #fbbf24; color: #92400e; }
+    .m-act-btn svg { width: 14px; height: 14px; }
+    .unread-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #3b82f6; display: inline-block; flex-shrink: 0;
+    }
+    .new-tag {
+      display: inline-block; padding: 1px 6px; border-radius: 4px;
+      font-size: 0.625rem; font-weight: 700; background: #ef4444; color: white;
+      text-transform: uppercase; letter-spacing: 0.05em; margin-left: 6px;
+      animation: pulse-new 2s infinite;
+    }
+    @keyframes pulse-new {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    /* Pagination */
+    .pgn { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-top: 1px solid #f3f4f6; }
+    .pgn-info { font-size: 0.8125rem; color: #6b7280; }
+    .pgn-btns { display: flex; gap: 4px; }
+    .pg-btn {
+      padding: 5px 11px; border-radius: 8px; border: 1px solid #e5e7eb;
+      font-size: 0.8125rem; color: #374151; background: white;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .pg-btn:hover { background: #f3f4f6; }
+    .pg-btn.act { background: #3b82f6; color: white; border-color: #3b82f6; }
+    .pg-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* Loading / Empty */
+    .msg-row td { text-align: center; padding: 48px 16px !important; color: #9ca3af; font-size: 0.875rem; }
+
+    /* Scroll */
+    .tbl-scroll { overflow-x: auto; }
+
+    /* Refresh btn */
+    .btn-ref {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 16px; border-radius: 10px; border: 1px solid #e5e7eb;
+      font-size: 0.8125rem; color: #374151; background: white;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .btn-ref:hover { background: #f3f4f6; }
+    .btn-ref svg { width: 15px; height: 15px; }
+
+    /* Detail modal */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px); z-index: 100;
+      display: flex; align-items: center; justify-content: center;
+      padding: 16px; opacity: 0; visibility: hidden; transition: all 0.25s;
+    }
+    .modal-overlay.open { opacity: 1; visibility: visible; }
+    .modal-box {
+      background: white; border-radius: 20px; width: 100%; max-width: 640px;
+      max-height: 85vh; overflow-y: auto; box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+      transform: translateY(20px); transition: transform 0.25s;
+    }
+    .modal-overlay.open .modal-box { transform: translateY(0); }
+    .modal-head {
+      padding: 20px 24px; border-bottom: 1px solid #f3f4f6;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-body { padding: 24px; }
+    .detail-row {
+      display: grid; grid-template-columns: 140px 1fr; gap: 8px;
+      padding: 10px 0; border-bottom: 1px solid #f9fafb;
+      font-size: 0.8125rem;
+    }
+    .detail-label { color: #9ca3af; font-weight: 500; }
+    .detail-val { color: #111827; }
+
+    /* Tab bar */
+    .tab-bar {
+      display: flex; align-items: center; gap: 4px;
+      padding: 4px; background: #f3f4f6; border-radius: 10px;
+      width: fit-content; margin-bottom: 20px;
+    }
+    .tab-btn {
+      padding: 6px 16px; border-radius: 8px; border: none;
+      font-size: 0.8125rem; font-weight: 500;
+      cursor: pointer; transition: all 0.2s;
+      background: transparent; color: #6b7280;
+    }
+    .tab-btn:hover { background: #e5e7eb; color: #374151; }
+    .tab-btn.active { background: #3b82f6; color: white; }
+    .tab-btn.active:hover { background: #2563eb; }
+    .tab-placeholder {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 400px; color: #9ca3af; gap: 12px;
+    }
+    .tab-placeholder svg { width: 48px; height: 48px; opacity: 0.4; }
+    .tab-placeholder p { font-size: 0.875rem; }
+
+    /* Kanban Board */
+    .kanban-wrap {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+      min-height: calc(100vh - 200px); align-items: start;
+    }
+    @media (max-width: 1024px) {
+      .kanban-wrap { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .kanban-wrap { grid-template-columns: 1fr; }
+    }
+    .kanban-col {
+      background: #f4f5f7; border-radius: 12px;
+      display: flex; flex-direction: column;
+      max-height: calc(100vh - 200px);
+    }
+    .kanban-col-head {
+      padding: 12px 16px; font-size: 0.75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      color: #5e6c84; display: flex; align-items: center; gap: 8px;
+      border-bottom: 2px solid transparent; flex-shrink: 0;
+    }
+    .kanban-col-head .col-count {
+      background: #dfe1e6; color: #44546f; border-radius: 10px;
+      padding: 0 7px; font-size: 0.6875rem; font-weight: 600; min-width: 20px;
+      text-align: center; line-height: 20px;
+    }
+    .kanban-col[data-status="pending"] .kanban-col-head { border-bottom-color: #f59e0b; }
+    .kanban-col[data-status="in_progress"] .kanban-col-head { border-bottom-color: #3b82f6; }
+    .kanban-col[data-status="resolved"] .kanban-col-head { border-bottom-color: #22c55e; }
+    .kanban-col[data-status="closed"] .kanban-col-head { border-bottom-color: #9ca3af; }
+    .kanban-cards {
+      padding: 8px; overflow-y: auto; flex: 1;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .kanban-cards::-webkit-scrollbar { width: 4px; }
+    .kanban-cards::-webkit-scrollbar-thumb { background: #c1c7d0; border-radius: 4px; }
+    .kanban-card {
+      background: white; border-radius: 8px; padding: 12px;
+      border: 1px solid #dfe1e6; cursor: pointer;
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+    .kanban-card:hover {
+      box-shadow: 0 1px 5px rgba(9,30,66,0.15);
+      border-color: #c1c7d0;
+    }
+    .kanban-card-title {
+      font-size: 0.8125rem; font-weight: 500; color: #172b4d;
+      margin-bottom: 8px; line-height: 1.4;
+      display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .kanban-card-cat {
+      display: inline-block; padding: 1px 6px; border-radius: 4px;
+      font-size: 0.625rem; font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .kanban-card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 0.6875rem; color: #5e6c84;
+    }
+    .kanban-card-trk {
+      font-family: 'SF Mono','Fira Code',monospace;
+      font-size: 0.6875rem; color: #6366f1;
+    }
+    .kanban-card-date { color: #97a0af; font-size: 0.625rem; }
+    .kanban-empty {
+      text-align: center; padding: 24px 12px;
+      color: #b3bac5; font-size: 0.75rem;
+    }
+
+    /* ====== Power BI Dashboard ====== */
+    .dash-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    @media (max-width: 768px) { .dash-grid { grid-template-columns: 1fr; } }
+    .dash-card {
+      background: white; border: 1px solid #e5e7eb; border-radius: 14px;
+      padding: 20px; overflow: hidden;
+    }
+    .dash-card-full { grid-column: 1 / -1; }
+    .dash-card-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .dash-card-title {
+      font-size: 0.875rem; font-weight: 600; color: #111827;
+    }
+    .dash-card-sub {
+      font-size: 0.6875rem; color: #9ca3af; margin-top: 2px;
+    }
+    /* Type filter pills */
+    .dash-filter-bar {
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 16px;
+    }
+    .dash-filter-pill {
+      padding: 5px 14px; border-radius: 20px; border: 1.5px solid #e5e7eb;
+      font-size: 0.75rem; font-weight: 500; cursor: pointer;
+      transition: all 0.2s; background: white; color: #6b7280;
+    }
+    .dash-filter-pill:hover { border-color: #c7d2fe; background: #f5f3ff; }
+    .dash-filter-pill.active {
+      background: #4f46e5; color: white; border-color: #4f46e5;
+    }
+    /* Donut */
+    .donut-wrap {
+      display: flex; align-items: center; gap: 24px;
+    }
+    @media (max-width: 480px) { .donut-wrap { flex-direction: column; } }
+    .donut-svg { flex-shrink: 0; }
+    .donut-svg circle {
+      transition: stroke-dasharray 0.6s ease, stroke-dashoffset 0.6s ease;
+    }
+    .donut-center {
+      font-size: 1.5rem; font-weight: 700; fill: #111827;
+    }
+    .donut-center-lbl {
+      font-size: 0.625rem; fill: #9ca3af;
+    }
+    .donut-legend { display: flex; flex-direction: column; gap: 8px; min-width: 130px; }
+    .donut-legend-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.8125rem; color: #374151; cursor: pointer;
+    }
+    .donut-legend-item:hover { color: #111827; }
+    .donut-dot {
+      width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0;
+    }
+    .donut-legend-val {
+      margin-left: auto; font-weight: 600; color: #111827;
+    }
+    /* MoM / YoY cards */
+    .mom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 480px) { .mom-grid { grid-template-columns: 1fr; } }
+    .mom-card {
+      background: #f9fafb; border-radius: 10px; padding: 14px 16px;
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .mom-label { font-size: 0.6875rem; color: #6b7280; font-weight: 500; }
+    .mom-row { display: flex; align-items: baseline; gap: 8px; }
+    .mom-val { font-size: 1.5rem; font-weight: 700; color: #111827; }
+    .mom-badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 0.6875rem; font-weight: 600;
+      padding: 2px 8px; border-radius: 12px;
+    }
+    .mom-up { background: #dcfce7; color: #16a34a; }
+    .mom-down { background: #fee2e2; color: #dc2626; }
+    .mom-flat { background: #f3f4f6; color: #6b7280; }
+    .mom-desc { font-size: 0.625rem; color: #9ca3af; }
+    /* Bar chart */
+    .bar-chart-wrap {
+      display: flex; align-items: flex-end; gap: 6px; height: 160px;
+      padding: 8px 0;
+    }
+    .bar-col {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      gap: 4px; height: 100%; justify-content: flex-end;
+    }
+    .bar-fill {
+      width: 100%; max-width: 56px; border-radius: 5px 5px 0 0;
+      transition: height 0.5s ease; position: relative;
+      cursor: pointer;
+    }
+    .bar-fill:hover { opacity: 0.85; }
+    .bar-val {
+      font-size: 0.625rem; font-weight: 600; color: #374151;
+    }
+    .bar-lbl {
+      font-size: 0.6875rem; color: #6b7280; white-space: nowrap;
+    }
+
+    /* Horizontal bars */
+    .hbar-row {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+    }
+    .hbar-label {
+      font-size: 0.75rem; color: #374151; min-width: 80px; font-weight: 500;
+    }
+    .hbar-track {
+      flex: 1; height: 14px; background: #f3f4f6; border-radius: 7px;
+      overflow: hidden;
+    }
+    .hbar-fill {
+      height: 100%; border-radius: 7px; transition: width 0.5s ease;
+    }
+    .hbar-val {
+      font-size: 0.75rem; font-weight: 600; color: #111827; min-width: 30px;
+      text-align: right;
+    }
+    .hbar-pct {
+      font-size: 0.625rem; color: #9ca3af; min-width: 35px; text-align: right;
+    }
+    /* Progress */
+    .prog-bar {
+      height: 14px; border-radius: 7px; background: #f3f4f6;
+      overflow: hidden; display: flex; margin-bottom: 12px;
+    }
+    .prog-fill { height: 100%; transition: width 0.5s ease; }
+    .prog-stats {
+      display: flex; gap: 20px;
+    }
+    .prog-item { display: flex; flex-direction: column; }
+    .prog-item .pval { font-size: 1.25rem; font-weight: 700; }
+    .prog-item .plbl { font-size: 0.625rem; color: #9ca3af; }
+  </style>
+</head>
+<body class="bg-white min-h-screen">
+  <!-- Admin Navigation -->
+  <div id="adminNavContainer" data-admin-nav="vfc"></div>
+
+  <!-- Main Content -->
+  <div class="admin-content">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between flex-wrap gap-4 mb-6">
+      <div>
+        <h1 class="text-xl font-bold text-gray-900">Voice for Change</h1>
+        <p class="text-sm text-gray-500 mt-0.5">จัดการคำร้องเรียน ชมเชย และข้อเสนอแนะ</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <!-- Tab Bar -->
+        <div class="tab-bar" style="margin-bottom:0">
+          <button class="tab-btn active" id="tabInbox" onclick="switchTab('inbox')">หน้าแรก</button>
+          <button class="tab-btn" id="tabBoard" onclick="switchTab('board')">กระดาน</button>
+          <button class="tab-btn" id="tabTable" onclick="switchTab('table')">ตาราง</button>
+          <button class="tab-btn" id="tabSettings" onclick="switchTab('settings')">ตั้งค่า</button>
+        </div>
+        <button onclick="refreshData()" class="btn-ref">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          รีเฟรช
         </button>
+      </div>
+    </div>
 
-        <!-- Bell Button with Dropdown (Circle on mobile, icon only on desktop) -->
+    <!-- Tab: Inbox -->
+    <div id="contentInbox" class="tab-content">
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div class="stat-card">
+        <div class="stat-icon bg-indigo-50">
+          <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <div><div class="stat-val" id="sTotal">-</div><div class="stat-lbl">ทั้งหมด</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon bg-amber-50">
+          <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div><div class="stat-val" id="sPending">-</div><div class="stat-lbl">รอดำเนินการ</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon bg-blue-50">
+          <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <div><div class="stat-val" id="sProgress">-</div><div class="stat-lbl">กำลังดำเนินการ</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon bg-green-50">
+          <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div><div class="stat-val" id="sResolved">-</div><div class="stat-lbl">เสร็จสิ้น</div></div>
+      </div>
+    </div>
+
+    <!-- Dashboard: Interactive Charts -->
+    <div id="dashCharts"></div>
+
+    </div>
+
+    <!-- Tab: Kanban Board -->
+    <div id="contentBoard" class="tab-content hidden">
+      <div class="kanban-wrap" id="kanbanBoard"></div>
+    </div>
+
+    <!-- Tab: Settings -->
+    <div id="contentSettings" class="tab-content hidden">
+      <div class="tab-placeholder">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <p>ตั้งค่า — Settings</p>
+      </div>
+    </div>
+
+    <!-- Tab: Table -->
+    <div id="contentTable" class="tab-content hidden">
+    <!-- Table Card -->
+    <div class="tbl-card">
+      <!-- Filters -->
+      <div class="tbl-head">
+        <div class="flex items-center gap-2 flex-wrap">
+          <select id="fType" onchange="applyFilters()" class="f-select">
+            <option value="">ทุกประเภท</option>
+            <option value="complaint">ร้องเรียน</option>
+            <option value="compliment">ชมเชย</option>
+            <option value="suggestion">เสนอแนะ</option>
+          </select>
+          <select id="fStatus" onchange="applyFilters()" class="f-select">
+            <option value="">ทุกสถานะ</option>
+            <option value="pending">รอดำเนินการ</option>
+            <option value="in_progress">กำลังดำเนินการ</option>
+            <option value="resolved">เสร็จสิ้น</option>
+            <option value="closed">ปิดแล้ว</option>
+          </select>
+          <div class="flex items-center gap-1.5">
+            <input type="date" id="fDateFrom" onchange="applyFilters()" class="f-select" title="ตั้งแต่วันที่">
+            <span class="text-gray-400 text-xs">ถึง</span>
+            <input type="date" id="fDateTo" onchange="applyFilters()" class="f-select" title="ถึงวันที่">
+          </div>
+          <select id="fRead" onchange="applyFilters()" class="f-select">
+            <option value="">ทั้งหมด</option>
+            <option value="unread">ยังไม่ได้อ่าน</option>
+            <option value="read">อ่านแล้ว</option>
+            <option value="pinned">ปักมุด</option>
+          </select>
+        </div>
         <div class="relative">
-          <button
-            onclick="toggleNotifications()"
-            class="flex items-center justify-center w-14 h-14 lg:w-10 lg:h-10 bg-white/80 lg:bg-transparent backdrop-blur-xl lg:backdrop-blur-none rounded-full border border-gray-200 lg:border-0 hover:bg-gray-50 lg:hover:bg-gray-100 transition-colors relative"
-          >
-            <svg
-              class="w-6 h-6 lg:w-5 lg:h-5 text-gray-700"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-              />
-            </svg>
-            <!-- Notification Badge -->
-            <span
-              id="notificationBadge"
-              class="absolute top-3 right-3 lg:top-1 lg:right-1 w-2.5 h-2.5 bg-red-500 rounded-full"
-            ></span>
-          </button>
-
-          <!-- Notification Dropdown -->
-          <div
-            id="notificationDropdown"
-            class="dropdown-menu absolute top-16 right-0 w-80 bg-white/95 backdrop-blur-xl rounded-2xl border border-gray-200 overflow-hidden"
-          >
-            <!-- Header -->
-            <div
-              class="px-4 py-3 border-b border-gray-100 flex items-center justify-between"
-            >
-              <h3 class="font-semibold text-gray-900">การแจ้งเตือน</h3>
-              <button
-                onclick="markAllRead()"
-                class="text-xs text-blue-500 hover:text-blue-600"
-              >
-                อ่านทั้งหมด
-              </button>
-            </div>
-
-            <!-- Notification List -->
-            <div class="max-h-80 overflow-y-auto">
-              <!-- Empty State -->
-              <div class="px-4 py-8 text-center">
-                <svg
-                  class="w-12 h-12 mx-auto text-gray-300 mb-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                  />
-                </svg>
-                <p class="text-sm text-gray-500">ไม่มีการแจ้งเตือนใหม่</p>
-              </div>
-            </div>
-          </div>
+          <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" id="fSearch" placeholder="ค้นหา..." class="f-search" oninput="applyFilters()">
         </div>
+      </div>
+
+      <!-- Table -->
+      <div class="tbl-scroll">
+        <table class="dtbl">
+          <thead>
+            <tr>
+              <th style="width:36px"></th>
+              <th>หมายเลขหนังสือ</th>
+              <th>เลขติดตาม</th>
+              <th>ประเภท</th>
+              <th>หัวข้อ</th>
+              <th>หมวดหมู่</th>
+              <th>สถานี</th>
+              <th>ฝ่าย</th>
+              <th>สถานะ</th>
+              <th>วันที่</th>
+              <th style="width:40px"></th>
+            </tr>
+          </thead>
+          <tbody id="tBody">
+            <tr class="msg-row"><td colspan="11">กำลังโหลดข้อมูล...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pgn">
+        <div class="pgn-info" id="pInfo">-</div>
+        <div class="pgn-btns" id="pBtns"></div>
       </div>
     </div>
+    </div><!-- /contentTable -->
 
-    <!-- Main Content -->
-    <div
-      id="mainContent"
-      class="pt-20 lg:pt-4 px-4 lg:pl-28 lg:pr-6 min-h-screen flex flex-col pb-4"
-    >
-      <!-- Page Title -->
-      <div class="mb-2 ml-4">
-        <h1 class="text-2xl font-bold text-gray-900">Voice for Change</h1>
-        <p class="text-gray-500 text-sm">
-          ระบบจัดการข้อร้องเรียน ข้อเสนอแนะ และคำชม
-        </p>
-      </div>
-
-      <!-- Content Area: Inbox View -->
-      <div id="viewInbox" class="bg-white rounded-[2.5rem] border border-gray-200 pt-2 pb-4 px-4 lg:pt-3 lg:pb-6 lg:px-6">
-        <div id="contentHome">
-          <!-- Filter Row + Tab Bar -->
-          <div class="px-1 py-2 mb-2 flex items-center gap-2">
-            <!-- Filter Dropdown (Read/Unread) -->
-            <div class="relative">
-              <button
-                onclick="toggleStatusDropdown()"
-                id="statusDropdownBtn"
-                class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-full hover:bg-gray-200 transition-all"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                </svg>
-                <span id="statusLabel">ทั้งหมด</span>
-                <svg class="w-3.5 h-3.5 transition-transform" id="statusArrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div
-                id="statusDropdownMenu"
-                class="hidden absolute top-full left-0 mt-1 w-48 bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden z-50"
-              >
-                <button onclick="selectStatus('all', 'ทั้งหมด')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-2 font-medium">
-                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  ทั้งหมด
-                </button>
-                <button onclick="selectStatus('unread', 'ยังไม่ได้อ่าน')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-2">
-                  <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                  ยังไม่ได้อ่าน
-                </button>
-              </div>
-            </div>
-
-            <!-- Category Dropdown -->
-            <div class="relative">
-              <button
-                onclick="toggleCategoryDropdown()"
-                id="categoryDropdownBtn"
-                class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-full hover:bg-gray-200 transition-all"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
-                </svg>
-                <span id="categoryLabel">ทั้งหมด</span>
-                <svg class="w-3.5 h-3.5 transition-transform" id="categoryArrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <!-- Dropdown Menu -->
-              <div
-                id="categoryDropdownMenu"
-                class="hidden absolute top-full left-0 mt-1 w-44 bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden z-50"
-              >
-                <button onclick="selectCategory('all', 'ทั้งหมด')" class="category-item w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-2 font-medium">
-                  <span class="w-2 h-2 rounded-full bg-gray-400"></span>
-                  ทั้งหมด
-                </button>
-                <button onclick="selectCategory('complaint', 'ร้องเรียน')" class="category-item w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors flex items-center gap-2">
-                  <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                  ร้องเรียน
-                </button>
-                <button onclick="selectCategory('compliment', 'ชื่นชม')" class="category-item w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors flex items-center gap-2">
-                  <span class="w-2 h-2 rounded-full bg-green-500"></span>
-                  ชื่นชม
-                </button>
-                <button onclick="selectCategory('suggestion', 'เสนอแนะ')" class="category-item w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition-colors flex items-center gap-2">
-                  <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                  เสนอแนะ
-                </button>
-              </div>
-            </div>
-
-            <!-- Spacer -->
-            <div class="flex-1"></div>
-
-            <!-- Tab Bar -->
-            <div class="tab-bar">
-              <button class="tab-btn active" onclick="switchTab('inbox')" id="tabInbox">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
-                รายการ
-              </button>
-              <button class="tab-btn" onclick="switchTab('table')" id="tabTable">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-                ตาราง
-              </button>
-            </div>
-          </div>
-
-          <div
-            class="flex flex-col lg:flex-row h-auto lg:h-[calc(125vh-190px)] inbox-compact border border-gray-200 rounded-2xl overflow-hidden"
-          >
-            <!-- Left Panel - Message List -->
-            <div
-              id="leftPanel"
-              class="overflow-hidden flex flex-col"
-            >
-              <!-- List Header with Filters -->
-              <div class="px-4 py-3 border-b border-gray-100">
-                <div class="flex items-center justify-between mb-3">
-                  <div class="flex items-center gap-2">
-                    <span id="listHeaderLabel" class="text-sm font-medium text-gray-700"
-                      >ทั้งหมด</span
-                    >
-                    <span
-                      class="px-2 py-0.5 bg-blue-100 text-blue-600 text-xs rounded-full"
-                      >24</span
-                    >
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <!-- Select Multiple Button -->
-                    <button
-                      onclick="toggleSelectMode()"
-                      id="selectModeBtn"
-                      class="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
-                      title="เลือกหลายรายการ"
-                    >
-                      <svg
-                        class="w-4 h-4 text-gray-500"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
-                        />
-                      </svg>
-                    </button>
-                    <!-- Filter Button with Dropdown -->
-                    <div class="relative">
-                      <button
-                        onclick="toggleFilterDropdown()"
-                        class="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
-                        title="กรอง"
-                      >
-                        <svg
-                          class="w-4 h-4 text-gray-500"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-                          />
-                        </svg>
-                      </button>
-                      <!-- Filter Dropdown Menu -->
-                      <div
-                        id="filterDropdown"
-                        class="hidden absolute right-0 top-full mt-1 w-44 bg-white rounded-xl border border-gray-200 shadow-lg z-50 py-1"
-                      >
-                        <button
-                          onclick="setFilter('all')"
-                          class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
-                        >
-                          <svg
-                            class="w-4 h-4 text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                            />
-                          </svg>
-                          ข้อความทั้งหมด
-                        </button>
-                        <button
-                          onclick="setFilter('unread')"
-                          class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
-                        >
-                          <svg
-                            class="w-4 h-4 text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76"
-                            />
-                          </svg>
-                          ยังไม่ได้อ่าน
-                        </button>
-                        <button
-                          onclick="setFilter('pinned')"
-                          class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
-                        >
-                          <svg
-                            class="w-4 h-4 text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
-                            />
-                          </svg>
-                          ปักมุด
-                        </button>
-                        <div class="border-t border-gray-100 my-1"></div>
-                        <button
-                          onclick="setFilter('nostatus')"
-                          class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
-                        >
-                          <svg
-                            class="w-4 h-4 text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                          ยังไม่เลือกสถานะ
-                        </button>
-                      </div>
-                    </div>
-                    <button
-                      class="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
-                      title="รีเฟรช"
-                    >
-                      <svg
-                        class="w-4 h-4 text-gray-500"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                        />
-                      </svg>
-                    </button>
-                    <button
-                      class="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
-                      title="ถังขยะ"
-                    >
-                      <svg
-                        class="w-4 h-4 text-gray-500"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-
-              </div>
-
-              <!-- Message List -->
-              <div class="flex-1 overflow-y-auto custom-scrollbar">
-                <!-- Message Item 1 - Active (ร้องเรียน) -->
-                <div
-                  class="message-item px-4 py-3 border-b border-gray-50 cursor-pointer bg-blue-50 border-l-4 border-l-red-500"
-                  data-category="complaint"
-                  onclick="selectMessage(1)"
-                >
-                  <div class="flex items-start gap-3">
-                    <div
-                      class="w-10 h-10 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center text-white font-medium text-sm shrink-0"
-                    >
-                      สป
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-center justify-between mb-1">
-                        <div class="flex items-center gap-2">
-                          <span class="font-medium text-gray-900 text-sm"
-                            >ไม่ระบุตัวตน</span
-                          >
-                          <span
-                            class="px-1.5 py-0.5 bg-red-100 text-red-600 text-[10px] rounded-full"
-                            >ร้องเรียน</span
-                          >
-                        </div>
-                        <span class="text-xs text-gray-400">03/02/2569</span>
-                      </div>
-                      <p class="text-sm text-gray-700 font-medium truncate">
-                        สภาพแวดล้อมในการทำงานไม่เหมาะสม
-                      </p>
-                      <p class="text-xs text-gray-500 truncate mt-0.5">
-                        ห้องน้ำสกปรก ไม่มีคนทำความสะอาด...
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Message Item 2 (เสนอแนะ) -->
-                <div
-                  class="message-item px-4 py-3 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors"
-                  data-category="suggestion"
-                  onclick="selectMessage(2)"
-                >
-                  <div class="flex items-start gap-3">
-                    <div
-                      class="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center text-white font-medium text-sm shrink-0"
-                    >
-                      PH
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-center justify-between mb-1">
-                        <div class="flex items-center gap-2">
-                          <span class="font-medium text-gray-900 text-sm"
-                            >Pakin H. (HDQ)</span
-                          >
-                          <span
-                            class="px-1.5 py-0.5 bg-yellow-100 text-yellow-700 text-[10px] rounded-full"
-                            >เสนอแนะ</span
-                          >
-                        </div>
-                        <span class="text-xs text-gray-400">02/02/2569</span>
-                      </div>
-                      <p class="text-sm text-gray-600 truncate">
-                        เสนอแนะการปรับปรุงระบบลางาน
-                      </p>
-                      <p class="text-xs text-gray-500 truncate mt-0.5">
-                        อยากให้มีระบบลางานผ่าน App...
-                      </p>
-                    </div>
-                    <div
-                      class="w-2 h-2 bg-blue-500 rounded-full shrink-0 mt-2"
-                    ></div>
-                  </div>
-                </div>
-
-                <!-- Message Item 3 (คำชม) -->
-                <div
-                  class="message-item px-4 py-3 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors"
-                  data-category="compliment"
-                  onclick="selectMessage(3)"
-                >
-                  <div class="flex items-start gap-3">
-                    <div
-                      class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-medium text-sm shrink-0"
-                    >
-                      ST
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-center justify-between mb-1">
-                        <div class="flex items-center gap-2">
-                          <span class="font-medium text-gray-900 text-sm"
-                            >Somchai T. (BKK)</span
-                          >
-                          <span
-                            class="px-1.5 py-0.5 bg-green-100 text-green-700 text-[10px] rounded-full"
-                            >คำชม</span
-                          >
-                        </div>
-                        <span class="text-xs text-gray-400">01/02/2569</span>
-                      </div>
-                      <p class="text-sm text-gray-600 truncate">
-                        ชมเชยพนักงาน Check-in Counter
-                      </p>
-                      <p class="text-xs text-gray-500 truncate mt-0.5">
-                        พี่แอน GA ให้บริการดีมาก...
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Message Item 4 (ร้องเรียน) -->
-                <div
-                  class="message-item px-4 py-3 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors"
-                  data-category="complaint"
-                  onclick="selectMessage(4)"
-                >
-                  <div class="flex items-start gap-3">
-                    <div
-                      class="w-10 h-10 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center text-white font-medium text-sm shrink-0"
-                    >
-                      NW
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-center justify-between mb-1">
-                        <div class="flex items-center gap-2">
-                          <span class="font-medium text-gray-900 text-sm"
-                            >Napat W. (CNX)</span
-                          >
-                          <span
-                            class="px-1.5 py-0.5 bg-red-100 text-red-600 text-[10px] rounded-full"
-                            >ร้องเรียน</span
-                          >
-                        </div>
-                        <span class="text-xs text-gray-400">31/01/2569</span>
-                      </div>
-                      <p class="text-sm text-gray-600 truncate">
-                        หัวหน้างานพูดจาไม่เหมาะสม
-                      </p>
-                      <p class="text-xs text-gray-500 truncate mt-0.5">
-                        ขอร้องเรียนหัวหน้าแผนก GF...
-                      </p>
-                    </div>
-                    <div
-                      class="w-2 h-2 bg-blue-500 rounded-full shrink-0 mt-2"
-                    ></div>
-                  </div>
-                </div>
-
-                <!-- Message Item 5 (เสนอแนะ) -->
-                <div
-                  class="message-item px-4 py-3 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors"
-                  data-category="suggestion"
-                  onclick="selectMessage(5)"
-                >
-                  <div class="flex items-start gap-3">
-                    <div
-                      class="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center text-white font-medium text-sm shrink-0"
-                    >
-                      WK
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-center justify-between mb-1">
-                        <div class="flex items-center gap-2">
-                          <span class="font-medium text-gray-900 text-sm"
-                            >Wichai K. (HKT)</span
-                          >
-                          <span
-                            class="px-1.5 py-0.5 bg-yellow-100 text-yellow-700 text-[10px] rounded-full"
-                            >เสนอแนะ</span
-                          >
-                        </div>
-                        <span class="text-xs text-gray-400">30/01/2569</span>
-                      </div>
-                      <p class="text-sm text-gray-600 truncate">
-                        เพิ่มอุปกรณ์ความปลอดภัย
-                      </p>
-                      <p class="text-xs text-gray-500 truncate mt-0.5">
-                        อยากให้เพิ่มเสื้อสะท้อนแสง...
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Message Item 6 (ร้องเรียน) -->
-                <div
-                  class="message-item px-4 py-3 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors"
-                  data-category="complaint"
-                  onclick="selectMessage(6)"
-                >
-                  <div class="flex items-start gap-3">
-                    <div
-                      class="w-10 h-10 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center text-white font-medium text-sm shrink-0"
-                    >
-                      ไม
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-center justify-between mb-1">
-                        <div class="flex items-center gap-2">
-                          <span class="font-medium text-gray-900 text-sm"
-                            >ไม่ระบุตัวตน</span
-                          >
-                          <span
-                            class="px-1.5 py-0.5 bg-red-100 text-red-600 text-[10px] rounded-full"
-                            >ร้องเรียน</span
-                          >
-                        </div>
-                        <span class="text-xs text-gray-400">29/01/2569</span>
-                      </div>
-                      <p class="text-sm text-gray-600 truncate">
-                        เครื่องปรับอากาศเสีย
-                      </p>
-                      <p class="text-xs text-gray-500 truncate mt-0.5">
-                        แจ้งซ่อมแล้วแต่ไม่มาดำเนินการ...
-                      </p>
-                    </div>
-                    <div
-                      class="w-2 h-2 bg-blue-500 rounded-full shrink-0 mt-2"
-                    ></div>
-                  </div>
-                </div>
-
-                <!-- Message Item 7 (เสนอแนะ) -->
-                <div
-                  class="message-item px-4 py-3 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors"
-                  data-category="suggestion"
-                  onclick="selectMessage(7)"
-                >
-                  <div class="flex items-start gap-3">
-                    <div
-                      class="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center text-white font-medium text-sm shrink-0"
-                    >
-                      AP
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-center justify-between mb-1">
-                        <div class="flex items-center gap-2">
-                          <span class="font-medium text-gray-900 text-sm">Anan P. (DMK)</span>
-                          <span class="px-1.5 py-0.5 bg-yellow-100 text-yellow-700 text-[10px] rounded-full">เสนอแนะ</span>
-                        </div>
-                        <span class="text-xs text-gray-400">28/01/2569</span>
-                      </div>
-                      <p class="text-sm text-gray-600 truncate">เสนอให้เพิ่มรถรับส่งพนักงาน</p>
-                      <p class="text-xs text-gray-500 truncate mt-0.5">รถรับส่งไม่เพียงพอ กรุณาเพิ่ม...</p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Message Item 8 (คำชม) -->
-                <div
-                  class="message-item px-4 py-3 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors"
-                  data-category="compliment"
-                  onclick="selectMessage(8)"
-                >
-                  <div class="flex items-start gap-3">
-                    <div
-                      class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-medium text-sm shrink-0"
-                    >
-                      SN
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-center justify-between mb-1">
-                        <div class="flex items-center gap-2">
-                          <span class="font-medium text-gray-900 text-sm">Suda N. (HDQ)</span>
-                          <span class="px-1.5 py-0.5 bg-green-100 text-green-700 text-[10px] rounded-full">คำชม</span>
-                        </div>
-                        <span class="text-xs text-gray-400">27/01/2569</span>
-                      </div>
-                      <p class="text-sm text-gray-600 truncate">ชมเชยทีม IT แก้ปัญหาได้รวดเร็ว</p>
-                      <p class="text-xs text-gray-500 truncate mt-0.5">ระบบล่มแต่ทีม IT แก้ไขภายใน...</p>
-                    </div>
-                    <div
-                      class="w-2 h-2 bg-blue-500 rounded-full shrink-0 mt-2"
-                    ></div>
-                  </div>
-                </div>
-
-                <!-- Message Item 9 (ร้องเรียน) -->
-                <div
-                  class="message-item px-4 py-3 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors"
-                  data-category="complaint"
-                  onclick="selectMessage(9)"
-                >
-                  <div class="flex items-start gap-3">
-                    <div
-                      class="w-10 h-10 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center text-white font-medium text-sm shrink-0"
-                    >
-                      TK
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-center justify-between mb-1">
-                        <div class="flex items-center gap-2">
-                          <span class="font-medium text-gray-900 text-sm">Thana K. (CEI)</span>
-                          <span class="px-1.5 py-0.5 bg-red-100 text-red-600 text-[10px] rounded-full">ร้องเรียน</span>
-                        </div>
-                        <span class="text-xs text-gray-400">26/01/2569</span>
-                      </div>
-                      <p class="text-sm text-gray-600 truncate">อุปกรณ์ GSE ชำรุด ไม่ได้ซ่อม</p>
-                      <p class="text-xs text-gray-500 truncate mt-0.5">แจ้งซ่อมเครื่อง GPU มานาน...</p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Message Item 10 (คำชม) -->
-                <div
-                  class="message-item px-4 py-3 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors"
-                  data-category="compliment"
-                  onclick="selectMessage(10)"
-                >
-                  <div class="flex items-start gap-3">
-                    <div
-                      class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-medium text-sm shrink-0"
-                    >
-                      PP
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-center justify-between mb-1">
-                        <div class="flex items-center gap-2">
-                          <span class="font-medium text-gray-900 text-sm">Pim P. (BKK)</span>
-                          <span class="px-1.5 py-0.5 bg-green-100 text-green-700 text-[10px] rounded-full">คำชม</span>
-                        </div>
-                        <span class="text-xs text-gray-400">25/01/2569</span>
-                      </div>
-                      <p class="text-sm text-gray-600 truncate">ขอบคุณพี่ๆ ทีม Ramp ดูแลดี</p>
-                      <p class="text-xs text-gray-500 truncate mt-0.5">ทำงานอย่างเป็นระบบ ปลอดภัย...</p>
-                    </div>
-                    <div
-                      class="w-2 h-2 bg-blue-500 rounded-full shrink-0 mt-2"
-                    ></div>
-                  </div>
-                </div>
-
-                <!-- Message Item 11 (ร้องเรียน) -->
-                <div
-                  class="message-item px-4 py-3 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors"
-                  data-category="complaint"
-                  onclick="selectMessage(11)"
-                >
-                  <div class="flex items-start gap-3">
-                    <div
-                      class="w-10 h-10 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center text-white font-medium text-sm shrink-0"
-                    >
-                      ไม
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-center justify-between mb-1">
-                        <div class="flex items-center gap-2">
-                          <span class="font-medium text-gray-900 text-sm">ไม่ระบุตัวตน</span>
-                          <span class="px-1.5 py-0.5 bg-red-100 text-red-600 text-[10px] rounded-full">ร้องเรียน</span>
-                        </div>
-                        <span class="text-xs text-gray-400">24/01/2569</span>
-                      </div>
-                      <p class="text-sm text-gray-600 truncate">ล่วงเวลาไม่ได้รับค่าตอบแทน</p>
-                      <p class="text-xs text-gray-500 truncate mt-0.5">ทำ OT แต่ไม่ได้รับเงินค่าล่วง...</p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Message Item 12 (เสนอแนะ) -->
-                <div
-                  class="message-item px-4 py-3 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors"
-                  data-category="suggestion"
-                  onclick="selectMessage(12)"
-                >
-                  <div class="flex items-start gap-3">
-                    <div
-                      class="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center text-white font-medium text-sm shrink-0"
-                    >
-                      KS
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-center justify-between mb-1">
-                        <div class="flex items-center gap-2">
-                          <span class="font-medium text-gray-900 text-sm">Krit S. (USM)</span>
-                          <span class="px-1.5 py-0.5 bg-yellow-100 text-yellow-700 text-[10px] rounded-full">เสนอแนะ</span>
-                        </div>
-                        <span class="text-xs text-gray-400">23/01/2569</span>
-                      </div>
-                      <p class="text-sm text-gray-600 truncate">เสนอจัดอบรมภาษาอังกฤษ</p>
-                      <p class="text-xs text-gray-500 truncate mt-0.5">อยากให้มีคอร์สภาษาอังกฤษ...</p>
-                    </div>
-                    <div
-                      class="w-2 h-2 bg-blue-500 rounded-full shrink-0 mt-2"
-                    ></div>
-                  </div>
-                </div>
-
-                <!-- Message Item 13 (ร้องเรียน) -->
-                <div
-                  class="message-item px-4 py-3 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors"
-                  data-category="complaint"
-                  onclick="selectMessage(13)"
-                >
-                  <div class="flex items-start gap-3">
-                    <div
-                      class="w-10 h-10 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center text-white font-medium text-sm shrink-0"
-                    >
-                      MW
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-center justify-between mb-1">
-                        <div class="flex items-center gap-2">
-                          <span class="font-medium text-gray-900 text-sm">Mali W. (HKT)</span>
-                          <span class="px-1.5 py-0.5 bg-red-100 text-red-600 text-[10px] rounded-full">ร้องเรียน</span>
-                        </div>
-                        <span class="text-xs text-gray-400">22/01/2569</span>
-                      </div>
-                      <p class="text-sm text-gray-600 truncate">รถยกกระเป๋าพัง ล่าช้า</p>
-                      <p class="text-xs text-gray-500 truncate mt-0.5">ทำให้กระเป๋าผู้โดยสารล่าช้า...</p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Message Item 14 (เสนอแนะ) -->
-                <div
-                  class="message-item px-4 py-3 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors"
-                  data-category="suggestion"
-                  onclick="selectMessage(14)"
-                >
-                  <div class="flex items-start gap-3">
-                    <div
-                      class="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center text-white font-medium text-sm shrink-0"
-                    >
-                      RJ
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-center justify-between mb-1">
-                        <div class="flex items-center gap-2">
-                          <span class="font-medium text-gray-900 text-sm">Rin J. (CNX)</span>
-                          <span class="px-1.5 py-0.5 bg-yellow-100 text-yellow-700 text-[10px] rounded-full">เสนอแนะ</span>
-                        </div>
-                        <span class="text-xs text-gray-400">21/01/2569</span>
-                      </div>
-                      <p class="text-sm text-gray-600 truncate">เสนอเพิ่มช่วงพักเบรกกลางวัน</p>
-                      <p class="text-xs text-gray-500 truncate mt-0.5">เวลาพักน้อยเกินไป อยากให้...</p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Message Item 15 (คำชม) -->
-                <div
-                  class="message-item px-4 py-3 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors"
-                  data-category="compliment"
-                  onclick="selectMessage(15)"
-                >
-                  <div class="flex items-start gap-3">
-                    <div
-                      class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-medium text-sm shrink-0"
-                    >
-                      NC
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-center justify-between mb-1">
-                        <div class="flex items-center gap-2">
-                          <span class="font-medium text-gray-900 text-sm">Nat C. (BKK)</span>
-                          <span class="px-1.5 py-0.5 bg-green-100 text-green-700 text-[10px] rounded-full">คำชม</span>
-                        </div>
-                        <span class="text-xs text-gray-400">20/01/2569</span>
-                      </div>
-                      <p class="text-sm text-gray-600 truncate">ชมเชยทีม Cargo ทำงานเร็ว</p>
-                      <p class="text-xs text-gray-500 truncate mt-0.5">สินค้าถูกจัดส่งตรงเวลาทุกครั้ง...</p>
-                    </div>
-                    <div
-                      class="w-2 h-2 bg-blue-500 rounded-full shrink-0 mt-2"
-                    ></div>
-                  </div>
-                </div>
-
-                <!-- Message Item 16 (ร้องเรียน) -->
-                <div
-                  class="message-item px-4 py-3 border-b border-gray-50 cursor-pointer hover:bg-gray-50 transition-colors"
-                  data-category="complaint"
-                  onclick="selectMessage(16)"
-                >
-                  <div class="flex items-start gap-3">
-                    <div
-                      class="w-10 h-10 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center text-white font-medium text-sm shrink-0"
-                    >
-                      WT
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-center justify-between mb-1">
-                        <div class="flex items-center gap-2">
-                          <span class="font-medium text-gray-900 text-sm">Wasan T. (DMK)</span>
-                          <span class="px-1.5 py-0.5 bg-red-100 text-red-600 text-[10px] rounded-full">ร้องเรียน</span>
-                        </div>
-                        <span class="text-xs text-gray-400">19/01/2569</span>
-                      </div>
-                      <p class="text-sm text-gray-600 truncate">ไม่มีที่จอดรถเพียงพอ</p>
-                      <p class="text-xs text-gray-500 truncate mt-0.5">พนักงานต้องจอดไกลมาก ไม่...</p>
-                    </div>
-                    <div
-                      class="w-2 h-2 bg-blue-500 rounded-full shrink-0 mt-2"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Draggable Resizer -->
-            <div class="panel-resizer hidden lg:block" id="panelResizer"></div>
-
-            <!-- Right Panel - Message Detail -->
-            <div
-              id="messageDetailPanel"
-              class="hidden lg:flex overflow-hidden flex-col"
-              style="flex: 1"
-            >
-              <!-- Detail Header -->
-              <div class="px-6 py-4">
-                <div class="flex items-center justify-between mb-3">
-                  <h2 class="text-lg font-semibold text-gray-900">
-                    สภาพแวดล้อมในการทำงานไม่เหมาะสม
-                  </h2>
-                  <span
-                    class="px-3 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full"
-                    >ร้องเรียน</span
-                  >
-                </div>
-                <div class="flex items-center gap-4 text-sm text-gray-500 border-t border-gray-100 pt-3">
-                  <div class="flex items-center gap-2">
-                    <div
-                      class="w-8 h-8 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center text-white font-medium text-xs"
-                    >
-                      สป
-                    </div>
-                    <div>
-                      <span class="text-gray-900 font-medium"
-                        >ไม่ระบุตัวตน</span
-                      >
-                    </div>
-                  </div>
-                  <span class="text-gray-400">03/02/2569 14:32</span>
-                </div>
-              </div>
-
-              <!-- Detail Content -->
-              <div class="flex-1 overflow-y-auto custom-scrollbar p-6">
-                <!-- Info Cards -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-                  <div class="bg-gray-50 rounded-xl p-3">
-                    <p class="text-xs text-gray-500 mb-1">สถานีที่ร้องเรียน</p>
-                    <p class="text-sm font-medium text-gray-900">
-                      สถานีสุวรรณภูมิ (BKK)
-                    </p>
-                  </div>
-                  <div class="bg-gray-50 rounded-xl p-3">
-                    <p class="text-xs text-gray-500 mb-1">ฝ่าย</p>
-                    <p class="text-sm font-medium text-gray-900">
-                      ฝ่ายปฏิบัติการภาคพื้น (BG)
-                    </p>
-                  </div>
-                  <div class="bg-gray-50 rounded-xl p-3">
-                    <p class="text-xs text-gray-500 mb-1">แผนก</p>
-                    <p class="text-sm font-medium text-gray-900">
-                      แผนกบริการผู้โดยสารภาคพื้น (GA)
-                    </p>
-                  </div>
-                  <div class="bg-gray-50 rounded-xl p-3">
-                    <p class="text-xs text-gray-500 mb-1">หมวดหมู่</p>
-                    <p class="text-sm font-medium text-red-600">
-                      สภาพแวดล้อมในการทำงาน
-                    </p>
-                  </div>
-                </div>
-
-                <!-- Complaint Details -->
-                <div class="space-y-4">
-                  <div>
-                    <h3 class="text-sm font-semibold text-gray-700 mb-2">
-                      รายละเอียดของเรื่องร้องเรียน
-                    </h3>
-                    <div class="bg-white border border-gray-200 rounded-xl p-4">
-                      <p class="text-gray-700 text-sm leading-relaxed">
-                        ห้องน้ำสกปรก ไม่มีคนทำความสะอาดเป็นประจำ กลิ่นเหม็นมาก
-                        ไม่มีกระดาษชำระ น้ำไม่ไหล บางห้องประตูล็อคไม่ได้
-                        พนักงานต้องใช้ห้องน้ำของผู้โดยสารแทน ซึ่งไม่เหมาะสม
-                        และส่งผลต่อภาพลักษณ์ของบริษัท
-                        <br /><br />
-                        นอกจากนี้ ห้องพักพนักงานก็มีสภาพเสื่อมโทรม
-                        เครื่องปรับอากาศเสีย ไม่ได้ซ่อม ทำให้ร้อนมากในตอนกลางวัน
-                        พนักงานไม่สามารถพักผ่อนได้อย่างเต็มที่
-                        ส่งผลต่อประสิทธิภาพการทำงาน
-                      </p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 class="text-sm font-semibold text-gray-700 mb-2">
-                      สิ่งที่อยากให้แก้ไข
-                    </h3>
-                    <div class="bg-white border border-gray-200 rounded-xl p-4">
-                      <p class="text-gray-700 text-sm leading-relaxed">
-                        1. จัดทำความสะอาดห้องน้ำทุก 2 ชั่วโมง<br />
-                        2. ซ่อมแซมประตูห้องน้ำที่ชำรุด<br />
-                        3. ตรวจสอบและซ่อมระบบน้ำประปา<br />
-                        4. ซ่อมเครื่องปรับอากาศห้องพักพนักงาน<br />
-                        5. เพิ่มพัดลมสำรองในกรณีฉุกเฉิน
-                      </p>
-                    </div>
-                  </div>
-
-                  <!-- Attachments -->
-                  <div>
-                    <h3 class="text-sm font-semibold text-gray-700 mb-2">
-                      ไฟล์แนบ
-                    </h3>
-                    <div class="flex flex-wrap gap-2">
-                      <div
-                        class="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg"
-                      >
-                        <svg
-                          class="w-4 h-4 text-blue-500"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
-                        <span class="text-xs text-gray-700">ห้องน้ำ_1.jpg</span>
-                      </div>
-                      <div
-                        class="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg"
-                      >
-                        <svg
-                          class="w-4 h-4 text-blue-500"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
-                        <span class="text-xs text-gray-700"
-                          >ห้องพัก_แอร์เสีย.jpg</span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Detail Footer -->
-              <div
-                class="px-6 py-4 border-t border-gray-100 flex items-center gap-3"
-              >
-                <button
-                  class="px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors"
-                >
-                  ดำเนินการ
-                </button>
-                <button
-                  class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors"
-                >
-                  ตอบกลับ
-                </button>
-                <button
-                  class="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors"
-                >
-                  ส่งต่อ
-                </button>
-              </div>
-            </div>
-          </div>
+  </div><!-- /admin-content -->
+  <!-- Detail Modal -->
+  <div id="detailModal" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+    <div class="modal-box">
+      <div class="modal-head">
+        <div>
+          <div class="text-base font-semibold text-gray-900" id="mTitle">รายละเอียด</div>
+          <div class="trk mt-0.5" id="mTracking"></div>
         </div>
-
+        <button onclick="closeModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
+          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
       </div>
-
-      <!-- Content Area: Table View -->
-      <div id="viewTable" class="bg-white rounded-[2.5rem] border border-gray-200 pt-2 pb-4 px-4 lg:pt-3 lg:pb-6 lg:px-6 table-view" style="display:none;">
-        <!-- Table Filter Row + Tab Bar -->
-        <div class="px-1 py-2 mb-2 flex items-center gap-2">
-            <!-- Status Filter Dropdown -->
-            <div class="relative">
-              <button
-                onclick="toggleTblStatusDropdown()"
-                id="tblStatusDropdownBtn"
-                class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-full hover:bg-gray-200 transition-all"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                </svg>
-                <span id="tblStatusLabel">รายการทั้งหมด</span>
-                <svg class="w-3.5 h-3.5 transition-transform" id="tblStatusArrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div
-                id="tblStatusDropdownMenu"
-                class="hidden absolute top-full left-0 mt-1 w-48 bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden z-50"
-              >
-                <button onclick="selectTblStatus('all', 'รายการทั้งหมด')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-2 font-medium">
-                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  รายการทั้งหมด
-                </button>
-                <button onclick="selectTblStatus('unread', 'ยังไม่ได้อ่าน')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-2">
-                  <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                  ยังไม่ได้อ่าน
-                </button>
-                <button onclick="selectTblStatus('read', 'อ่านแล้ว')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-2">
-                  <span class="w-2 h-2 rounded-full bg-gray-400"></span>
-                  อ่านแล้ว
-                </button>
-                <button onclick="selectTblStatus('pending', 'รอดำเนินการ')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-2">
-                  <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
-                  รอดำเนินการ
-                </button>
-              </div>
-            </div>
-
-            <!-- Category Filter Dropdown -->
-            <div class="relative">
-              <button
-                onclick="toggleTblCategoryDropdown()"
-                id="tblCategoryDropdownBtn"
-                class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-full hover:bg-gray-200 transition-all"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-                <span id="tblCategoryLabel">ทั้งหมด</span>
-                <svg class="w-3.5 h-3.5 transition-transform" id="tblCategoryArrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div
-                id="tblCategoryDropdownMenu"
-                class="hidden absolute top-full left-0 mt-1 w-48 bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden z-50"
-              >
-                <button onclick="selectTblCategory('all', 'ทั้งหมด')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-2 font-medium">
-                  ทั้งหมด
-                </button>
-                <button onclick="selectTblCategory('complaint', 'ร้องเรียน')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-2">
-                  <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                  ร้องเรียน
-                </button>
-                <button onclick="selectTblCategory('suggestion', 'เสนอแนะ')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-2">
-                  <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
-                  เสนอแนะ
-                </button>
-                <button onclick="selectTblCategory('compliment', 'คำชม')" class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-2">
-                  <span class="w-2 h-2 rounded-full bg-green-500"></span>
-                  คำชม
-                </button>
-              </div>
-            </div>
-
-            <!-- Spacer -->
-            <div class="flex-1"></div>
-
-            <!-- Tab Bar -->
-            <div class="tab-bar">
-              <button class="tab-btn" onclick="switchTab('inbox')" id="tabInbox2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
-                รายการ
-              </button>
-              <button class="tab-btn active" onclick="switchTab('table')" id="tabTable2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-                ตาราง
-              </button>
-            </div>
-        </div>
-        <!-- Table -->
-        <div class="overflow-auto custom-scrollbar rounded-xl border border-gray-100" style="max-height: calc(125vh - 280px);">
-          <table>
-            <thead>
-              <tr>
-                <th style="width:50px">#</th>
-                <th style="width:85px">ประเภท</th>
-                <th>หัวข้อ</th>
-                <th style="width:130px">หมวดหมู่</th>
-                <th style="width:150px">สถานี</th>
-                <th style="width:120px">ฝ่าย</th>
-                <th style="width:110px">ผู้แจ้ง</th>
-                <th style="width:100px">วันที่</th>
-                <th style="width:90px">สถานะ</th>
-              </tr>
-            </thead>
-            <tbody id="tableViewBody"></tbody>
-          </table>
-        </div>
-      </div>
+      <div class="modal-body" id="mBody"></div>
+      <div class="modal-actions" id="mActions"></div>
     </div>
+  </div>
 
-    <!-- Mobile Detail Modal -->
-    <div
-      id="mobileModalBackdrop"
-      class="modal-backdrop lg:hidden"
-      onclick="closeMobileDetail()"
-    ></div>
-    <div
-      id="mobileModalCard"
-      class="modal-card lg:hidden"
-    >
-      <div id="mobileDetailContent" class="flex flex-col overflow-hidden h-full">
-        <!-- Content will be injected by JavaScript -->
-      </div>
-    </div>
+  <script>
+    // ========================================
+    // VFC Admin — Supabase Data Table
+    // ========================================
+    let allData = [], filtered = [], page = 1;
+    const PER = 20;
 
-    <!-- VFC Admin Page Logic -->
-    <script src="../../../function/admin/components/vfc-admin.js"></script>
-  </body>
+    // Tab switching
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.querySelectorAll('.tab-content').forEach(c => {
+        c.classList.add('hidden');
+      });
+      const btnId = 'tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1);
+      const contentId = 'content' + tabName.charAt(0).toUpperCase() + tabName.slice(1);
+      document.getElementById(btnId).classList.add('active');
+      document.getElementById(contentId).classList.remove('hidden');
+      if (tabName === 'board') renderBoard();
+      if (tabName === 'inbox') renderDashboard();
+    }
+
+    // Dashboard — Power BI style
+    let dashTypeFilter = '';
+    let dashYear = new Date().getFullYear();
+    let dashMonth = '';
+    let dashFilterYear = '';
+    let dashDept = '';
+    function setDashFilter(type) {
+      dashTypeFilter = type;
+      renderDashboard();
+    }
+    function setDashYear(y) {
+      dashYear = parseInt(y);
+      renderDashboard();
+    }
+    function setDashMonth(m) {
+      dashMonth = m;
+      renderDashboard();
+    }
+    function setDashFilterYear(y) {
+      dashFilterYear = y;
+      renderDashboard();
+    }
+    function setDashDept(d) {
+      dashDept = d;
+      renderDashboard();
+    }
+    function renderDashboard() {
+      // Apply all dashboard filters
+      let src = [...allData];
+      if (dashTypeFilter) src = src.filter(d => d.type === dashTypeFilter);
+      if (dashFilterYear) src = src.filter(d => d.created_at && new Date(d.created_at).getFullYear() === parseInt(dashFilterYear));
+      if (dashMonth) src = src.filter(d => d.created_at && (new Date(d.created_at).getMonth() + 1) === parseInt(dashMonth));
+      if (dashDept) src = src.filter(d => (d.detail_department || '') === dashDept);
+      const total = src.length;
+      const allTotal = allData.length;
+      const container = document.getElementById('dashCharts');
+      if (!allTotal) { container.innerHTML = ''; return; }
+
+      // Available years from data
+      const yearsSet = new Set();
+      allData.forEach(r => { if (r.created_at) yearsSet.add(new Date(r.created_at).getFullYear()); });
+      yearsSet.add(new Date().getFullYear());
+      const availYears = [...yearsSet].sort((a,b) => b - a);
+
+      // Available departments from data
+      const deptSet = new Set();
+      allData.forEach(r => { if (r.detail_department) deptSet.add(r.detail_department); });
+      const availDepts = [...deptSet].sort();
+
+      // Counts by type (from filtered src)
+      const cComplaint = src.filter(d => d.type === 'complaint').length;
+      const cSuggestion = src.filter(d => d.type === 'suggestion').length;
+      const cCompliment = src.filter(d => d.type === 'compliment').length;
+
+      // Status counts
+      const pending = src.filter(d => !d.status || d.status === 'pending').length;
+      const inProg = src.filter(d => d.status === 'in_progress').length;
+      const resolved = src.filter(d => d.status === 'resolved').length;
+      const closed = src.filter(d => d.status === 'closed').length;
+      const done = resolved + closed;
+
+      // MoM / YoY
+      const now = new Date();
+      const getMonthKey = (y, m) => y + '-' + String(m+1).padStart(2,'0');
+      const curMonthKey = getMonthKey(now.getFullYear(), now.getMonth());
+      const prevMonth = new Date(now.getFullYear(), now.getMonth()-1, 1);
+      const prevMonthKey = getMonthKey(prevMonth.getFullYear(), prevMonth.getMonth());
+      const sameMonthLastYear = new Date(now.getFullYear()-1, now.getMonth(), 1);
+      const yoyKey = getMonthKey(sameMonthLastYear.getFullYear(), sameMonthLastYear.getMonth());
+
+      const countByKey = (key) => src.filter(r => r.created_at && r.created_at.startsWith(key)).length;
+      const curCount = countByKey(curMonthKey);
+      const prevCount = countByKey(prevMonthKey);
+      const yoyCount = countByKey(yoyKey);
+
+      const momPct = prevCount ? Math.round((curCount - prevCount) / prevCount * 100) : (curCount ? 100 : 0);
+      const yoyPct = yoyCount ? Math.round((curCount - yoyCount) / yoyCount * 100) : (curCount ? 100 : 0);
+
+      const badge = (pct) => {
+        if (pct > 0) return `<span class="mom-badge mom-up">▲ +${pct}%</span>`;
+        if (pct < 0) return `<span class="mom-badge mom-down">▼ ${pct}%</span>`;
+        return `<span class="mom-badge mom-flat">— 0%</span>`;
+      };
+
+      // Monthly Jan-Dec for selected year
+      const monthFull = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+      const monthShort = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+      const isWide = window.innerWidth >= 768;
+      const months = [];
+      for (let m = 0; m < 12; m++) {
+        const key = dashYear + '-' + String(m+1).padStart(2,'0');
+        const count = src.filter(r => r.created_at && r.created_at.startsWith(key)).length;
+        months.push({ label: isWide ? monthFull[m] : monthShort[m], count, key });
+      }
+      const maxMonth = Math.max(...months.map(m => m.count), 1);
+
+      // Donut
+      const donutData = [
+        { label: 'รอดำเนินการ', val: pending, color: '#f59e0b' },
+        { label: 'กำลังดำเนินการ', val: inProg, color: '#3b82f6' },
+        { label: 'เสร็จสิ้น', val: resolved, color: '#22c55e' },
+        { label: 'ปิดแล้ว', val: closed, color: '#9ca3af' }
+      ];
+      const R = 60, CX = 80, CY = 80, C = 2 * Math.PI * R;
+      let offset = 0;
+      let donutPaths = '';
+      donutData.forEach(s => {
+        const pct = total ? s.val / total : 0;
+        const dash = pct * C;
+        donutPaths += `<circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="${s.color}" stroke-width="20" stroke-dasharray="${dash} ${C - dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${CX} ${CY})"/>`;
+        offset += dash;
+      });
+
+      // Bar colors by type filter
+      const barColor = dashTypeFilter === 'complaint' ? '#ef4444' : dashTypeFilter === 'compliment' ? '#22c55e' : dashTypeFilter === 'suggestion' ? '#eab308' : '#6366f1';
+
+      // Type bar data
+      const typeMax = Math.max(cComplaint, cSuggestion, cCompliment, 1);
+      const pctOf = (v) => total ? Math.round(v/allTotal*100) : 0;
+
+      // Progress %
+      const pctDone = total ? Math.round(done/total*100) : 0;
+      const pctProg = total ? Math.round(inProg/total*100) : 0;
+      const pctPend = total ? Math.round(pending/total*100) : 0;
+
+      // ====== Build HTML ======
+      let h = '';
+
+      // Filter bar
+      const selStyle = 'padding:6px 12px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:0.8125rem;color:#374151;background:white;cursor:pointer;outline:none';
+      h += `<div class="dash-filter-bar">`;
+      h += `<span style="font-size:0.75rem;color:#6b7280;font-weight:500;margin-right:4px">ตัวกรอง:</span>`;
+
+      // ประเภท
+      h += `<select onchange="setDashFilter(this.value)" style="${selStyle}">`;
+      h += `<option value="">ประเภท: ทั้งหมด</option>`;
+      h += `<option value="complaint"${dashTypeFilter==='complaint'?' selected':''}>🔴 ร้องเรียน</option>`;
+      h += `<option value="suggestion"${dashTypeFilter==='suggestion'?' selected':''}>🟡 เสนอแนะ</option>`;
+      h += `<option value="compliment"${dashTypeFilter==='compliment'?' selected':''}>🟢 ชมเชย</option>`;
+      h += `</select>`;
+
+      // ปี
+      h += `<select onchange="setDashFilterYear(this.value)" style="${selStyle}">`;
+      h += `<option value="">ปี: ทั้งหมด</option>`;
+      availYears.forEach(y => {
+        h += `<option value="${y}"${dashFilterYear==String(y)?' selected':''}>${y + 543}</option>`;
+      });
+      h += `</select>`;
+
+      // เดือน
+      const monthNames = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+      h += `<select onchange="setDashMonth(this.value)" style="${selStyle}">`;
+      h += `<option value="">เดือน: ทั้งหมด</option>`;
+      monthNames.forEach((name, idx) => {
+        h += `<option value="${idx+1}"${dashMonth==String(idx+1)?' selected':''}>${name}</option>`;
+      });
+      h += `</select>`;
+
+      // ส่วนงาน
+      h += `<select onchange="setDashDept(this.value)" style="${selStyle}">`;
+      h += `<option value="">ส่วนงาน: ทั้งหมด</option>`;
+      availDepts.forEach(d => {
+        h += `<option value="${d}"${dashDept===d?' selected':''}>${d}</option>`;
+      });
+      h += `</select>`;
+
+      h += `</div>`;
+
+      h += `<div class="dash-grid">`;
+
+      // ── Card 1: Donut ──
+      h += `<div class="dash-card">`;
+      h += `<div class="dash-card-head"><div><div class="dash-card-title">สถานะรวม</div><div class="dash-card-sub">สัดส่วนตามสถานะปัจจุบัน</div></div></div>`;
+      h += `<div class="donut-wrap">`;
+      h += `<svg class="donut-svg" width="160" height="160" viewBox="0 0 160 160">`;
+      if (total) {
+        h += donutPaths;
+      } else {
+        h += `<circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="#f3f4f6" stroke-width="20"/>`;
+      }
+      h += `<text x="${CX}" y="${CY-4}" class="donut-center" text-anchor="middle">${total}</text>`;
+      h += `<text x="${CX}" y="${CY+14}" class="donut-center-lbl" text-anchor="middle">รายการ</text>`;
+      h += `</svg>`;
+      h += `<div class="donut-legend">`;
+      donutData.forEach(s => {
+        h += `<div class="donut-legend-item"><span class="donut-dot" style="background:${s.color}"></span>${s.label}<span class="donut-legend-val">${s.val}</span></div>`;
+      });
+      h += `</div></div></div>`;
+
+      // ── Card 2: MoM / YoY ──
+      h += `<div class="dash-card">`;
+      h += `<div class="dash-card-head"><div><div class="dash-card-title">เปรียบเทียบ</div><div class="dash-card-sub">เดือนนี้ vs เดือนก่อน / ปีก่อน</div></div></div>`;
+      h += `<div class="mom-grid">`;
+      // MoM
+      h += `<div class="mom-card">`;
+      h += `<div class="mom-label">MoM (เดือนต่อเดือน)</div>`;
+      h += `<div class="mom-row"><span class="mom-val">${curCount}</span>${badge(momPct)}</div>`;
+      h += `<div class="mom-desc">เดือนก่อน: ${prevCount} รายการ</div>`;
+      h += `</div>`;
+      // YoY
+      h += `<div class="mom-card">`;
+      h += `<div class="mom-label">YoY (ปีต่อปี)</div>`;
+      h += `<div class="mom-row"><span class="mom-val">${curCount}</span>${badge(yoyPct)}</div>`;
+      h += `<div class="mom-desc">เดือนเดียวกันปีก่อน: ${yoyCount} รายการ</div>`;
+      h += `</div>`;
+      h += `</div></div>`;
+
+      // ── Card 3: Monthly trend ──
+      h += `<div class="dash-card">`;
+      h += `<div class="dash-card-head"><div><div class="dash-card-title">แนวโน้มรายเดือน</div><div class="dash-card-sub">ม.ค. — ธ.ค. ${dashYear + 543}${dashTypeFilter ? ' — ' + (TYPES[dashTypeFilter]?.th || '') : ''}</div></div>`;
+      h += `<select onchange="setDashYear(this.value)" style="padding:4px 10px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.75rem;color:#374151;background:white;cursor:pointer;outline:none">`;
+      availYears.forEach(y => {
+        h += `<option value="${y}"${y===dashYear?' selected':''}>${y + 543}</option>`;
+      });
+      h += `</select></div>`;
+      h += `<div class="bar-chart-wrap">`;
+      months.forEach(m => {
+        const pct = m.count ? Math.max((m.count/maxMonth)*100, 4) : 2;
+        h += `<div class="bar-col"><div class="bar-val">${m.count||''}</div><div class="bar-fill" style="height:${pct}%;background:${barColor}" title="${m.label}: ${m.count}"></div><div class="bar-lbl">${m.label}</div></div>`;
+      });
+      h += `</div></div>`;
+
+      // ── Card 4: Type breakdown ──
+      h += `<div class="dash-card">`;
+      h += `<div class="dash-card-head"><div><div class="dash-card-title">ประเภทข้อความ</div><div class="dash-card-sub">จำนวนตามประเภท</div></div></div>`;
+      h += `<div class="hbar-row"><span class="hbar-label">ร้องเรียน</span><div class="hbar-track"><div class="hbar-fill" style="width:${cComplaint/typeMax*100}%;background:#ef4444"></div></div><span class="hbar-val">${cComplaint}</span><span class="hbar-pct">${pctOf(cComplaint)}%</span></div>`;
+      h += `<div class="hbar-row"><span class="hbar-label">เสนอแนะ</span><div class="hbar-track"><div class="hbar-fill" style="width:${cSuggestion/typeMax*100}%;background:#eab308"></div></div><span class="hbar-val">${cSuggestion}</span><span class="hbar-pct">${pctOf(cSuggestion)}%</span></div>`;
+      h += `<div class="hbar-row"><span class="hbar-label">ชมเชย</span><div class="hbar-track"><div class="hbar-fill" style="width:${cCompliment/typeMax*100}%;background:#22c55e"></div></div><span class="hbar-val">${cCompliment}</span><span class="hbar-pct">${pctOf(cCompliment)}%</span></div>`;
+      h += `</div>`;
+
+      // ── Card 5: Progress ──
+      h += `<div class="dash-card">`;
+      h += `<div class="dash-card-head"><div><div class="dash-card-title">ความคืบหน้า</div><div class="dash-card-sub">สถานะการดำเนินงาน${dashTypeFilter ? ' — ' + (TYPES[dashTypeFilter]?.th || '') : ''}</div></div></div>`;
+      h += `<div class="prog-bar">`;
+      if (pctDone) h += `<div class="prog-fill" style="width:${pctDone}%;background:#22c55e"></div>`;
+      if (pctProg) h += `<div class="prog-fill" style="width:${pctProg}%;background:#3b82f6"></div>`;
+      if (pctPend) h += `<div class="prog-fill" style="width:${pctPend}%;background:#f59e0b"></div>`;
+      h += `</div><div class="prog-stats">`;
+      h += `<div class="prog-item"><span class="pval" style="color:#22c55e">${pctDone}%</span><span class="plbl">เสร็จสิ้น</span></div>`;
+      h += `<div class="prog-item"><span class="pval" style="color:#3b82f6">${pctProg}%</span><span class="plbl">กำลังดำเนินการ</span></div>`;
+      h += `<div class="prog-item"><span class="pval" style="color:#f59e0b">${pctPend}%</span><span class="plbl">รอดำเนินการ</span></div>`;
+      h += `</div></div>`;
+
+      // ── Card 6: Top 10 Stations ──
+      const stationCount = {};
+      src.forEach(d => {
+        const st = d.detail_station || 'ไม่ระบุ';
+        stationCount[st] = (stationCount[st] || 0) + 1;
+      });
+      const topStations = Object.entries(stationCount)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10);
+      const maxStation = topStations.length ? topStations[0][1] : 1;
+      const stColors = ['#6366f1','#8b5cf6','#a78bfa','#c4b5fd','#7c3aed','#4f46e5','#818cf8','#6d28d9','#5b21b6','#a5b4fc'];
+
+      h += `<div class="dash-card" style="grid-column:1/-1">`;
+      h += `<div class="dash-card-head"><div><div class="dash-card-title">Top 10 สถานี</div><div class="dash-card-sub">สถานีที่มีรายการมากที่สุด</div></div></div>`;
+      if (topStations.length) {
+        topStations.forEach(([name, count], idx) => {
+          const pct = (count / maxStation) * 100;
+          h += `<div class="hbar-row">`;
+          h += `<span style="font-size:0.6875rem;color:#9ca3af;min-width:22px;text-align:center;font-weight:600">${idx + 1}</span>`;
+          h += `<span class="hbar-label">${name}</span>`;
+          h += `<div class="hbar-track"><div class="hbar-fill" style="width:${pct}%;background:${stColors[idx % stColors.length]}"></div></div>`;
+          h += `<span class="hbar-val">${count}</span>`;
+          h += `<span class="hbar-pct">${total ? Math.round(count / total * 100) : 0}%</span>`;
+          h += `</div>`;
+        });
+      } else {
+        h += `<div style="padding:20px;text-align:center;color:#9ca3af;font-size:0.8125rem">ไม่มีข้อมูล</div>`;
+      }
+      h += `</div>`;
+
+      h += `</div>`; // close dash-grid
+      container.innerHTML = h;
+    }
+
+    // Kanban board render
+    function renderBoard() {
+      const cols = [
+        { key: 'pending',     label: 'รอดำเนินการ' },
+        { key: 'in_progress', label: 'กำลังดำเนินการ' },
+        { key: 'resolved',    label: 'เสร็จสิ้น' },
+        { key: 'closed',      label: 'ปิดแล้ว' }
+      ];
+      const board = document.getElementById('kanbanBoard');
+      let html = '';
+      cols.forEach(col => {
+        const items = allData.filter(d => (d.status || 'pending') === col.key);
+        html += `<div class="kanban-col" data-status="${col.key}">`;
+        html += `<div class="kanban-col-head">${col.label} <span class="col-count">${items.length}</span></div>`;
+        html += `<div class="kanban-cards">`;
+        if (!items.length) {
+          html += `<div class="kanban-empty">ไม่มีรายการ</div>`;
+        } else {
+          items.forEach(r => {
+            const tp = TYPES[r.type] || { th: r.type, cls: '' };
+            const catColors = {
+              complaint:  'background:#fee2e2;color:#dc2626',
+              compliment: 'background:#dcfce7;color:#16a34a',
+              suggestion: 'background:#fef9c3;color:#ca8a04'
+            };
+            const catStyle = catColors[r.type] || 'background:#f3f4f6;color:#6b7280';
+            html += `<div class="kanban-card" onclick="openDetail('${r.id}')">`;
+            html += `<div class="kanban-card-title">${r.subject || 'ไม่มีหัวข้อ'}</div>`;
+            html += `<span class="kanban-card-cat" style="${catStyle}">${tp.th}</span>`;
+            if (r.category) html += ` <span class="kanban-card-cat" style="background:#e0e7ff;color:#4338ca">${r.category}</span>`;
+            html += `<div class="kanban-card-footer">`;
+            html += `<span class="kanban-card-trk">${r.tracking_number || '-'}</span>`;
+            html += `<span class="kanban-card-date">${fmtDate(r.created_at).split(' ')[0]}</span>`;
+            html += `</div></div>`;
+          });
+        }
+        html += `</div></div>`;
+      });
+      board.innerHTML = html;
+    }
+
+    // Read status (localStorage)
+    const READ_KEY = 'vfc_read_ids';
+    function getReadIds() {
+      try { return JSON.parse(localStorage.getItem(READ_KEY) || '[]'); }
+      catch { return []; }
+    }
+    function markAsRead(id) {
+      const ids = getReadIds();
+      if (!ids.includes(String(id))) {
+        ids.push(String(id));
+        localStorage.setItem(READ_KEY, JSON.stringify(ids));
+      }
+    }
+    function markAsUnread(id) {
+      let ids = getReadIds();
+      ids = ids.filter(x => x !== String(id));
+      localStorage.setItem(READ_KEY, JSON.stringify(ids));
+    }
+    function isRead(id) {
+      return getReadIds().includes(String(id));
+    }
+    function isNew(item) {
+      if (!item.created_at) return false;
+      return (Date.now() - new Date(item.created_at).getTime()) < 24 * 60 * 60 * 1000;
+    }
+
+    // Pin status (localStorage)
+    const PIN_KEY = 'vfc_pinned_ids';
+    function getPinnedIds() {
+      try { return JSON.parse(localStorage.getItem(PIN_KEY) || '[]'); }
+      catch { return []; }
+    }
+    function togglePin(id, e) {
+      if (e) { e.stopPropagation(); }
+      let ids = getPinnedIds();
+      const sid = String(id);
+      if (ids.includes(sid)) {
+        ids = ids.filter(x => x !== sid);
+      } else {
+        ids.push(sid);
+      }
+      localStorage.setItem(PIN_KEY, JSON.stringify(ids));
+      render();
+    }
+    function isPinned(id) {
+      return getPinnedIds().includes(String(id));
+    }
+
+    // Supabase helper
+    const sb = () => window.supabaseClient;
+    function waitSB() {
+      return new Promise(r => { const c = () => sb() ? r(sb()) : setTimeout(c, 100); c(); });
+    }
+
+    // Type config
+    const TYPES = {
+      complaint:  { th: 'ร้องเรียน', cls: 'b-complaint' },
+      compliment: { th: 'ชมเชย',     cls: 'b-compliment' },
+      suggestion: { th: 'เสนอแนะ',   cls: 'b-suggestion' }
+    };
+    const STATUS = {
+      pending:     'รอดำเนินการ',
+      in_progress: 'กำลังดำเนินการ',
+      resolved:    'เสร็จสิ้น',
+      closed:      'ปิดแล้ว'
+    };
+
+    // Format date → DD/MM/YYYY HH:MM
+    function fmtDate(s) {
+      if (!s) return '-';
+      const d = new Date(s);
+      const pad = n => String(n).padStart(2, '0');
+      return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()+543} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+
+    // Generate document number: VFC-YYMM-DeptCode-001 (reset per year)
+    function genDocNums(data) {
+      const counters = {};
+      // Sort by created_at ascending for correct numbering
+      const sorted = [...data].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+      const docMap = {};
+
+      sorted.forEach(item => {
+        if (!item.created_at) { docMap[item.id] = '-'; return; }
+        const d = new Date(item.created_at);
+        const yy = String(d.getFullYear() + 543).slice(-2);
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        // ใช้ BH เป็นรหัสฝ่ายทั้งหมดตอนนี้
+        const deptCode = 'BH';
+        // Counter resets per year + dept
+        const counterKey = `${yy}-${deptCode}`;
+        counters[counterKey] = (counters[counterKey] || 0) + 1;
+        const seq = String(counters[counterKey]).padStart(3, '0');
+        docMap[item.id] = `VFC-${yy}${mm}-${deptCode}-${seq}`;
+      });
+
+      return docMap;
+    }
+
+    let docNumMap = {};
+
+    // Fetch
+    async function fetchData() {
+      const client = await waitSB();
+      const { data, error } = await client
+        .from('vfc_submissions')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        document.getElementById('tBody').innerHTML = `<tr class="msg-row"><td colspan="11">❌ ${error.message}</td></tr>`;
+        return;
+      }
+      allData = data || [];
+      docNumMap = genDocNums(allData);
+      updateStats();
+      applyFilters();
+      renderDashboard();
+    }
+
+    // Stats
+    function updateStats() {
+      document.getElementById('sTotal').textContent    = allData.length;
+      document.getElementById('sPending').textContent   = allData.filter(d => d.status === 'pending').length;
+      document.getElementById('sProgress').textContent  = allData.filter(d => d.status === 'in_progress').length;
+      document.getElementById('sResolved').textContent  = allData.filter(d => d.status === 'resolved' || d.status === 'closed').length;
+    }
+
+    // Filter
+    function applyFilters() {
+      const t = document.getElementById('fType').value;
+      const s = document.getElementById('fStatus').value;
+      const q = document.getElementById('fSearch').value.toLowerCase().trim();
+      const dateFrom = document.getElementById('fDateFrom').value;
+      const dateTo = document.getElementById('fDateTo').value;
+
+      const rd = document.getElementById('fRead').value;
+
+      filtered = allData.filter(item => {
+        if (t && item.type !== t) return false;
+        if (s && item.status !== s) return false;
+        if (rd === 'unread' && isRead(item.id)) return false;
+        if (rd === 'read' && !isRead(item.id)) return false;
+        if (rd === 'pinned' && !isPinned(item.id)) return false;
+        if (dateFrom && item.created_at) {
+          const itemDate = new Date(item.created_at).toISOString().slice(0, 10);
+          if (itemDate < dateFrom) return false;
+        }
+        if (dateTo && item.created_at) {
+          const itemDate = new Date(item.created_at).toISOString().slice(0, 10);
+          if (itemDate > dateTo) return false;
+        }
+        if (q) {
+          const txt = [item.tracking_number, item.subject, item.category,
+            item.detail_station, item.detail_department, item.reporter_name
+          ].filter(Boolean).join(' ').toLowerCase();
+          if (!txt.includes(q)) return false;
+        }
+        return true;
+      });
+      // Sort: pinned first
+      filtered.sort((a, b) => {
+        const pa = isPinned(a.id) ? 0 : 1;
+        const pb = isPinned(b.id) ? 0 : 1;
+        return pa - pb;
+      });
+      page = 1;
+      render();
+    }
+
+    // Render table
+    function render() {
+      const tbody = document.getElementById('tBody');
+      const start = (page - 1) * PER, end = start + PER;
+      const rows = filtered.slice(start, end);
+
+      if (!rows.length) {
+        tbody.innerHTML = '<tr class="msg-row"><td colspan="11">ไม่พบข้อมูล</td></tr>';
+        renderPgn();
+        return;
+      }
+
+      tbody.innerHTML = rows.map(r => {
+        const tp = TYPES[r.type] || { th: r.type, cls: '' };
+        const st = r.status || 'pending';
+        const docNum = docNumMap[r.id] || '-';
+        const unread = !isRead(r.id);
+        const isNewItem = isNew(r);
+        const pinned = isPinned(r.id);
+        let rowCls = '';
+        if (pinned) rowCls += ' row-pinned';
+        if (unread) rowCls += ' row-unread';
+        const pinSvg = pinned
+          ? '<svg fill="currentColor" viewBox="0 0 16 16"><path d="M4.146.146A.5.5 0 014.5 0h7a.5.5 0 01.5.5c0 .68-.342 1.174-.646 1.479-.126.125-.25.224-.354.298v4.431l.078.048c.203.127.476.314.751.555C12.36 7.775 13 8.527 13 9.5a.5.5 0 01-.5.5H8.5v5.5a.5.5 0 01-1 0V10H3.5a.5.5 0 01-.5-.5c0-.973.64-1.725 1.17-2.189A5.921 5.921 0 015 6.708V2.277a2.77 2.77 0 01-.354-.298C4.342 1.674 4 1.18 4 .5a.5.5 0 01.146-.354z"/></svg>'
+          : '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>';
+        return `<tr class="${rowCls.trim()}" onclick="openDetail('${r.id}')">
+          <td style="text-align:center;width:36px;padding:0">
+            ${unread ? (isNewItem ? '<span class="new-tag">new</span>' : '<span class="unread-dot"></span>') : ''}
+          </td>
+          <td style="white-space:nowrap;font-weight:500">${pinned ? '<span class="pin-icon">📌</span> ' : ''}${docNum}</td>
+          <td><span class="trk">${r.tracking_number || '-'}</span></td>
+          <td><span class="badge ${tp.cls}">${tp.th}</span></td>
+          <td><span class="txt-trunc">${r.subject || '-'}</span></td>
+          <td>${r.category || '-'}</td>
+          <td>${r.detail_station || '-'}</td>
+          <td>${r.detail_department || '-'}</td>
+          <td><span class="s-badge s-${st}"><span class="dot"></span>${STATUS[st] || st}</span></td>
+          <td style="white-space:nowrap">${fmtDate(r.created_at)}</td>
+          <td><button class="act-btn ${pinned ? 'pinned' : ''}" onclick="togglePin('${r.id}', event)" title="${pinned ? 'เลิกปักมุด' : 'ปักมุด'}">${pinSvg}</button></td>
+        </tr>`;
+      }).join('');
+      renderPgn();
+    }
+
+    // Pagination
+    function renderPgn() {
+      const total = Math.ceil(filtered.length / PER);
+      const s = (page-1)*PER+1, e = Math.min(page*PER, filtered.length);
+      document.getElementById('pInfo').textContent = filtered.length ? `${s}-${e} จาก ${filtered.length}` : 'ไม่มีรายการ';
+
+      const el = document.getElementById('pBtns');
+      if (total <= 1) { el.innerHTML = ''; return; }
+
+      let h = `<button class="pg-btn" onclick="goPage(${page-1})" ${page===1?'disabled':''}>‹</button>`;
+      for (let i = 1; i <= total; i++) {
+        if (i===1||i===total||(i>=page-1&&i<=page+1))
+          h += `<button class="pg-btn ${i===page?'act':''}" onclick="goPage(${i})">${i}</button>`;
+        else if (i===page-2||i===page+2)
+          h += `<span style="padding:5px 3px;color:#ccc">…</span>`;
+      }
+      h += `<button class="pg-btn" onclick="goPage(${page+1})" ${page===total?'disabled':''}>›</button>`;
+      el.innerHTML = h;
+    }
+
+    function goPage(p) {
+      const total = Math.ceil(filtered.length / PER);
+      if (p < 1 || p > total) return;
+      page = p; render();
+    }
+
+    // Detail modal
+    function openDetail(id) {
+      const item = allData.find(d => String(d.id) === String(id));
+      if (!item) return;
+
+      const tp = TYPES[item.type] || { th: item.type, cls: '' };
+      const st = item.status || 'pending';
+
+      document.getElementById('mTitle').innerHTML = `<span class="badge ${tp.cls}">${tp.th}</span> ${item.subject || 'ไม่มีหัวข้อ'}`;
+      document.getElementById('mTracking').textContent = item.tracking_number || '';
+
+      const rows = [
+        ['หมวดหมู่', item.category],
+        ['สถานะ', `<span class="s-badge s-${st}"><span class="dot"></span>${STATUS[st]||st}</span>`],
+        ['สถานี (เรื่อง)', item.detail_station],
+        ['ฝ่าย (เรื่อง)', item.detail_department],
+        ['แผนก (เรื่อง)', item.detail_section],
+        ['รายละเอียด', item.detail_text],
+        ['สิ่งที่ต้องการแก้ไข', item.fix_text],
+        ['ไม่ระบุตัวตน', item.is_anonymous ? 'ใช่' : 'ไม่'],
+        ['ชื่อผู้ส่ง', item.reporter_name],
+        ['รหัสพนักงาน', item.reporter_employee_id],
+        ['สถานี (ผู้ส่ง)', item.reporter_station],
+        ['ฝ่าย (ผู้ส่ง)', item.reporter_department],
+        ['แผนก (ผู้ส่ง)', item.reporter_section],
+        ['วันที่ส่ง', fmtDate(item.created_at)]
+      ];
+
+      document.getElementById('mBody').innerHTML = rows
+        .filter(([, v]) => v)
+        .map(([l, v]) => `<div class="detail-row"><div class="detail-label">${l}</div><div class="detail-val">${v}</div></div>`)
+        .join('');
+
+      // Action buttons
+      const pinned = isPinned(id);
+      const readStatus = isRead(id);
+      document.getElementById('mActions').innerHTML = `
+        <button class="m-act-btn ${pinned ? 'active' : ''}" onclick="togglePin('${id}'); updateModalActions('${id}')">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+          ${pinned ? 'เลิกปักมุด' : 'ปักมุด'}
+        </button>
+        <button class="m-act-btn" onclick="markAsUnread('${id}'); closeModal(); render()">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          ทำเครื่องหมายยังไม่อ่าน
+        </button>
+      `;
+
+      document.getElementById('detailModal').classList.add('open');
+
+      // Mark as read
+      markAsRead(id);
+      render();
+    }
+
+    function updateModalActions(id) {
+      // Refresh modal buttons after toggle pin
+      const pinned = isPinned(id);
+      const btnEl = document.querySelector('#mActions .m-act-btn');
+      if (btnEl) {
+        btnEl.className = `m-act-btn ${pinned ? 'active' : ''}`;
+        btnEl.innerHTML = `
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+          ${pinned ? 'เลิกปักมุด' : 'ปักมุด'}
+        `;
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('detailModal').classList.remove('open');
+    }
+
+    // Keyboard
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // Refresh
+    function refreshData() {
+      document.getElementById('tBody').innerHTML = '<tr class="msg-row"><td colspan="11">กำลังโหลดข้อมูล...</td></tr>';
+      fetchData();
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', fetchData);
+  </script>
+</body>
 </html>
-
