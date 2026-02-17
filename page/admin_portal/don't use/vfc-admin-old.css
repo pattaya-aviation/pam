@@ -1,0 +1,244 @@
+/* ========================================
+   VFC Admin Page Styles
+   Used by: page/admin_portal/vfc-admin/index.html
+   ======================================== */
+
+/* Compact inbox style */
+.inbox-compact {
+  font-size: 0.875rem;
+}
+.inbox-compact .text-lg {
+  font-size: 1rem;
+}
+.inbox-compact .text-sm {
+  font-size: 0.75rem;
+}
+.inbox-compact .text-xs {
+  font-size: 0.65rem;
+}
+.inbox-compact .px-6 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.inbox-compact .py-4 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+.inbox-compact .py-3 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.inbox-compact .p-6 {
+  padding: 1rem;
+}
+.inbox-compact .gap-4 {
+  gap: 0.75rem;
+}
+.inbox-compact .w-10 {
+  width: 2rem;
+  height: 2rem;
+}
+.inbox-compact .w-8 {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.inbox-compact .mb-4 {
+  margin-bottom: 0.75rem;
+}
+
+/* Profile circle becomes dot indicator */
+.message-item .dot-indicator {
+  width: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  shrink: 0;
+  margin-top: 6px;
+}
+
+/* Panel Resizer */
+.panel-resizer {
+  width: 4px;
+  background: #e5e7eb;
+  cursor: col-resize;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.panel-resizer:hover,
+.panel-resizer.active {
+  background: #3b82f6;
+}
+
+/* Mobile Modal Overlay */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.modal-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
+.modal-card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: 92%;
+  max-width: 600px;
+  max-height: 90vh;
+  background: white;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  z-index: 201;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+.modal-card.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Tab Bar */
+.tab-bar {
+  display: flex;
+  gap: 6px;
+  padding: 3px;
+  background: #f3f4f6;
+  border-radius: 12px;
+  width: fit-content;
+}
+.tab-btn {
+  padding: 6px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tab-btn:hover {
+  background: rgba(0,0,0,0.04);
+}
+.tab-btn.active {
+  background: #3b82f6;
+  color: #fff;
+  box-shadow: 0 1px 3px rgba(59,130,246,0.3);
+}
+
+/* Table View */
+.table-view table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.table-view thead th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #f9fafb;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #6b7280;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #e5e7eb;
+}
+.table-view tbody tr {
+  border-bottom: 1px solid #f3f4f6;
+  transition: background 0.15s;
+  cursor: pointer;
+}
+.table-view tbody tr:hover {
+  background: rgba(59,130,246,0.03);
+}
+.table-view tbody td {
+  padding: 10px 12px;
+  color: #374151;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+
+/* Badge Pills */
+.badge-pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge-complaint { background: #fee2e2; color: #991b1b; }
+.badge-suggestion { background: #fef3c7; color: #92400e; }
+.badge-compliment { background: #dcfce7; color: #14532d; }
+.badge-unread { background: #dbeafe; color: #1e40af; }
+.badge-read { background: #f3f4f6; color: #6b7280; }
+.badge-pending { background: #fef3c7; color: #92400e; }
+
+/* Left panel: full width on mobile, fixed width on desktop */
+@media (min-width: 1024px) {
+  #leftPanel {
+    width: 25%;
+  }
+}
+
+/* Bigger fonts & icons in message list */
+.message-item .text-sm {
+  font-size: 15px;
+}
+.message-item .text-xs {
+  font-size: 13px;
+}
+.message-item svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+.message-item {
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+}
+.message-item .mb-1 {
+  margin-bottom: 6px !important;
+}
+.message-item .font-medium.text-gray-900.text-sm {
+  display: none;
+}
+.message-item .flex.items-center.gap-2 > span[class*="rounded-full"] {
+  font-size: 13px !important;
+  padding: 3px 10px !important;
+}
+.message-item .flex.items-center.gap-2 > span.text-xs.text-gray-400 {
+  font-size: 13px !important;
+}
