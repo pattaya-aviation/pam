@@ -212,13 +212,13 @@ function renderMobileMenu(currentPage) {
     });
     
     return `
-        <div class="admin-mobile-nav fixed top-4 left-4 z-50">
-            <button onclick="toggleAdminMobileMenu()" class="flex items-center justify-center w-14 h-14 bg-white/80 backdrop-blur-xl rounded-full border border-gray-200 hover:bg-gray-50 transition-colors">
+        <div class="admin-mobile-nav fixed bottom-4 right-4 z-50">
+            <button onclick="toggleAdminMobileMenu()" class="flex items-center justify-center w-14 h-14 bg-white/80 backdrop-blur-xl rounded-full border border-gray-200 hover:bg-gray-50 transition-colors shadow-lg">
                 <svg class="w-6 h-6 text-gray-700 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
             </button>
-            <div id="adminMobileMenu" class="hidden absolute top-16 left-0 w-56 bg-white/95 backdrop-blur-xl rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
+            <div id="adminMobileMenu" class="hidden absolute bottom-16 right-0 w-56 bg-white/95 backdrop-blur-xl rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
                 <nav class="py-2">
                     ${menuItems}
                     <div class="border-t border-gray-100 my-2"></div>
