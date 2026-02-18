@@ -7,6 +7,13 @@ body {
   touch-action: pan-x pan-y;
 }
 
+/* Hide scrollbar globally */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+*::-webkit-scrollbar { display: none; }
+
 /* Font Weights */
 .font-light {
   font-weight: 300;
