@@ -325,59 +325,11 @@
     .tab-btn.active { color: #2563eb; border-bottom-color: #2563eb; font-weight: 600; }
     .tab-btn.active:hover { color: #1d4ed8; border-bottom-color: #1d4ed8; }
 
-    /* Mobile: iOS 18 floating tab bar */
+    /* Mobile: text tabs from left */
     @media (max-width: 640px) {
-      .tab-bar {
-        position: fixed;
-        bottom: 0;
-        left: 0; right: 0;
-        margin: 0 auto;
-        width: auto;
-        max-width: fit-content;
-        z-index: 50;
-        border-bottom: none;
-        border-top: none;
-        border-radius: 999px;
-        background: rgba(240,240,240,0.75);
-        backdrop-filter: saturate(180%) blur(20px);
-        -webkit-backdrop-filter: saturate(180%) blur(20px);
-        border: none;
-        box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-        padding: 4px 6px;
-        gap: 4px;
-        justify-content: center;
-        margin-bottom: 0;
-      }
-      .tab-btn {
-        padding: 6px 14px;
-        font-size: 0.625rem;
-        gap: 3px;
-        border: none;
-        border-bottom: none;
-        margin-bottom: 0;
-        border-radius: 999px;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        flex: none;
-        min-width: 0;
-        background: transparent;
-        color: #6b6b6b;
-        font-weight: 500;
-        transition: all 0.25s ease;
-      }
-      .tab-btn:hover { color: #6b6b6b; }
-      .tab-btn svg { width: 20px; height: 20px; transition: all 0.25s ease; }
-      .tab-btn.active {
-        background: rgba(255,255,255,0.85);
-        color: #1c1c1e;
-        border-bottom: none;
-        padding: 8px 18px;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-        font-weight: 600;
-      }
-      .tab-btn.active svg { width: 26px; height: 26px; }
-      .admin-content { padding-bottom: 80px !important; }
+      .tab-bar { justify-content: flex-start; }
+      .tab-btn { padding: 10px 14px; font-size: 0.75rem; }
+      .tab-btn svg { display: none; }
     }
     .tab-placeholder {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -606,24 +558,8 @@
       <p class="text-sm text-gray-500 mt-0.5">จัดการคำร้องเรียน ชมเชย และข้อเสนอแนะ</p>
     </div>
 
-    <!-- Floating Navbar - Right: Search Circle + Bell Circle -->
-    <div class="fixed top-4 right-4 z-50">
-      <div class="flex items-center gap-3">
-        <!-- Search Button (Circle) -->
-        <button onclick="document.getElementById('fSearch').focus(); switchTab('table');" class="flex items-center justify-center w-14 h-14 bg-white/80 backdrop-blur-xl rounded-full border border-gray-200 hover:bg-gray-50 transition-colors">
-          <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-          </svg>
-        </button>
-        <!-- Bell Button -->
-        <button onclick="toggleNotifPanel()" class="flex items-center justify-center w-14 h-14 bg-white/80 backdrop-blur-xl rounded-full border border-gray-200 hover:bg-gray-50 transition-colors relative">
-          <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-          </svg>
-          <span id="notifDot" class="absolute top-3 right-3 w-2.5 h-2.5 bg-red-500 rounded-full" style="display:none;"></span>
-        </button>
-      </div>
-    </div>
+
+
     <!-- Tab Bar -->
     <div class="tab-bar" style="margin-bottom:16px">
       <button class="tab-btn active" id="tabInbox" onclick="switchTab('inbox')">
