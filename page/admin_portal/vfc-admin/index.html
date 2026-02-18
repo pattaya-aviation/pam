@@ -1020,6 +1020,36 @@
     let trashData = JSON.parse(localStorage.getItem('vfc_trash') || '[]');
     const PER = 20;
 
+    // Category EN → TH mapping
+    const CATEGORIES = {
+      // Complaint
+      work_environment: 'สภาพแวดล้อมในการทำงาน',
+      management: 'การบริหารจัดการ',
+      hr_welfare: 'สวัสดิการและทรัพยากรบุคคล',
+      equipment: 'อุปกรณ์และเครื่องมือ',
+      safety: 'ความปลอดภัย',
+      communication: 'การสื่อสารภายในองค์กร',
+      process: 'กระบวนการทำงาน',
+      colleague: 'เพื่อนร่วมงาน',
+      supervisor: 'หัวหน้างาน',
+      // Compliment
+      service: 'การบริการ',
+      teamwork: 'การทำงานเป็นทีม',
+      leadership: 'ภาวะผู้นำ',
+      problem_solving: 'การแก้ปัญหา',
+      dedication: 'ความทุ่มเท',
+      helping: 'การช่วยเหลือ',
+      // Suggestion
+      facility: 'สิ่งอำนวยความสะดวก',
+      welfare: 'สวัสดิการ',
+      policy: 'นโยบาย',
+      technology: 'เทคโนโลยี',
+      training: 'การฝึกอบรม',
+      // Common
+      other: 'อื่นๆ'
+    };
+    function catTh(key) { return CATEGORIES[key] || key || '-'; }
+
     // Tab switching
     function switchTab(tabName) {
       document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -1508,7 +1538,7 @@
             html += `<div class="kanban-card" onclick="openDetail('${r.id}')">`;
             html += `<div class="kanban-card-title">${r.subject || 'ไม่มีหัวข้อ'}</div>`;
             html += `<span class="kanban-card-cat" style="${catStyle}">${tp.th}</span>`;
-            if (r.category) html += ` <span class="kanban-card-cat" style="background:#e0e7ff;color:#4338ca">${r.category}</span>`;
+            if (r.category) html += ` <span class="kanban-card-cat" style="background:#e0e7ff;color:#4338ca">${catTh(r.category)}</span>`;
             html += `<div class="kanban-card-footer">`;
             html += `<span class="kanban-card-trk">${r.tracking_number || '-'}</span>`;
             html += `<span class="kanban-card-date">${fmtDate(r.created_at).split(' ')[0]}</span>`;
@@ -1730,7 +1760,7 @@
           <td><span class="trk">${r.tracking_number || '-'}</span></td>
           <td><span class="badge ${tp.cls}">${tp.th}</span></td>
           <td><span class="txt-trunc">${r.subject || '-'}</span></td>
-          <td>${r.category || '-'}</td>
+          <td>${catTh(r.category)}</td>
           <td>${r.detail_station || '-'}</td>
           <td>${r.detail_department || '-'}</td>
           <td><span class="s-badge s-${st}"><span class="dot"></span>${STATUS[st] || st}</span></td>
@@ -1860,7 +1890,7 @@
         left += '</div>';
       }
       const infoItems = [
-        ['หมวดหมู่', item.category], ['สถานี', item.detail_station],
+        ['หมวดหมู่', item.category ? catTh(item.category) : null], ['สถานี', item.detail_station],
         ['ฝ่าย', item.detail_department], ['แผนก', item.detail_section],
       ].filter(([,v]) => v);
       if (infoItems.length) {
