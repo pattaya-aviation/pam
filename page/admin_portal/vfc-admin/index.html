@@ -23,7 +23,7 @@
     @media (max-width: 1023px) {
       .admin-content {
         margin-left: 0;
-        padding: 80px 16px 24px;
+        padding: 20px 16px 24px;
       }
     }
 
@@ -222,7 +222,9 @@
       background: white; border-radius: 16px; width: 100%; max-width: 900px;
       max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 60px rgba(0,0,0,0.18);
       transform: translateY(20px); transition: transform 0.25s;
+      scrollbar-width: none; -ms-overflow-style: none;
     }
+    .modal-box::-webkit-scrollbar { display: none; }
     .modal-overlay.open .modal-box { transform: translateY(0); }
 
     /* Email-style header */
