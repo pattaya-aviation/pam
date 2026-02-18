@@ -327,6 +327,30 @@
     .tab-btn.active { color: #2563eb; border-bottom-color: #2563eb; font-weight: 600; }
     .tab-btn.active:hover { color: #1d4ed8; border-bottom-color: #1d4ed8; }
 
+    /* Floating pill header */
+    .floating-header {
+      position: fixed; top: 10px; left: 50%; transform: translateX(-50%) translateY(-20px);
+      z-index: 55; opacity: 0; visibility: hidden; pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background: rgba(255,255,255,0.82); backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-radius: 999px; padding: 8px 24px;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.06);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .floating-header.visible {
+      opacity: 1; visibility: visible; pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+    .floating-header h1 { font-size: 0.875rem; font-weight: 700; color: #111827; margin: 0; white-space: nowrap; }
+    .floating-header p { font-size: 0.625rem; color: #9ca3af; margin: 0; white-space: nowrap; display: none; }
+    @media (min-width: 640px) {
+      .floating-header p { display: block; }
+      .floating-header::before {
+        content: ''; width: 1px; height: 16px; background: rgba(0,0,0,0.1);
+      }
+    }
+
     /* Mobile: text tabs from left */
     @media (max-width: 640px) {
       .tab-bar { justify-content: flex-start; }
@@ -555,9 +579,15 @@
   <div class="admin-content">
 
     <!-- Header -->
-    <div class="mb-4">
+    <div class="mb-4" id="pageHeader">
       <h1 class="text-xl font-bold text-gray-900">Voice for Change</h1>
       <p class="text-sm text-gray-500 mt-0.5">จัดการคำร้องเรียน ชมเชย และข้อเสนอแนะ</p>
+    </div>
+
+    <!-- Floating pill header (shows on scroll) -->
+    <div class="floating-header" id="floatingHeader">
+      <h1>Voice for Change</h1>
+      <p>จัดการคำร้องเรียน ชมเชย และข้อเสนอแนะ</p>
     </div>
 
 
@@ -719,6 +749,20 @@
   </div>
 
   <script>
+    // ========================================
+    // Floating pill header on scroll
+    // ========================================
+    (function() {
+      const header = document.getElementById('pageHeader');
+      const pill = document.getElementById('floatingHeader');
+      if (header && pill) {
+        const obs = new IntersectionObserver(([e]) => {
+          pill.classList.toggle('visible', !e.isIntersecting);
+        }, { threshold: 0 });
+        obs.observe(header);
+      }
+    })();
+
     // ========================================
     // VFC Admin — Supabase Data Table
     // ========================================
