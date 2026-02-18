@@ -221,28 +221,34 @@
     }
     .modal-overlay.open { opacity: 1; visibility: visible; }
 
-    /* Wrap: flex container for pill rail + modal-box */
+    /* Wrap: column layout (tab bar above + modal-box below) */
     .modal-wrap {
-      display: flex; align-items: stretch;
+      display: flex; flex-direction: column;
       width: 100%; max-width: 640px;
       max-height: 88vh; height: auto;
       transform: scale(0.96); opacity: 0;
       transition: transform 0.25s cubic-bezier(0.32,0.72,0,1), opacity 0.25s;
     }
     .modal-overlay.open .modal-wrap { transform: scale(1); opacity: 1; }
+    @media (min-width: 768px) {
+      .modal-overlay { align-items: center; padding: 24px; }
+      .modal-wrap { max-width: 100%; height: 90vh; }
+    }
+
+    /* ── Floating pill tab bar (above modal) ── */
+    .m-tab-bar {
+      display: flex; align-items: center;
+      padding: 0 4px;
+      gap: 8px; flex-shrink: 0;
+      margin-bottom: 8px;
+    }
 
     .modal-box {
-      background: white; flex: 1; min-width: 0;
+      background: white; flex: 1; min-height: 0;
       border-radius: 20px; overflow: hidden;
       display: flex; flex-direction: column;
       box-shadow: 0 25px 60px rgba(0,0,0,0.18);
       scrollbar-width: none; -ms-overflow-style: none;
-    }
-    @media (min-width: 768px) {
-      .modal-overlay { align-items: center; padding: 24px; }
-      .modal-wrap {
-        max-width: 100%; height: 90vh;
-      }
     }
     .modal-box::-webkit-scrollbar { display: none; }
 
@@ -271,41 +277,40 @@
       }
     }
 
-    /* ── Vertical pill rail (left edge) ── */
+    /* ── Horizontal pill rail ── */
     .m-dot-rail {
-      width: 130px; flex-shrink: 0;
-      display: none; flex-direction: column; gap: 6px;
-      padding: 12px 10px 12px 0;
+      display: flex; flex-direction: row; gap: 6px;
+      flex: 1; min-width: 0;
+      overflow-x: auto; scrollbar-width: none;
     }
-    @media (min-width: 768px) {
-      .m-dot-rail { display: flex; }
-    }
+    .m-dot-rail::-webkit-scrollbar { display: none; }
     .m-dot {
-      display: flex; align-items: center; gap: 4px;
-      padding: 8px 10px 8px 14px; border-radius: 12px;
-      background: #d1d5db; color: #6b7280;
-      font-size: 0.7rem; font-weight: 600;
-      cursor: pointer; transition: all 0.2s;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-      border: none; text-align: left;
+      display: flex; align-items: center; gap: 6px;
+      padding: 10px 12px 10px 16px; border-radius: 9999px;
+      background: rgba(255,255,255,0.85); color: #6b7280;
+      font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; transition: all 0.15s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.06);
+      white-space: nowrap; flex-shrink: 0;
     }
     .m-dot:hover {
-      background: #e5e7eb; color: #374151;
-      transform: translateX(2px);
+      background: rgba(255,255,255,0.95); color: #374151;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.12);
     }
     .m-dot.active {
       background: #3b82f6; color: white;
-      box-shadow: 0 2px 10px rgba(59,130,246,0.35);
-      transform: translateX(4px);
+      border-color: #3b82f6;
+      box-shadow: 0 3px 12px rgba(59,130,246,0.35);
     }
     .m-dot-label {
-      flex: 1; min-width: 0;
+      max-width: 150px; min-width: 0;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .m-dot-x {
-      width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
+      width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
-      font-size: 9px; color: #9ca3af; cursor: pointer;
+      font-size: 11px; color: #9ca3af; cursor: pointer;
       background: transparent; border: none;
       transition: all 0.1s; opacity: 0;
     }
@@ -313,50 +318,53 @@
     .m-dot.active .m-dot-x { color: rgba(255,255,255,0.6); }
     .m-dot-x:hover { background: rgba(0,0,0,0.12); color: #ef4444; }
 
-    /* ── Window controls (top-right circles) ── */
+    /* ── Window controls (top-right of modal) ── */
     .m-win-ctrl {
       position: absolute; top: 12px; right: 16px;
       display: flex; gap: 8px; z-index: 10;
     }
     .m-win-btn {
-      width: 14px; height: 14px; border-radius: 50%; border: none;
+      width: 36px; height: 36px; border-radius: 50%; border: none;
       cursor: pointer; transition: all 0.15s;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: white;
     }
-    .m-win-min {
-      background: #f59e0b;
-    }
-    .m-win-min:hover { background: #d97706; transform: scale(1.15); }
-    .m-win-close {
-      background: #ef4444;
-    }
-    .m-win-close:hover { background: #dc2626; transform: scale(1.15); }
+    .m-win-btn:hover { transform: scale(1.1); }
+    .m-win-min { background: #f59e0b; }
+    .m-win-min:hover { background: #d97706; }
+    .m-win-close { background: #ef4444; }
+    .m-win-close:hover { background: #dc2626; }
 
     /* Minimized dock */
     .m-dock {
-      position: fixed; right: 16px; bottom: 80px; z-index: 99;
-      display: flex; flex-direction: column-reverse; gap: 10px;
+      position: fixed; left: 16px; bottom: 16px; z-index: 99;
+      display: flex; flex-direction: column-reverse; gap: 8px;
+    }
+    @media (min-width: 768px) {
+      .m-dock { left: auto; right: 16px; align-items: flex-end; }
     }
     .m-dock-item {
-      width: 48px; height: 48px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      color: white; font-weight: 700; font-size: 0.875rem;
-      cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-      transition: all 0.2s; position: relative;
+      display: flex; align-items: center; gap: 10px;
+      padding: 6px 14px 6px 6px;
+      border-radius: 9999px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      cursor: pointer; transition: all 0.2s;
       animation: dockPop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .m-dock-item:hover { transform: scale(1.12); box-shadow: 0 6px 24px rgba(0,0,0,0.25); }
-    .m-dock-badge {
-      position: absolute; top: -2px; right: -2px;
-      width: 14px; height: 14px; border-radius: 50%;
-      background: #ef4444; border: 2px solid white;
+    .m-dock-item:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.18); }
+    .m-dock-icon {
+      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 700; font-size: 0.8rem;
     }
-    .m-dock-tooltip {
-      position: absolute; right: 58px; top: 50%; transform: translateY(-50%);
-      background: #1f2937; color: white; font-size: 0.6875rem;
-      padding: 4px 10px; border-radius: 6px; white-space: nowrap;
-      opacity: 0; pointer-events: none; transition: opacity 0.15s;
+    .m-dock-label {
+      font-size: 0.78rem; font-weight: 600; color: #374151;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      max-width: 140px;
     }
-    .m-dock-item:hover .m-dock-tooltip { opacity: 1; }
     @keyframes dockPop {
       from { transform: scale(0); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
@@ -787,6 +795,14 @@
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
         รายการ
       </button>
+      <button class="tab-btn" id="tabCalendar" onclick="switchTab('calendar')">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        ปฏิทิน
+      </button>
+      <button class="tab-btn" id="tabTrash" onclick="switchTab('trash')">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+        ถังขยะ <span id="trashCount" style="background:#ef4444;color:white;border-radius:9999px;padding:1px 6px;font-size:0.65rem;margin-left:2px;display:none">0</span>
+      </button>
       <button class="tab-btn" id="tabSettings" onclick="switchTab('settings')">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         ตั้งค่า
@@ -848,11 +864,37 @@
 
 
 
+    <!-- Tab: Trash -->
+    <div id="contentTrash" class="tab-content hidden">
+      <div style="padding:24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <h3 style="font-size:1.1rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:8px">
+            <svg style="width:20px;height:20px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            ถังขยะ
+          </h3>
+          <button onclick="emptyTrash()" style="background:#ef4444;color:white;border:none;border-radius:10px;padding:8px 16px;font-size:0.8rem;font-weight:600;cursor:pointer">ล้างถังขยะ</button>
+        </div>
+        <div id="trashList"></div>
+      </div>
+    </div>
+
     <!-- Tab: Settings -->
     <div id="contentSettings" class="tab-content hidden">
       <div class="tab-placeholder">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         <p>ตั้งค่า — Settings</p>
+      </div>
+    </div>
+
+    <!-- Tab: Calendar -->
+    <div id="contentCalendar" class="tab-content hidden">
+      <div id="calendarView" style="padding:24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+          <button onclick="changeCalMonth(-1)" style="background:none;border:1px solid #e5e7eb;border-radius:10px;padding:8px 14px;cursor:pointer;font-size:0.85rem;color:#374151">◀ เดือนก่อน</button>
+          <h3 id="calMonthLabel" style="font-size:1.1rem;font-weight:700;color:#111827"></h3>
+          <button onclick="changeCalMonth(1)" style="background:none;border:1px solid #e5e7eb;border-radius:10px;padding:8px 14px;cursor:pointer;font-size:0.85rem;color:#374151">เดือนถัดไป ▶</button>
+        </div>
+        <div id="calGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px"></div>
       </div>
     </div>
 
@@ -934,16 +976,17 @@
   <!-- Detail Modal -->
   <div id="detailModal" class="modal-overlay" onclick="if(event.target===this)minimizeActiveTab()">
     <div class="modal-wrap">
-      <!-- Vertical pill tabs on the left -->
-      <div class="m-dot-rail" id="mDotRail"></div>
+      <!-- Floating pill tab bar (above modal) -->
+      <div class="m-tab-bar">
+        <div class="m-dot-rail" id="mDotRail"></div>
+      </div>
       <!-- Modal box -->
       <div class="modal-box" style="position:relative">
         <!-- Window controls top-right -->
         <div class="m-win-ctrl">
-          <button onclick="minimizeActiveTab()" class="m-win-btn m-win-min" title="ย่อ"></button>
-          <button onclick="closeActiveTab()" class="m-win-btn m-win-close" title="ปิด"></button>
+          <button onclick="minimizeAllTabs()" class="m-win-btn m-win-min" title="ย่อทั้งหมด">−</button>
+          <button onclick="closeAllTabs()" class="m-win-btn m-win-close" title="ปิดทั้งหมด">✕</button>
         </div>
-        <!-- Content area -->
         <div class="m-inner">
           <div class="m-content" id="mContent"></div>
           <div class="m-sidebar" id="mSidebar"></div>
@@ -974,6 +1017,7 @@
     // VFC Admin — Supabase Data Table
     // ========================================
     let allData = [], filtered = [], page = 1;
+    let trashData = JSON.parse(localStorage.getItem('vfc_trash') || '[]');
     const PER = 20;
 
     // Tab switching
@@ -990,6 +1034,8 @@
       document.getElementById(contentId).classList.remove('hidden');
       if (tabName === 'board') renderBoard();
       if (tabName === 'inbox') renderDashboard();
+      if (tabName === 'calendar') renderCalendar();
+      if (tabName === 'trash') renderTrash();
     }
 
     // Dashboard — Power BI style
@@ -1269,6 +1315,169 @@
       container.innerHTML = h;
     }
 
+    // ── Calendar view ──
+    let calYear = new Date().getFullYear();
+    let calMonth = new Date().getMonth();
+
+    function changeCalMonth(dir) {
+      calMonth += dir;
+      if (calMonth < 0) { calMonth = 11; calYear--; }
+      if (calMonth > 11) { calMonth = 0; calYear++; }
+      renderCalendar();
+    }
+
+    function renderCalendar() {
+      const thMonths = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+                        'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+      const thDays = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+      document.getElementById('calMonthLabel').textContent = thMonths[calMonth] + ' ' + (calYear + 543);
+
+      const firstDay = new Date(calYear, calMonth, 1).getDay();
+      const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+      // Group items by date
+      const itemsByDate = {};
+      allData.forEach(item => {
+        if (!item.timestamp) return;
+        const d = new Date(item.timestamp);
+        if (d.getFullYear() === calYear && d.getMonth() === calMonth) {
+          const day = d.getDate();
+          if (!itemsByDate[day]) itemsByDate[day] = [];
+          itemsByDate[day].push(item);
+        }
+      });
+
+      let h = '';
+      // Day headers
+      thDays.forEach(d => {
+        h += `<div style="padding:8px 4px;text-align:center;font-size:0.7rem;font-weight:700;color:#9ca3af">${d}</div>`;
+      });
+
+      // Empty cells before first day
+      for (let i = 0; i < firstDay; i++) {
+        h += `<div></div>`;
+      }
+
+      // Date cells
+      for (let day = 1; day <= daysInMonth; day++) {
+        const items = itemsByDate[day] || [];
+        const isToday = (day === new Date().getDate() && calMonth === new Date().getMonth() && calYear === new Date().getFullYear());
+        const hasItems = items.length > 0;
+
+        let cellStyle = 'padding:6px 4px;text-align:center;border-radius:12px;min-height:56px;font-size:0.8rem;transition:all 0.15s;';
+        if (isToday) cellStyle += 'background:#eff6ff;border:2px solid #3b82f6;font-weight:700;color:#3b82f6;';
+        else if (hasItems) cellStyle += 'background:#f9fafb;cursor:pointer;';
+        else cellStyle += 'color:#6b7280;';
+
+        const onclick = hasItems ? ` onclick="openTab('${items[0].id}')"` : '';
+
+        h += `<div style="${cellStyle}"${onclick}>`;
+        h += `<div style="font-weight:${isToday?'700':'600'};margin-bottom:2px">${day}</div>`;
+
+        if (hasItems) {
+          h += `<div style="display:flex;gap:3px;justify-content:center;flex-wrap:wrap">`;
+          items.slice(0, 4).forEach(item => {
+            const tc = getTabColor(item.type);
+            h += `<span style="width:8px;height:8px;border-radius:50%;background:${tc.dot};display:inline-block" title="${item.subject || ''}"></span>`;
+          });
+          if (items.length > 4) h += `<span style="font-size:0.55rem;color:#9ca3af">+${items.length - 4}</span>`;
+          h += `</div>`;
+        }
+        h += `</div>`;
+      }
+
+      document.getElementById('calGrid').innerHTML = h;
+    }
+
+    // ── Trash functions ──
+    function moveToTrash(id) {
+      const idx = allData.findIndex(d => String(d.id) === String(id));
+      if (idx === -1) return;
+      if (!confirm('ย้ายรายการนี้ไปถังขยะ?')) return;
+      const item = allData.splice(idx, 1)[0];
+      item._trashedAt = new Date().toISOString();
+      trashData.push(item);
+      localStorage.setItem('vfc_trash', JSON.stringify(trashData));
+      // Close modal tab if open
+      closeTab(String(id));
+      applyFilters();
+      renderDashboard();
+      updateTrashCount();
+    }
+
+    function restoreFromTrash(id) {
+      const idx = trashData.findIndex(d => String(d.id) === String(id));
+      if (idx === -1) return;
+      const item = trashData.splice(idx, 1)[0];
+      delete item._trashedAt;
+      allData.push(item);
+      localStorage.setItem('vfc_trash', JSON.stringify(trashData));
+      applyFilters();
+      renderDashboard();
+      renderTrash();
+      updateTrashCount();
+    }
+
+    function emptyTrash() {
+      if (!trashData.length) return;
+      if (!confirm(`ลบถาวร ${trashData.length} รายการ? การกระทำนี้ไม่สามารถย้อนกลับได้`)) return;
+      trashData = [];
+      localStorage.setItem('vfc_trash', JSON.stringify(trashData));
+      renderTrash();
+      updateTrashCount();
+    }
+
+    function updateTrashCount() {
+      const el = document.getElementById('trashCount');
+      if (!el) return;
+      if (trashData.length > 0) {
+        el.textContent = trashData.length;
+        el.style.display = 'inline';
+      } else {
+        el.style.display = 'none';
+      }
+    }
+
+    function renderTrash() {
+      const container = document.getElementById('trashList');
+      if (!container) return;
+      if (!trashData.length) {
+        container.innerHTML = `<div style="text-align:center;padding:60px 20px;color:#9ca3af">
+          <svg style="width:48px;height:48px;margin:0 auto 12px;opacity:0.3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          <p style="font-size:0.9rem;font-weight:600">ถังขยะว่าง</p>
+          <p style="font-size:0.75rem">รายการที่ลบจะแสดงที่นี่</p>
+        </div>`;
+        return;
+      }
+
+      let h = '';
+      trashData.forEach(item => {
+        const tp = TYPES[item.type] || { th: item.type, cls: '' };
+        const tc = getTabColor(item.type);
+        const trashedDate = item._trashedAt ? fmtDate(item._trashedAt) : '-';
+        h += `<div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;background:#fafafa;border:1px solid #f3f4f6;margin-bottom:8px;transition:all 0.15s">`;
+        h += `<div style="width:36px;height:36px;border-radius:50%;background:${tc.bg};display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.8rem;flex-shrink:0">${(item.reporter_name || item.subject || '?').charAt(0)}</div>`;
+        h += `<div style="flex:1;min-width:0">`;
+        h += `<div style="font-weight:600;font-size:0.85rem;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${item.subject || 'ไม่มีหัวข้อ'}</div>`;
+        h += `<div style="font-size:0.72rem;color:#9ca3af;display:flex;gap:8px;align-items:center;margin-top:2px">`;
+        h += `<span class="badge ${tp.cls}" style="font-size:0.65rem;padding:2px 8px">${tp.th}</span>`;
+        h += `<span>ลบเมื่อ ${trashedDate}</span>`;
+        h += `</div></div>`;
+        h += `<button onclick="restoreFromTrash('${item.id}')" style="background:#3b82f6;color:white;border:none;border-radius:8px;padding:6px 12px;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap">กู้คืน</button>`;
+        h += `<button onclick="permanentDelete('${item.id}')" style="background:none;color:#ef4444;border:1px solid #fecaca;border-radius:8px;padding:6px 12px;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap">ลบถาวร</button>`;
+        h += `</div>`;
+      });
+      container.innerHTML = h;
+    }
+
+    function permanentDelete(id) {
+      if (!confirm('ลบรายการนี้ถาวร?')) return;
+      trashData = trashData.filter(d => String(d.id) !== String(id));
+      localStorage.setItem('vfc_trash', JSON.stringify(trashData));
+      renderTrash();
+      updateTrashCount();
+    }
+
     // Kanban board render
     function renderBoard() {
       const cols = [
@@ -1426,10 +1635,14 @@
         return;
       }
       allData = data || [];
+      // Exclude items already in trash
+      const trashIds = new Set(trashData.map(t => String(t.id)));
+      allData = allData.filter(d => !trashIds.has(String(d.id)));
       docNumMap = genDocNums(allData);
       updateStats();
       applyFilters();
       renderDashboard();
+      updateTrashCount();
     }
 
     // Stats
@@ -1600,10 +1813,10 @@
         const tp = TYPES[item.type] || { th: item.type };
         const tc = getTabColor(item.type);
         const initials = item.is_anonymous ? '?' : ((item.reporter_name || item.subject || '?').charAt(0));
-        const label = (item.subject || tp.th || 'รายการ').substring(0, 30);
-        h += `<div class="m-dock-item" style="background:${tc.bg}" onclick="restoreTab('${tab.id}')">`;
-        h += initials;
-        h += `<span class="m-dock-tooltip">${label}</span>`;
+        const label = (item.subject || tp.th || 'รายการ').substring(0, 20);
+        h += `<div class="m-dock-item" onclick="restoreTab('${tab.id}')">`;
+        h += `<span class="m-dock-icon" style="background:${tc.bg}">${initials}</span>`;
+        h += `<span class="m-dock-label">${label}</span>`;
         h += `</div>`;
       });
       dock.innerHTML = h;
@@ -1695,6 +1908,9 @@
       right += `<button class="m-act-btn2" onclick="markAsUnread('${id}'); closeTab('${id}'); render()">`;
       right += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>';
       right += 'ยังไม่อ่าน</button>';
+      right += `<button class="m-act-btn2" style="color:#ef4444" onclick="moveToTrash('${id}')">`;
+      right += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>';
+      right += 'ย้ายไปถังขยะ</button>';
       right += '</div>';
       document.getElementById('mSidebar').innerHTML = right;
     }
@@ -1778,11 +1994,28 @@
       renderDock();
     }
 
+    // ── Minimize ALL tabs ──
+    function minimizeAllTabs() {
+      openTabs.forEach(t => t.minimized = true);
+      activeTabId = null;
+      document.getElementById('detailModal').classList.remove('open');
+      renderTabBar();
+      renderDock();
+    }
+
+    // ── Close ALL tabs ──
+    function closeAllTabs() {
+      openTabs = [];
+      activeTabId = null;
+      document.getElementById('detailModal').classList.remove('open');
+      renderTabBar();
+      renderDock();
+    }
+
     // ── Restore from dock ──
     function restoreTab(id) {
-      const tab = openTabs.find(t => t.id === String(id));
-      if (!tab) return;
-      tab.minimized = false;
+      // Restore ALL minimized tabs
+      openTabs.forEach(t => t.minimized = false);
       activeTabId = String(id);
 
       renderTabContent(activeTabId);
