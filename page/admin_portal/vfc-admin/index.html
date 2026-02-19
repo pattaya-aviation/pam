@@ -645,22 +645,33 @@
     .m-act-btn2:hover { border-color: #3b82f6; color: #3b82f6; }
     .m-act-btn2 svg { width: 14px; height: 14px; }
 
-    /* Tab bar — underline style */
+    /* Tab bar — slide pill style */
     .tab-bar {
-      display: flex; align-items: center; gap: 0;
-      border-bottom: 2px solid #e5e7eb;
-      width: 100%; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 4px;
+      position: relative; width: 100%; margin-bottom: 20px;
+      background: #f3f4f6; border-radius: 9999px; padding: 4px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .tab-bar::-webkit-scrollbar { display: none; }
+    .tab-pill {
+      position: absolute; top: 4px; left: 4px;
+      height: calc(100% - 8px); border-radius: 9999px;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 0;
     }
     .tab-btn {
-      padding: 10px 20px; border: none; border-bottom: 2px solid transparent;
-      margin-bottom: -2px; font-size: 0.8125rem; font-weight: 500;
-      cursor: pointer; transition: all 0.15s;
-      background: transparent; color: #6b7280; white-space: nowrap;
+      padding: 8px 18px; border: none; background: transparent;
+      font-size: 0.8125rem; font-weight: 500; cursor: pointer;
+      transition: color 0.2s; color: #6b7280; white-space: nowrap;
       display: flex; align-items: center; gap: 6px;
+      position: relative; z-index: 1; border-radius: 9999px;
+      flex-shrink: 0;
     }
-    .tab-btn:hover { color: #111827; }
-    .tab-btn.active { color: #2563eb; border-bottom-color: #2563eb; font-weight: 600; }
-    .tab-btn.active:hover { color: #1d4ed8; border-bottom-color: #1d4ed8; }
+    .tab-btn:hover { color: #374151; }
+    .tab-btn.active { color: #2563eb; font-weight: 600; }
+    .tab-btn svg { width: 16px; height: 16px; }
 
     /* Floating pill header */
     .floating-header {
@@ -686,10 +697,10 @@
       }
     }
 
-    /* Mobile: text tabs from left */
+    /* Mobile: compact tabs */
     @media (max-width: 640px) {
       .tab-bar { justify-content: flex-start; }
-      .tab-btn { padding: 10px 14px; font-size: 0.75rem; }
+      .tab-btn { padding: 8px 12px; font-size: 0.75rem; }
       .tab-btn svg { display: none; }
     }
     .tab-placeholder {
@@ -966,6 +977,7 @@
 
     <!-- Tab Bar -->
     <div class="tab-bar" style="margin-bottom:16px">
+      <div class="tab-pill" id="tabPill"></div>
       <button class="tab-btn active" id="tabInbox" onclick="switchTab('inbox')">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>
         หน้าแรก
@@ -1234,7 +1246,7 @@
     };
     function catTh(key) { return CATEGORIES[key] || key || '-'; }
 
-    // Tab switching
+    // Tab switching with slide pill
     function switchTab(tabName) {
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('active');
@@ -1244,13 +1256,36 @@
       });
       const btnId = 'tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1);
       const contentId = 'content' + tabName.charAt(0).toUpperCase() + tabName.slice(1);
-      document.getElementById(btnId).classList.add('active');
+      const activeBtn = document.getElementById(btnId);
+      activeBtn.classList.add('active');
       document.getElementById(contentId).classList.remove('hidden');
+      slideTabPill(activeBtn);
       if (tabName === 'board') renderBoard();
       if (tabName === 'inbox') renderDashboard();
       if (tabName === 'calendar') renderCalendar();
       if (tabName === 'trash') renderTrash();
     }
+    function slideTabPill(btn) {
+      const pill = document.getElementById('tabPill');
+      if (!pill || !btn) return;
+      const bar = btn.closest('.tab-bar');
+      const barRect = bar.getBoundingClientRect();
+      const btnRect = btn.getBoundingClientRect();
+      pill.style.left = (btnRect.left - barRect.left) + 'px';
+      pill.style.width = btnRect.width + 'px';
+    }
+    // Initialize pill position on load
+    window.addEventListener('load', () => {
+      const activeBtn = document.querySelector('.tab-bar .tab-btn.active');
+      if (activeBtn) {
+        const pill = document.getElementById('tabPill');
+        if (pill) pill.style.transition = 'none';
+        slideTabPill(activeBtn);
+        requestAnimationFrame(() => {
+          if (pill) pill.style.transition = '';
+        });
+      }
+    });
 
     // Dashboard — Power BI style
     let dashTypeFilter = '';
