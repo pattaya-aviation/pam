@@ -1,5 +1,5 @@
 /**
- * PA-System Shared Navbar Component
+ * PAM Shared Navbar Component
  * 
  * Usage: Include this script in your HTML and call renderNavbar() after the container element
  * 
@@ -298,7 +298,7 @@
                 <!-- Logo -->
                 <div class="text-center mb-8">
                     <img src="${paths.logo}" alt="Pattaya Aviation" class="h-14 mx-auto mb-4">
-                    <h2 class="text-xl font-bold text-gray-900">เข้าสู่ระบบ PA-System</h2>
+                    <h2 class="text-xl font-bold text-gray-900">เข้าสู่ระบบ PAM</h2>
                 </div>
                 
                 <!-- Login Form -->
