@@ -532,6 +532,37 @@
     }
     .m-history-expand:hover { color: #6b7280; }
 
+    /* ── Detail version tabs ── */
+    .m-ver-tabs {
+      display: flex; gap: 8px; margin-bottom: 14px;
+    }
+    .m-ver-tab {
+      padding: 6px 16px; border: 1.5px solid #e5e7eb; border-radius: 9999px;
+      background: white; font-size: 0.8125rem; font-weight: 600;
+      cursor: pointer; color: #9ca3af; transition: all 0.18s;
+    }
+    .m-ver-tab:hover { color: #374151; border-color: #d1d5db; background: #f9fafb; }
+    .m-ver-tab.active {
+      color: white; background: #3b82f6; border-color: #3b82f6;
+      box-shadow: 0 2px 8px rgba(59,130,246,0.25);
+    }
+    .m-ver-tab.active-orig {
+      color: white; background: #f59e0b; border-color: #f59e0b;
+      box-shadow: 0 2px 8px rgba(245,158,11,0.25);
+    }
+    .m-ver-original {
+      padding: 16px; background: #fffbeb; border-radius: 12px;
+      border: 1px solid #fde68a; margin-bottom: 16px;
+      font-size: 0.875rem; line-height: 1.85; color: #92400e;
+      white-space: pre-wrap; word-break: break-word;
+    }
+    .m-ver-original-label {
+      font-size: 0.6875rem; font-weight: 700; color: #d97706;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+    }
+    .m-ver-original-label svg { width: 14px; height: 14px; }
+
     /* Fix text callout */
     .m-fix {
       display: flex; gap: 10px; align-items: flex-start;
@@ -2134,7 +2165,25 @@
       // ── Detail text + Fix text (combined edit) ──
       const hasDetail = item.detail_text;
       const hasFix = item.fix_text;
+      const history = item.edit_history || [];
+      const hasOriginal = history.length > 0;
+      // Find original values from first history entry
+      let origDetail = '', origFix = '';
+      if (hasOriginal) {
+        const detailHist = history.filter(h => h.field === 'รายละเอียด');
+        const fixHist = history.filter(h => h.field === 'สิ่งที่ต้องการแก้ไข');
+        origDetail = detailHist.length ? detailHist[0].old_value : (item.detail_text || '');
+        origFix = fixHist.length ? fixHist[0].old_value : (item.fix_text || '');
+      }
       if (hasDetail || hasFix) {
+        // Version tabs (only show if has edit history)
+        if (hasOriginal) {
+          left += '<div class="m-ver-tabs">';
+          left += `<button class="m-ver-tab active" onclick="switchDetailVer('${id}','current')">ฉบับปัจจุบัน</button>`;
+          left += `<button class="m-ver-tab" onclick="switchDetailVer('${id}','original')">ฉบับต้นฉบับ</button>`;
+          left += '</div>';
+        }
+
         left += '<div class="m-label-row">';
         left += '<div class="m-label">รายละเอียด</div>';
         left += `<button class="m-edit-btn" id="editBtn_${id}" onclick="toggleEditDetail('${id}')">`;
@@ -2142,7 +2191,7 @@
         left += 'แก้ไข</button>';
         left += '</div>';
 
-        // View mode
+        // Current version (view mode)
         left += `<div id="detailViewWrap_${id}">`;
         if (hasDetail) left += `<div class="m-body">${item.detail_text}</div>`;
         if (hasFix) {
@@ -2152,6 +2201,24 @@
           left += '</div>';
         }
         left += '</div>';
+
+        // Original version (hidden)
+        if (hasOriginal) {
+          left += `<div id="detailOrigWrap_${id}" style="display:none">`;
+          if (origDetail) {
+            left += '<div class="m-ver-original-label">';
+            left += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>';
+            left += 'รายละเอียด (ต้นฉบับ)</div>';
+            left += `<div class="m-ver-original">${origDetail}</div>`;
+          }
+          if (origFix) {
+            left += '<div class="m-ver-original-label">';
+            left += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+            left += 'สิ่งที่ต้องการแก้ไข (ต้นฉบับ)</div>';
+            left += `<div class="m-ver-original">${origFix}</div>`;
+          }
+          left += '</div>';
+        }
 
         // Edit mode (hidden)
         left += `<div id="detailEditWrap_${id}" style="display:none">`;
@@ -2449,6 +2516,35 @@
       msgEl.style.color = '#22c55e';
       setTimeout(() => { msgEl.textContent = ''; }, 3000);
     }
+    // ── Switch detail version (current / original) ──
+    function switchDetailVer(id, ver) {
+      const viewWrap = document.getElementById('detailViewWrap_' + id);
+      const origWrap = document.getElementById('detailOrigWrap_' + id);
+      const editBtn = document.getElementById('editBtn_' + id);
+      const editWrap = document.getElementById('detailEditWrap_' + id);
+      const actions = document.getElementById('detailEditActions_' + id);
+      if (!viewWrap || !origWrap) return;
+
+      // Find tabs container
+      const tabsContainer = viewWrap.closest('.m-content') || viewWrap.parentElement;
+      const tabs = tabsContainer.querySelectorAll('.m-ver-tab');
+      tabs.forEach(t => { t.classList.remove('active', 'active-orig'); });
+
+      if (ver === 'current') {
+        viewWrap.style.display = '';
+        origWrap.style.display = 'none';
+        if (editBtn) editBtn.style.display = '';
+        tabs[0].classList.add('active');
+      } else {
+        viewWrap.style.display = 'none';
+        origWrap.style.display = '';
+        if (editBtn) editBtn.style.display = 'none';
+        if (editWrap) editWrap.style.display = 'none';
+        if (actions) actions.style.display = 'none';
+        tabs[1].classList.add('active-orig');
+      }
+    }
+
     // ── History version toggle ──
     function showHistoryVer(uid, ver) {
       const oldEl = document.getElementById('hv_old_' + uid);
