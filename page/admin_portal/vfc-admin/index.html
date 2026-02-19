@@ -253,7 +253,7 @@
     .modal-box::-webkit-scrollbar { display: none; }
 
     /* ── Modal inner layout ── */
-    .m-inner { display: flex; flex-direction: column; flex: 1; overflow-y: auto; }
+    .m-inner { display: flex; flex-direction: column; flex: 1; overflow-y: auto; position: relative; z-index: 1; }
     @media (min-width: 768px) {
       .m-inner { flex-direction: row; overflow: hidden; }
     }
@@ -274,6 +274,7 @@
         width: 40%; flex-shrink: 0; border-top: none;
         border-left: 1px solid #f3f4f6; overflow-y: auto;
         border-radius: 0 20px 20px 0;
+        padding-top: 56px;
       }
     }
 
@@ -320,8 +321,9 @@
 
     /* ── Window controls (top-right of modal) ── */
     .m-win-ctrl {
-      position: absolute; top: 12px; right: 16px;
-      display: flex; gap: 8px; z-index: 10;
+      position: absolute; top: 0; right: 0;
+      display: flex; gap: 8px; z-index: 999;
+      pointer-events: auto;
     }
     .m-win-btn {
       width: 36px; height: 36px; border-radius: 50%; border: none;
@@ -397,7 +399,7 @@
       color: white; font-weight: 700; font-size: 1rem; flex-shrink: 0;
       box-shadow: 0 2px 8px rgba(99,102,241,0.25);
     }
-    .m-sender-name { font-size: 0.9375rem; font-weight: 600; color: #111827; }
+    .m-sender-name { font-size: 1.125rem; font-weight: 600; color: #111827; }
     .m-sender-sub { font-size: 0.75rem; color: #9ca3af; margin-top: 2px; }
 
     /* Section label */
@@ -414,6 +416,122 @@
       margin-bottom: 20px;
     }
 
+    /* Edit detail */
+    .m-label-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .m-label-row .m-label { margin-bottom: 0; }
+    .m-edit-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 10px; border-radius: 8px; border: 1px solid #e5e7eb;
+      font-size: 0.6875rem; font-weight: 500; cursor: pointer;
+      background: white; color: #6b7280; transition: all 0.15s;
+    }
+    .m-edit-btn:hover { border-color: #3b82f6; color: #3b82f6; }
+    .m-edit-btn svg { width: 12px; height: 12px; }
+    /* Editable area */
+    .m-editable {
+      width: 100%; padding: 12px 14px; border-radius: 12px;
+      border: 1.5px solid #3b82f6; font-size: 0.9375rem;
+      color: #374151; outline: none; min-height: 120px;
+      font-family: inherit; line-height: 1.85; background: #f8faff;
+      margin-bottom: 8px; box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+      white-space: pre-wrap; word-break: break-word;
+    }
+    .m-editable:focus { border-color: #2563eb; }
+    .m-editable ul, .m-editable ol { padding-left: 20px; margin: 4px 0; }
+    .m-editable li { margin-bottom: 2px; }
+
+    /* Toolbar */
+    .m-toolbar {
+      display: flex; align-items: center; gap: 4px;
+      padding: 6px 8px; border-radius: 10px 10px 0 0;
+      background: #f3f4f6; border: 1.5px solid #3b82f6;
+      border-bottom: none; margin-bottom: -1px;
+    }
+    .m-toolbar-btn {
+      width: 30px; height: 30px; border-radius: 6px; border: none;
+      background: transparent; cursor: pointer; color: #374151;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s; font-size: 14px;
+    }
+    .m-toolbar-btn:hover { background: #e5e7eb; }
+    .m-toolbar-btn.active { background: #3b82f6; color: white; }
+    .m-toolbar-sep {
+      width: 1px; height: 20px; background: #d1d5db; margin: 0 4px;
+    }
+
+    .m-edit-actions {
+      display: flex; gap: 8px; align-items: center; margin-bottom: 16px;
+    }
+    .m-edit-save {
+      padding: 6px 16px; border-radius: 8px; border: none;
+      font-size: 0.8125rem; font-weight: 600; cursor: pointer;
+      background: #3b82f6; color: white; transition: all 0.15s;
+    }
+    .m-edit-save:hover { background: #2563eb; }
+    .m-edit-cancel {
+      padding: 6px 16px; border-radius: 8px; border: 1px solid #e5e7eb;
+      font-size: 0.8125rem; font-weight: 500; cursor: pointer;
+      background: white; color: #6b7280; transition: all 0.15s;
+    }
+    .m-edit-cancel:hover { border-color: #d1d5db; color: #374151; }
+    .m-edit-msg { font-size: 0.75rem; margin-left: 8px; }
+
+    /* Version history */
+    .m-history-toggle {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 10px; border-radius: 8px; border: 1px solid #e5e7eb;
+      font-size: 0.6875rem; font-weight: 500; cursor: pointer;
+      background: white; color: #9ca3af; transition: all 0.15s;
+      margin-bottom: 12px;
+    }
+    .m-history-toggle:hover { color: #6b7280; border-color: #d1d5db; }
+    .m-history-toggle svg { width: 12px; height: 12px; }
+    .m-history-list {
+      border-left: 2px solid #e5e7eb; padding-left: 14px;
+      margin-bottom: 20px;
+    }
+    .m-history-item {
+      margin-bottom: 14px; padding-bottom: 14px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .m-history-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .m-history-date {
+      font-size: 0.6875rem; color: #9ca3af; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .m-history-date svg { width: 12px; height: 12px; flex-shrink: 0; }
+    .m-history-tabs {
+      display: flex; gap: 0; margin-bottom: 0;
+    }
+    .m-history-tab {
+      padding: 5px 14px; border: 1px solid #e5e7eb; border-bottom: none;
+      font-size: 0.6875rem; font-weight: 600; cursor: pointer;
+      background: #f9fafb; color: #9ca3af; transition: all 0.15s;
+    }
+    .m-history-tab:first-child { border-radius: 8px 0 0 0; }
+    .m-history-tab:last-child { border-radius: 0 8px 0 0; }
+    .m-history-tab.tab-old.active { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
+    .m-history-tab.tab-new.active { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
+    .m-history-content {
+      font-size: 0.8125rem; line-height: 1.75; padding: 12px 14px;
+      border-radius: 0 0 8px 8px; max-height: 300px; overflow-y: auto;
+      white-space: pre-wrap; word-break: break-word;
+    }
+    .m-history-content.ver-old {
+      background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; border-top: none;
+    }
+    .m-history-content.ver-new {
+      background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; border-top: none;
+    }
+    .m-history-expand {
+      font-size: 0.625rem; color: #9ca3af; cursor: pointer;
+      margin-top: 4px; text-align: right;
+    }
+    .m-history-expand:hover { color: #6b7280; }
+
     /* Fix text callout */
     .m-fix {
       display: flex; gap: 10px; align-items: flex-start;
@@ -425,24 +543,22 @@
       width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px;
     }
 
-    /* Info table */
-    .m-info-table {
-      width: 100%; border-radius: 14px; overflow: hidden;
-      border: 1px solid #f3f4f6; margin-bottom: 8px;
+    /* Info pills */
+    .m-info-pills {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;
     }
-    .m-info-row-item {
-      display: flex; border-bottom: 1px solid #f3f4f6;
+    .m-info-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 999px;
+      background: #f3f4f6; font-size: 0.8125rem;
+      color: #374151; transition: all 0.15s;
     }
-    .m-info-row-item:last-child { border-bottom: none; }
-    .m-info-label {
-      width: 100px; flex-shrink: 0; padding: 10px 14px;
+    .m-info-pill:hover { background: #e5e7eb; }
+    .m-info-pill-label {
       font-size: 0.6875rem; font-weight: 600; color: #9ca3af;
-      text-transform: uppercase; letter-spacing: 0.04em;
-      background: #fafafa;
     }
-    .m-info-val {
-      flex: 1; padding: 10px 14px;
-      font-size: 0.8125rem; color: #111827; font-weight: 500;
+    .m-info-pill-val {
+      font-weight: 500; color: #111827;
     }
 
     /* Sidebar section */
@@ -1012,18 +1128,18 @@
   </div><!-- /admin-content -->
   <!-- Detail Modal -->
   <div id="detailModal" class="modal-overlay" onclick="if(event.target===this)minimizeActiveTab()">
-    <div class="modal-wrap">
+    <div class="modal-wrap" style="position:relative">
+      <!-- Window controls (outside modal-box, in modal-wrap) -->
+      <div class="m-win-ctrl">
+        <button type="button" onclick="event.stopPropagation(); minimizeAllTabs()" class="m-win-btn m-win-min" title="ย่อทั้งหมด">−</button>
+        <button type="button" onclick="event.stopPropagation(); closeAllTabs()" class="m-win-btn m-win-close" title="ปิดทั้งหมด">✕</button>
+      </div>
       <!-- Floating pill tab bar (above modal) -->
       <div class="m-tab-bar">
         <div class="m-dot-rail" id="mDotRail"></div>
       </div>
       <!-- Modal box -->
-      <div class="modal-box" style="position:relative">
-        <!-- Window controls top-right -->
-        <div class="m-win-ctrl">
-          <button onclick="minimizeAllTabs()" class="m-win-btn m-win-min" title="ย่อทั้งหมด">−</button>
-          <button onclick="closeAllTabs()" class="m-win-btn m-win-close" title="ปิดทั้งหมด">✕</button>
-        </div>
+      <div class="modal-box">
         <div class="m-inner">
           <div class="m-content" id="mContent"></div>
           <div class="m-sidebar" id="mSidebar"></div>
@@ -1980,7 +2096,8 @@
       const subject = item.subject || 'ไม่มีหัวข้อ';
       const senderName = item.is_anonymous ? 'ไม่ระบุตัวตน' : (item.reporter_name || 'ไม่ระบุชื่อ');
       const initials = item.is_anonymous ? '?' : (senderName.charAt(0) || '?');
-      const senderSub = [item.reporter_employee_id, item.reporter_station, item.reporter_department].filter(Boolean).join(' · ');
+      const empId = item.reporter_employee_id || '';
+      const senderPills = [item.reporter_station, item.reporter_department].filter(Boolean);
 
       // ── Left content ──
       let left = '';
@@ -1992,32 +2109,123 @@
       left += '</div>';
       left += `<div class="m-subject">${subject}</div>`;
       left += '<div class="m-sender-card">';
-      left += `<div class="m-avatar">${initials}</div>`;
       left += '<div>';
-      left += `<div class="m-sender-name">${senderName}</div>`;
-      left += `<div class="m-sender-sub">${senderSub || 'ไม่ระบุข้อมูลผู้ส่ง'}</div>`;
-      left += '</div></div>';
-      if (item.detail_text) {
-        left += '<div class="m-label">รายละเอียด</div>';
-        left += `<div class="m-body">${item.detail_text}</div>`;
-      }
-      if (item.fix_text) {
-        left += '<div class="m-fix">';
-        left += '<svg class="m-fix-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
-        left += `<div><strong>สิ่งที่ต้องการแก้ไข</strong><br>${item.fix_text}</div>`;
+      left += `<div class="m-sender-name">${senderName}${empId ? ` <span style="margin-left:6px">${empId}</span>` : ''}</div>`;
+      if (senderPills.length) {
+        left += '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px">';
+        senderPills.forEach(v => {
+          left += `<span class="m-info-pill" style="padding:3px 10px;font-size:0.75rem">${v}</span>`;
+        });
         left += '</div>';
       }
+      left += '</div></div>';
       const infoItems = [
         ['หมวดหมู่', item.category ? catTh(item.category) : null], ['สถานี', item.detail_station],
         ['ฝ่าย', item.detail_department], ['แผนก', item.detail_section],
       ].filter(([,v]) => v);
       if (infoItems.length) {
         left += '<div class="m-label">ข้อมูลเพิ่มเติม</div>';
-        left += '<div class="m-info-table">';
+        left += '<div class="m-info-pills">';
         infoItems.forEach(([l,v]) => {
-          left += `<div class="m-info-row-item"><div class="m-info-label">${l}</div><div class="m-info-val">${v}</div></div>`;
+          left += `<span class="m-info-pill"><span class="m-info-pill-label">${l}</span> <span class="m-info-pill-val">${v}</span></span>`;
         });
         left += '</div>';
+      }
+      // ── Detail text + Fix text (combined edit) ──
+      const hasDetail = item.detail_text;
+      const hasFix = item.fix_text;
+      if (hasDetail || hasFix) {
+        left += '<div class="m-label-row">';
+        left += '<div class="m-label">รายละเอียด</div>';
+        left += `<button class="m-edit-btn" id="editBtn_${id}" onclick="toggleEditDetail('${id}')">`;
+        left += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>';
+        left += 'แก้ไข</button>';
+        left += '</div>';
+
+        // View mode
+        left += `<div id="detailViewWrap_${id}">`;
+        if (hasDetail) left += `<div class="m-body">${item.detail_text}</div>`;
+        if (hasFix) {
+          left += '<div class="m-fix">';
+          left += '<svg class="m-fix-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+          left += `<div><strong>สิ่งที่ต้องการแก้ไข</strong><br>${item.fix_text}</div>`;
+          left += '</div>';
+        }
+        left += '</div>';
+
+        // Edit mode (hidden)
+        left += `<div id="detailEditWrap_${id}" style="display:none">`;
+        // Toolbar
+        left += '<div class="m-toolbar">';
+        const pd = 'onmousedown="event.preventDefault()"';
+        // Text style group
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('bold')" title="ตัวหนา"><b>B</b></button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('italic')" title="ตัวเอียง"><i>I</i></button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('underline')" title="ขีดเส้นใต้"><u>U</u></button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('strikeThrough')" title="ขีดทับ"><s>S</s></button>`;
+        left += '<div class="m-toolbar-sep"></div>';
+        // List group
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('insertUnorderedList')" title="รายการจุด"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('insertOrderedList')" title="รายการตัวเลข"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 6h14M7 12h14M7 18h14"/><text x="2" y="7" font-size="6" fill="currentColor" font-weight="700">1</text><text x="2" y="13" font-size="6" fill="currentColor" font-weight="700">2</text><text x="2" y="19" font-size="6" fill="currentColor" font-weight="700">3</text></svg></button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('indent')" title="เพิ่มย่อหน้า"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18M3 20h18M13 8h8M13 12h8M13 16h8M3 8l4 4-4 4"/></svg></button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('outdent')" title="ลดย่อหน้า"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18M3 20h18M13 8h8M13 12h8M13 16h8M7 8L3 12l4 4"/></svg></button>`;
+        left += '<div class="m-toolbar-sep"></div>';
+        // Color & highlight group
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtHighlight()" title="ไฮไลท์สีเหลือง" style="background:#fef08a;color:#854d0e;font-weight:700;font-size:12px">H</button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('foreColor','#ef4444')" title="ข้อความสีแดง" style="color:#ef4444;font-weight:700">A</button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('foreColor','#3b82f6')" title="ข้อความสีน้ำเงิน" style="color:#3b82f6;font-weight:700">A</button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('removeFormat')" title="ล้าง format"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>`;
+        left += '<div class="m-toolbar-sep"></div>';
+        // Undo/Redo
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('undo')" title="เลิกทำ"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a5 5 0 010 10H9M3 10l4-4M3 10l4 4"/></svg></button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('redo')" title="ทำซ้ำ"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10H11a5 5 0 000 10h4M21 10l-4-4M21 10l-4 4"/></svg></button>`;
+        left += '</div>';
+        // Detail editable
+        if (hasDetail) {
+          left += `<div style="font-size:0.6875rem;font-weight:600;color:#9ca3af;margin:10px 0 4px;text-transform:uppercase;letter-spacing:0.04em">รายละเอียด</div>`;
+          left += `<div id="detailTextEdit_${id}" class="m-editable" contenteditable="true" style="border-radius:12px">${item.detail_text}</div>`;
+        }
+        // Fix editable
+        if (hasFix) {
+          left += `<div style="font-size:0.6875rem;font-weight:600;color:#9ca3af;margin:10px 0 4px;text-transform:uppercase;letter-spacing:0.04em">สิ่งที่ต้องการแก้ไข</div>`;
+          left += `<div id="fixTextEdit_${id}" class="m-editable" contenteditable="true" style="border-radius:12px;min-height:80px">${item.fix_text}</div>`;
+        }
+        left += '</div>';
+
+        // Edit actions
+        left += `<div id="detailEditActions_${id}" class="m-edit-actions" style="display:none">`;
+        left += `<button class="m-edit-save" onclick="saveDetailText('${id}')">บันทึก</button>`;
+        left += `<button class="m-edit-cancel" onclick="toggleEditDetail('${id}')">ยกเลิก</button>`;
+        left += `<span id="detailEditMsg_${id}" class="m-edit-msg"></span>`;
+        left += '</div>';
+
+        // Version history
+        const history = item.edit_history || [];
+        if (history.length) {
+          left += `<button class="m-history-toggle" onclick="document.getElementById('historyList_${id}').style.display = document.getElementById('historyList_${id}').style.display === 'none' ? 'block' : 'none'">`;
+          left += `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
+          left += `ประวัติการแก้ไข (${history.length})</button>`;
+          left += `<div id="historyList_${id}" class="m-history-list" style="display:none">`;
+          [...history].reverse().forEach((h, idx) => {
+            const d = h.edited_at ? new Date(h.edited_at).toLocaleString('th-TH') : '';
+            const uid = `${id}_${idx}`;
+            left += '<div class="m-history-item">';
+            left += `<div class="m-history-date">`;
+            left += `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>`;
+            left += `${d}${h.field ? ' · <b>' + h.field + '</b>' : ''}`;
+            left += '</div>';
+            // Tabs
+            left += '<div class="m-history-tabs">';
+            left += `<button class="m-history-tab tab-old active" onclick="showHistoryVer('${uid}','old')">ก่อนแก้</button>`;
+            left += `<button class="m-history-tab tab-new" onclick="showHistoryVer('${uid}','new')">หลังแก้</button>`;
+            left += '</div>';
+            // Content boxes
+            left += `<div id="hv_old_${uid}" class="m-history-content ver-old">${h.old_value || '<em>ไม่มีข้อมูลเดิม</em>'}</div>`;
+            left += `<div id="hv_new_${uid}" class="m-history-content ver-new" style="display:none">${h.new_value || ''}</div>`;
+            left += '</div>';
+          });
+          left += '</div>';
+        }
       }
       document.getElementById('mContent').innerHTML = left;
 
@@ -2153,7 +2361,7 @@
 
     // ── Close ALL tabs ──
     function closeAllTabs() {
-      openTabs = [];
+      openTabs.length = 0;
       activeTabId = null;
       document.getElementById('detailModal').classList.remove('open');
       renderTabBar();
@@ -2240,6 +2448,136 @@
       msgEl.textContent = '✅ บันทึกคำตอบเรียบร้อย';
       msgEl.style.color = '#22c55e';
       setTimeout(() => { msgEl.textContent = ''; }, 3000);
+    }
+    // ── History version toggle ──
+    function showHistoryVer(uid, ver) {
+      const oldEl = document.getElementById('hv_old_' + uid);
+      const newEl = document.getElementById('hv_new_' + uid);
+      if (!oldEl || !newEl) return;
+      const parent = oldEl.closest('.m-history-item');
+      parent.querySelectorAll('.m-history-tab').forEach(t => t.classList.remove('active'));
+      if (ver === 'old') {
+        oldEl.style.display = '';
+        newEl.style.display = 'none';
+        parent.querySelector('.tab-old').classList.add('active');
+      } else {
+        oldEl.style.display = 'none';
+        newEl.style.display = '';
+        parent.querySelector('.tab-new').classList.add('active');
+      }
+    }
+
+    // ── Formatting commands ──
+    function fmtCmd(cmd, val) {
+      document.execCommand(cmd, false, val || null);
+    }
+    function fmtHighlight() {
+      const sel = window.getSelection();
+      if (!sel.rangeCount || sel.isCollapsed) return;
+      // Toggle: if already highlighted, remove it
+      const parent = sel.anchorNode.parentElement;
+      if (parent && parent.tagName === 'MARK') {
+        const text = document.createTextNode(parent.textContent);
+        parent.parentNode.replaceChild(text, parent);
+      } else {
+        document.execCommand('hiliteColor', false, '#fef08a');
+      }
+    }
+
+    // ── Edit detail text ──
+    function toggleEditDetail(id) {
+      const viewWrap = document.getElementById('detailViewWrap_' + id);
+      const editWrap = document.getElementById('detailEditWrap_' + id);
+      const actions = document.getElementById('detailEditActions_' + id);
+      const btn = document.getElementById('editBtn_' + id);
+      if (!viewWrap || !editWrap) return;
+      const isEditing = editWrap.style.display !== 'none';
+      if (isEditing) {
+        // Cancel — restore original
+        viewWrap.style.display = '';
+        editWrap.style.display = 'none';
+        actions.style.display = 'none';
+        if (btn) btn.style.display = '';
+      } else {
+        // Enter edit mode
+        viewWrap.style.display = 'none';
+        editWrap.style.display = '';
+        actions.style.display = '';
+        if (btn) btn.style.display = 'none';
+        const editEl = document.getElementById('detailTextEdit_' + id);
+        if (editEl) editEl.focus();
+      }
+    }
+
+    async function saveDetailText(id) {
+      const msgEl = document.getElementById('detailEditMsg_' + id);
+      const item = allData.find(d => String(d.id) === String(id));
+      if (!item) return;
+
+      const detailEl = document.getElementById('detailTextEdit_' + id);
+      const fixEl = document.getElementById('fixTextEdit_' + id);
+      const newDetail = detailEl ? detailEl.innerHTML.trim() : (item.detail_text || '');
+      const newFix = fixEl ? fixEl.innerHTML.trim() : (item.fix_text || '');
+      const oldDetail = item.detail_text || '';
+      const oldFix = item.fix_text || '';
+
+      const detailChanged = newDetail !== oldDetail;
+      const fixChanged = newFix !== oldFix;
+
+      if (!detailChanged && !fixChanged) {
+        msgEl.textContent = 'ℹ️ ไม่มีการเปลี่ยนแปลง';
+        msgEl.style.color = '#6b7280';
+        return;
+      }
+
+      msgEl.textContent = 'กำลังบันทึก...';
+      msgEl.style.color = '#6b7280';
+
+      // Build version history
+      const history = Array.isArray(item.edit_history) ? [...item.edit_history] : [];
+      if (detailChanged) {
+        history.push({
+          field: 'รายละเอียด',
+          old_value: oldDetail,
+          new_value: newDetail,
+          edited_at: new Date().toISOString()
+        });
+      }
+      if (fixChanged) {
+        history.push({
+          field: 'สิ่งที่ต้องการแก้ไข',
+          old_value: oldFix,
+          new_value: newFix,
+          edited_at: new Date().toISOString()
+        });
+      }
+
+      const updateObj = { edit_history: history };
+      if (detailChanged) updateObj.detail_text = newDetail;
+      if (fixChanged) updateObj.fix_text = newFix;
+
+      const client = await waitSB();
+      const { error } = await client
+        .from('vfc_submissions')
+        .update(updateObj)
+        .eq('id', id);
+
+      if (error) {
+        msgEl.textContent = '❌ เกิดข้อผิดพลาด: ' + error.message;
+        msgEl.style.color = '#ef4444';
+        return;
+      }
+
+      // Update local data
+      if (detailChanged) item.detail_text = newDetail;
+      if (fixChanged) item.fix_text = newFix;
+      item.edit_history = history;
+
+      msgEl.textContent = '✅ บันทึกเรียบร้อย';
+      msgEl.style.color = '#22c55e';
+
+      // Re-render
+      setTimeout(() => { renderTabContent(id); }, 800);
     }
 
     // Keyboard
