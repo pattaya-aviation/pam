@@ -2486,8 +2486,8 @@
 
 /* Icon buttons */
 .ic-btn {
-    width: 34px;
-    height: 34px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     border: none;
     background: #f3f4f6;
@@ -2501,8 +2501,8 @@
 }
 
 .ic-btn svg {
-    width: 15px;
-    height: 15px;
+    width: 18px;
+    height: 18px;
 }
 
 .ic-btn:hover {
@@ -2528,18 +2528,18 @@
 .ic-reply-btn {
     width: auto;
     border-radius: 9999px;
-    padding: 0 16px;
-    gap: 6px;
+    padding: 0 22px;
+    gap: 7px;
     background: #111827;
     color: white;
-    font-size: 0.78rem;
+    font-size: 0.875rem;
     font-weight: 600;
     margin-left: auto;
 }
 
 .ic-reply-btn svg {
-    width: 13px;
-    height: 13px;
+    width: 15px;
+    height: 15px;
 }
 
 .ic-reply-btn:hover {
@@ -2760,9 +2760,9 @@
 .ic-dc-actions {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     flex-shrink: 0;
-    padding-top: 12px;
+    padding-top: 14px;
     border-top: 1px solid #f3f4f6;
     margin-top: auto;
 }
