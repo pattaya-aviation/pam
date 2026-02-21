@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>รอการอนุมัติ - PAM</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase ต้องโหลดก่อน inline script ด้านล่าง -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="../../function/shared/js/supabase-config.js"></script>
     <link rel="stylesheet" href="../../function/shared/css/fonts.css">
-    <link rel="stylesheet" href="../../function/home/css/user-base.css">
     <style>
         @keyframes pulse-ring {
             0% {
@@ -51,15 +53,6 @@
             animation: spin-slow 8s linear infinite;
         }
 
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #f59e0b;
-            box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
-            animation: pulse-dot 2s ease-in-out infinite;
-        }
-
         @keyframes pulse-dot {
 
             0%,
@@ -72,35 +65,30 @@
             }
         }
 
-        .rejected .status-dot {
-            background: #ef4444;
-            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
-        }
-
-        .rejected .status-dot {
-            animation: none;
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #f59e0b;
+            animation: pulse-dot 2s ease-in-out infinite;
         }
     </style>
 </head>
 
 <body class="bg-white min-h-screen flex items-center justify-center p-6">
 
-    <!-- Background -->
-    <div class="bg-wrapper" style="background: linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 30%,#ede9fe 70%,#fdf2f8 100%)">
+    <div
+        style="background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 30%,#ede9fe 70%,#fdf2f8 100%);position:fixed;inset:0;z-index:0">
     </div>
 
-    <!-- Card -->
-    <div id="statusCard" class="relative z-10 w-full max-w-sm">
+    <div class="relative z-10 w-full max-w-sm">
         <div class="bg-white/80 backdrop-blur-xl rounded-[2.5rem] p-8 shadow-xl border border-gray-100 text-center">
 
             <!-- Icon -->
             <div class="relative mx-auto w-24 h-24 mb-6 float-icon">
-                <!-- Pulse rings -->
                 <div class="absolute inset-0 rounded-full bg-amber-100 pulse-ring"></div>
-                <div class="absolute inset-0 rounded-full bg-amber-50 pulse-ring" style="animation-delay:0.5s"></div>
-                <!-- Icon bg -->
+                <div class="absolute inset-0 rounded-full bg-amber-50 pulse-ring" style="animation-delay:.5s"></div>
                 <div class="absolute inset-0 rounded-full bg-amber-50 flex items-center justify-center">
-                    <!-- Spinning border -->
                     <svg class="absolute inset-0 w-full h-full spin-slow" viewBox="0 0 96 96">
                         <circle cx="48" cy="48" r="44" fill="none" stroke="#fcd34d" stroke-width="2"
                             stroke-dasharray="60 220" stroke-linecap="round" />
@@ -113,13 +101,12 @@
                 </div>
             </div>
 
-            <!-- Status badge -->
+            <!-- Badge -->
             <div class="flex items-center justify-center gap-2 mb-4">
                 <div class="status-dot"></div>
                 <span id="badgeText" class="text-sm font-semibold text-amber-600">รอการอนุมัติ</span>
             </div>
 
-            <!-- Title -->
             <h1 id="statusTitle" class="text-xl font-bold text-gray-900 mb-2">กำลังรอการอนุมัติ</h1>
             <p id="statusDesc" class="text-sm text-gray-500 leading-relaxed mb-6">
                 บัญชีของคุณอยู่ระหว่างการตรวจสอบ<br>
@@ -135,7 +122,7 @@
 
             <!-- Actions -->
             <div class="flex flex-col gap-3">
-                <button onclick="checkStatus()"
+                <button id="checkBtn" onclick="checkStatus()"
                     class="w-full py-3 bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold rounded-2xl transition-colors flex items-center justify-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -143,52 +130,45 @@
                     </svg>
                     ตรวจสอบสถานะ
                 </button>
-                <button onclick="logout()"
+                <button onclick="doLogout()"
                     class="w-full py-3 bg-white hover:bg-gray-50 text-gray-600 text-sm font-medium rounded-2xl transition-colors border border-gray-200">
                     ออกจากระบบ
                 </button>
             </div>
         </div>
-
-        <!-- Note -->
-        <p class="text-center text-xs text-gray-400 mt-4 px-4">
-            หากใช้เวลานานเกินไป กรุณาติดต่อผู้ดูแลระบบ
-        </p>
+        <p class="text-center text-xs text-gray-400 mt-4 px-4">หากใช้เวลานานเกินไป กรุณาติดต่อผู้ดูแลระบบ</p>
     </div>
 
     <script>
-        // ─── Read user from sessionStorage ───
+        // ── แสดง user info จาก sessionStorage ─────────────────────────
         const stored = sessionStorage.getItem('user');
         const user = stored ? JSON.parse(stored) : null;
-
         if (user) {
             document.getElementById('userInfo').classList.remove('hidden');
             document.getElementById('userName').textContent = user.name || '-';
             document.getElementById('userEmail').textContent = user.email || '-';
         }
 
-        // ─── Logout ───
-        function logout() {
+        // ── Logout ─────────────────────────────────────────────────────
+        async function doLogout() {
+            if (window.supabaseClient) await window.supabaseClient.auth.signOut();
             sessionStorage.removeItem('user');
             window.location.href = '../../page/home/main/pam.html';
         }
 
-        // ─── Check approval status ───
+        // ── Check approval status ──────────────────────────────────────
         async function checkStatus() {
-            if (!user || !user.email) return;
-
-            const btn = document.querySelector('button');
+            if (!user?.email) return;
+            const btn = document.getElementById('checkBtn');
             btn.disabled = true;
             btn.textContent = 'กำลังตรวจสอบ...';
 
             try {
-                const { createClient } = window.supabase;
-                const client = createClient(
-                    'https://hptcjcoowhmgtamqqgnr.supabase.co',
-                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwdGNqY29vd2htZ3RhbXFxZ25yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEyMjQ0OTcsImV4cCI6MjA4NjgwMDQ5N30.SvLPWPBPXKEvg3VpgJtBWFhQMmcanF865kWoPTGlmqU'
-                );
+                // ใช้ window.supabaseClient ที่มี session ของ user อยู่แล้ว
+                const db = window.supabaseClient;
+                if (!db) throw new Error('no client');
 
-                const { data, error } = await client
+                const { data, error } = await db
                     .from('portal_users')
                     .select('status')
                     .eq('email', user.email)
@@ -201,8 +181,7 @@
                 } else if (data.status === 'rejected') {
                     showRejected();
                 } else {
-                    // Still pending — show feedback
-                    btn.textContent = 'ยังรออยู่ — ลองใหม่อีกครั้ง';
+                    btn.textContent = 'ยังรออยู่ — ลองอีกครั้ง';
                     btn.disabled = false;
                 }
             } catch (e) {
@@ -218,17 +197,12 @@
             document.getElementById('badgeText').textContent = 'ถูกปฏิเสธ';
             document.getElementById('badgeText').className = 'text-sm font-semibold text-red-600';
             document.getElementById('statusTitle').textContent = 'การเข้าใช้งานถูกปฏิเสธ';
-            document.getElementById('statusDesc').textContent = 'บัญชีของคุณไม่ได้รับอนุมัติ\nกรุณาติดต่อผู้ดูแลระบบ';
-            const icon = document.getElementById('statusIcon');
-            icon.className = 'w-10 h-10 text-red-500';
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>';
+            document.getElementById('statusDesc').textContent = 'บัญชีของคุณไม่ได้รับอนุมัติ กรุณาติดต่อผู้ดูแลระบบ';
         }
 
-        // Auto-check every 30s
+        // Auto-check ทุก 30 วินาที
         setInterval(checkStatus, 30000);
     </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </body>
 
 </html>
