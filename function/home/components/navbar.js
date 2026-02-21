@@ -495,24 +495,35 @@
     }
 
     window.signInWithMicrosoft = async function () {
-        if (!msalInstance) {
-            showModalError("กรุณารอสักครู่ กำลังโหลด...");
+        // ── Path A: Supabase Auth OAuth (recommended — enables RLS) ──
+        if (window.supabaseClient) {
+            const { error } = await window.supabaseClient.auth.signInWithOAuth({
+                provider: 'azure',
+                options: {
+                    scopes: 'openid profile email',
+                    redirectTo: window.location.origin + '/page/portal/auth-callback.html'
+                }
+            });
+            if (error) showModalError('เกิดข้อผิดพลาด: ' + error.message);
+            // page will redirect to Azure → back to auth-callback.html
             return;
         }
 
-        const loginRequest = {
-            scopes: ["openid", "profile", "email"]
-        };
-
+        // ── Path B: fallback MSAL (if supabaseClient not available) ──
+        if (!msalInstance) {
+            showModalError('กรุณารอสักครู่ กำลังโหลด...');
+            return;
+        }
+        const loginRequest = { scopes: ['openid', 'profile', 'email'] };
         try {
             const response = await msalInstance.loginPopup(loginRequest);
             handleMSLoginSuccess(response.account);
         } catch (error) {
-            console.error("Login error:", error);
-            if (error.errorCode === "popup_window_error") {
+            console.error('Login error:', error);
+            if (error.errorCode === 'popup_window_error') {
                 msalInstance.loginRedirect(loginRequest);
             } else {
-                showModalError("เกิดข้อผิดพลาด: " + error.message);
+                showModalError('เกิดข้อผิดพลาด: ' + error.message);
             }
         }
     };
