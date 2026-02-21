@@ -519,19 +519,54 @@
 
 
 
-    function handleMSLoginSuccess(account) {
+    async function handleMSLoginSuccess(account) {
+        // 1) Save to sessionStorage (for immediate UI use)
         sessionStorage.setItem('user', JSON.stringify({
             name: account.name,
             email: account.username,
             id: account.localAccountId
         }));
 
-        showModalSuccess("ยินดีต้อนรับ " + account.name + "!");
+        showModalSuccess('ยินดีต้อนรับ ' + account.name + '!');
 
+        // 2) Upsert into Supabase portal_users & check approval
+        let approvalStatus = 'pending';
+        if (window.supabaseClient) {
+            try {
+                // upsert: insert or update last_login
+                const { error: upsertErr } = await window.supabaseClient
+                    .from('portal_users')
+                    .upsert({
+                        email: account.username,
+                        name: account.name,
+                        ms_id: account.localAccountId,
+                        last_login: new Date().toISOString()
+                    }, { onConflict: 'email', ignoreDuplicates: false });
+
+                if (upsertErr) console.warn('⚠️ upsert error:', upsertErr.message);
+
+                // fetch current status
+                const { data, error: fetchErr } = await window.supabaseClient
+                    .from('portal_users')
+                    .select('status')
+                    .eq('email', account.username)
+                    .single();
+
+                if (!fetchErr && data) approvalStatus = data.status;
+            } catch (e) {
+                console.warn('⚠️ Supabase error:', e);
+            }
+        }
+
+        // 3) Redirect based on status
         setTimeout(() => {
             closeLoginModal();
-            // Use getBasePath() — window.__navbarBasePath is never set anywhere
-            window.location.href = getBasePath() + 'page/portal/index.html';
+            if (approvalStatus === 'approved') {
+                window.location.href = getBasePath() + 'page/portal/index.html';
+            } else {
+                // pending or rejected — go to waiting page
+                window.location.href = getBasePath() + 'page/portal/pending.html';
+            }
         }, 1500);
     }
 
