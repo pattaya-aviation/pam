@@ -19,17 +19,17 @@ pa-system/
 │       └── admin-page-standard.md
 │
 ├── function/                    ← Shared JS / CSS components
-│   ├── admin/
+│   ├── portal/
 │   │   ├── components/
 │   │   │   └── admin-nav.js     ← Admin navbar (auth, routing, logout)
 │   │   └── css/
 │   │       ├── admin-base.css   ← Admin-wide base styles
-│   │       └── vfc-admin.css    ← VFC Admin page styles
+│   │       └── vfc.css          ← VFC Admin page styles (extracted)
 │   ├── shared/
 │   │   ├── css/fonts.css
 │   │   ├── js/supabase-config.js  ← Supabase client (shared ทุกหน้า)
 │   │   └── logo/Pattaya Aviation.png
-│   └── user/
+│   └── home/
 │       ├── components/
 │       │   ├── navbar.js        ← User navbar (login modal, routing)
 │       │   └── vfc-form.js      ← VFC form logic (shared ทุก form)
@@ -38,7 +38,7 @@ pa-system/
 │           └── vfc-form.css     ← VFC form styles
 │
 └── page/
-    ├── userpage/                ← User-facing pages
+    ├── home/                    ← User-facing pages
     │   ├── main/
     │   │   └── pam.html         ← หน้าแรก (landing page)
     │   ├── vfc/
@@ -48,15 +48,12 @@ pa-system/
     │   │   ├── suggestion.html  ← แบบฟอร์มเสนอแนะ
     │   │   └── track.html       ← ติดตามสถานะ
     │   └── tax/
-    │       ├── tax-home.html    ← Tax system landing page
-    │       ├── tax-calculator.html ← คำนวณภาษี
-    │       └── pa-ly01.html     ← แบบฟอร์ม ล.ย.01
-    └── adminpage/               ← Admin-only pages
+    │       ├── tax.html         ← Tax system landing page
+    │       └── tax-calculator.html ← คำนวณภาษี
+    └── portal/                  ← Admin-only pages
         ├── index.html           ← Admin portal entry (auth gate)
-        ├── vfc-admin/
+        ├── vfc/
         │   └── index.html       ← VFC Admin dashboard
-        ├── tax-admin/
-        │   └── index.html       ← Tax Admin (placeholder)
         └── settings/
             └── index.html       ← Admin settings
 ```
@@ -164,6 +161,7 @@ pa-system/
 | `page/tax/*.html` | ลบ wallpaper CSS เสีย, เพิ่ม `.bg-tax` class |
 | `page/admin_portal/vfc-admin/index.html` | ลด 2824 → 1930 บรรทัด (CSS ย้ายออก) |
 | `page/tax/tax-home.html` | ลบ `toggleMobileMenu()` ซ้ำ (navbar.js จัดการแล้ว) |
+| `function/portal/css/vfc.css` | **UI** — Deck card: scrollbar ย้ายเข้าใน body text, ปุ่ม action ใหญ่ขึ้น (34→44px) |
 
 ### โครงสร้างที่เปลี่ยน
 
