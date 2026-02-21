@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รอการอนุมัติ - PAM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../../function/shared/css/fonts.css">
+    <link rel="stylesheet" href="../../function/home/css/user-base.css">
+    <style>
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: scale(1.6);
+                opacity: 0;
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        @keyframes spin-slow {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        .float-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .spin-slow {
+            animation: spin-slow 8s linear infinite;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #f59e0b;
+            box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 0 8px rgba(245, 158, 11, 0);
+            }
+        }
+
+        .rejected .status-dot {
+            background: #ef4444;
+            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+        }
+
+        .rejected .status-dot {
+            animation: none;
+        }
+    </style>
+</head>
+
+<body class="bg-white min-h-screen flex items-center justify-center p-6">
+
+    <!-- Background -->
+    <div class="bg-wrapper" style="background: linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 30%,#ede9fe 70%,#fdf2f8 100%)">
+    </div>
+
+    <!-- Card -->
+    <div id="statusCard" class="relative z-10 w-full max-w-sm">
+        <div class="bg-white/80 backdrop-blur-xl rounded-[2.5rem] p-8 shadow-xl border border-gray-100 text-center">
+
+            <!-- Icon -->
+            <div class="relative mx-auto w-24 h-24 mb-6 float-icon">
+                <!-- Pulse rings -->
+                <div class="absolute inset-0 rounded-full bg-amber-100 pulse-ring"></div>
+                <div class="absolute inset-0 rounded-full bg-amber-50 pulse-ring" style="animation-delay:0.5s"></div>
+                <!-- Icon bg -->
+                <div class="absolute inset-0 rounded-full bg-amber-50 flex items-center justify-center">
+                    <!-- Spinning border -->
+                    <svg class="absolute inset-0 w-full h-full spin-slow" viewBox="0 0 96 96">
+                        <circle cx="48" cy="48" r="44" fill="none" stroke="#fcd34d" stroke-width="2"
+                            stroke-dasharray="60 220" stroke-linecap="round" />
+                    </svg>
+                    <svg id="statusIcon" class="w-10 h-10 text-amber-500" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Status badge -->
+            <div class="flex items-center justify-center gap-2 mb-4">
+                <div class="status-dot"></div>
+                <span id="badgeText" class="text-sm font-semibold text-amber-600">รอการอนุมัติ</span>
+            </div>
+
+            <!-- Title -->
+            <h1 id="statusTitle" class="text-xl font-bold text-gray-900 mb-2">กำลังรอการอนุมัติ</h1>
+            <p id="statusDesc" class="text-sm text-gray-500 leading-relaxed mb-6">
+                บัญชีของคุณอยู่ระหว่างการตรวจสอบ<br>
+                ผู้ดูแลระบบจะอนุมัติการเข้าใช้งานในเร็วๆ นี้
+            </p>
+
+            <!-- User info -->
+            <div id="userInfo" class="bg-gray-50 rounded-2xl p-4 mb-6 text-left hidden">
+                <p class="text-xs text-gray-400 font-medium mb-1">บัญชีที่ใช้ login</p>
+                <p id="userName" class="text-sm font-semibold text-gray-800"></p>
+                <p id="userEmail" class="text-xs text-gray-500"></p>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex flex-col gap-3">
+                <button onclick="checkStatus()"
+                    class="w-full py-3 bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold rounded-2xl transition-colors flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    ตรวจสอบสถานะ
+                </button>
+                <button onclick="logout()"
+                    class="w-full py-3 bg-white hover:bg-gray-50 text-gray-600 text-sm font-medium rounded-2xl transition-colors border border-gray-200">
+                    ออกจากระบบ
+                </button>
+            </div>
+        </div>
+
+        <!-- Note -->
+        <p class="text-center text-xs text-gray-400 mt-4 px-4">
+            หากใช้เวลานานเกินไป กรุณาติดต่อผู้ดูแลระบบ
+        </p>
+    </div>
+
+    <script>
+        // ─── Read user from sessionStorage ───
+        const stored = sessionStorage.getItem('user');
+        const user = stored ? JSON.parse(stored) : null;
+
+        if (user) {
+            document.getElementById('userInfo').classList.remove('hidden');
+            document.getElementById('userName').textContent = user.name || '-';
+            document.getElementById('userEmail').textContent = user.email || '-';
+        }
+
+        // ─── Logout ───
+        function logout() {
+            sessionStorage.removeItem('user');
+            window.location.href = '../../page/home/main/pam.html';
+        }
+
+        // ─── Check approval status ───
+        async function checkStatus() {
+            if (!user || !user.email) return;
+
+            const btn = document.querySelector('button');
+            btn.disabled = true;
+            btn.textContent = 'กำลังตรวจสอบ...';
+
+            try {
+                const { createClient } = window.supabase;
+                const client = createClient(
+                    'https://hptcjcoowhmgtamqqgnr.supabase.co',
+                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwdGNqY29vd2htZ3RhbXFxZ25yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEyMjQ0OTcsImV4cCI6MjA4NjgwMDQ5N30.SvLPWPBPXKEvg3VpgJtBWFhQMmcanF865kWoPTGlmqU'
+                );
+
+                const { data, error } = await client
+                    .from('portal_users')
+                    .select('status')
+                    .eq('email', user.email)
+                    .single();
+
+                if (error) throw error;
+
+                if (data.status === 'approved') {
+                    window.location.href = '../../page/portal/index.html';
+                } else if (data.status === 'rejected') {
+                    showRejected();
+                } else {
+                    // Still pending — show feedback
+                    btn.textContent = 'ยังรออยู่ — ลองใหม่อีกครั้ง';
+                    btn.disabled = false;
+                }
+            } catch (e) {
+                console.error(e);
+                btn.textContent = 'เกิดข้อผิดพลาด ลองใหม่';
+                btn.disabled = false;
+            }
+        }
+
+        function showRejected() {
+            document.querySelector('.status-dot').style.cssText =
+                'width:10px;height:10px;border-radius:50%;background:#ef4444;animation:none';
+            document.getElementById('badgeText').textContent = 'ถูกปฏิเสธ';
+            document.getElementById('badgeText').className = 'text-sm font-semibold text-red-600';
+            document.getElementById('statusTitle').textContent = 'การเข้าใช้งานถูกปฏิเสธ';
+            document.getElementById('statusDesc').textContent = 'บัญชีของคุณไม่ได้รับอนุมัติ\nกรุณาติดต่อผู้ดูแลระบบ';
+            const icon = document.getElementById('statusIcon');
+            icon.className = 'w-10 h-10 text-red-500';
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>';
+        }
+
+        // Auto-check every 30s
+        setInterval(checkStatus, 30000);
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</body>
+
+</html>
