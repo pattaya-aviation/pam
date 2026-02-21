@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ระบบภาษี - Tax System</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Shared CSS -->
+    <link rel="stylesheet" href="../../../function/shared/css/fonts.css">
+
+    <!-- User Portal CSS -->
+    <link rel="stylesheet" href="../../../function/home/css/user-base.css">
+
+    <style>
+        /* Page-specific: Wallpaper handled by user-base.css .bg-tax class */
+    </style>
+</head>
+
+<body class="min-h-screen flex items-start lg:items-center justify-center p-6 lg:p-12 pt-24 lg:pt-20">
+
+    <!-- Background Wrapper (iOS Compatible) -->
+    <div class="bg-wrapper bg-tax"></div>
+
+
+    <!-- Navbar Component -->
+    <div id="navbar-container"></div>
+    <script src="../../../function/home/components/navbar.js"></script>
+
+    <!-- Main Container -->
+    <div class="w-full max-w-5xl flex flex-col lg:flex-row lg:items-center lg:gap-16">
+
+        <!-- Left: Title -->
+        <div class="text-left lg:flex-1 mb-8 lg:mb-0 px-4 sm:px-0">
+            <h1 class="text-3xl sm:text-4xl lg:text-7xl font-bold text-gray-900 whitespace-nowrap">Tax System</h1>
+            <p class="text-base sm:text-lg lg:text-5xl text-indigo-500 mt-2 lg:mt-6 whitespace-nowrap">ระบบภาษี</p>
+            <p class="text-gray-500 mt-4 lg:mt-8 text-sm lg:text-2xl leading-relaxed">
+                เครื่องมือช่วยคำนวณและจัดการภาษีของพนักงาน<br>
+                รวมถึงการยื่นแบบลดหย่อนภาษี ล.ย.01 ประจำปี
+            </p>
+        </div>
+
+        <!-- Right: Action Cards -->
+        <div class="w-full max-w-sm sm:max-w-none lg:w-[480px] lg:flex-shrink-0 mx-auto lg:mx-0">
+            <div class="grid grid-cols-1 gap-5">
+
+                <!-- Card 1: คำนวณภาษี -->
+                <a href="calculator.html"
+                    class="group bg-white/70 backdrop-blur-xl rounded-[2rem] p-5 py-6 lg:p-7 lg:py-8 shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-4 lg:gap-6 border border-gray-200">
+                    <div
+                        class="w-12 h-12 lg:w-16 lg:h-16 bg-emerald-50 rounded-full flex items-center justify-center flex-shrink-0 shadow-md shadow-emerald-200">
+                        <svg class="w-6 h-6 lg:w-8 lg:h-8 text-emerald-500" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-base lg:text-xl font-semibold text-gray-900">คำนวณภาษี</h3>
+                        <p class="text-xs lg:text-base text-gray-500 mt-1">คำนวณภาษีเงินได้บุคคลธรรมดา</p>
+                    </div>
+                    <svg class="w-5 h-5 lg:w-6 lg:h-6 text-gray-300 group-hover:text-emerald-400 transition-colors"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+
+                <!-- Card 2: ลดหย่อนภาษี -->
+                <a href="ly01.html"
+                    class="group bg-white/70 backdrop-blur-xl rounded-[2rem] p-5 py-6 lg:p-7 lg:py-8 shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-4 lg:gap-6 border border-gray-200">
+                    <div
+                        class="w-12 h-12 lg:w-16 lg:h-16 bg-amber-50 rounded-full flex items-center justify-center flex-shrink-0 shadow-md shadow-amber-200">
+                        <svg class="w-6 h-6 lg:w-8 lg:h-8 text-amber-500" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-base lg:text-xl font-semibold text-gray-900">ลดหย่อนภาษี (ล.ย.01)</h3>
+                        <p class="text-xs lg:text-base text-gray-500 mt-1">กรอกแบบฟอร์มลดหย่อนภาษีประจำปี</p>
+                    </div>
+                    <svg class="w-5 h-5 lg:w-6 lg:h-6 text-gray-300 group-hover:text-amber-400 transition-colors"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation functions provided by navbar.js (window.toggleMobileMenu, window.toggleSubmenu) -->
+
+
+</body>
+
+</html>

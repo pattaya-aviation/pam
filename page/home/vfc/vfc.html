@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Voice for Change</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Shared CSS -->
+    <link rel="stylesheet" href="../../../function/shared/css/fonts.css">
+
+    <!-- User Portal CSS -->
+    <link rel="stylesheet" href="../../../function/home/css/user-base.css">
+
+    <style>
+        /* Page-specific: Wallpaper handled by user-base.css default gradient */
+    </style>
+</head>
+
+<body class="min-h-screen flex items-start lg:items-center justify-center p-6 lg:p-12 pt-24 lg:pt-20">
+
+    <!-- Background Wrapper (iOS Compatible) -->
+    <div class="bg-wrapper"></div>
+
+
+    <!-- Navbar Component -->
+    <div id="navbar-container"></div>
+    <script src="../../../function/home/components/navbar.js"></script>
+
+    <!-- Main Container -->
+    <div class="w-full max-w-7xl flex flex-col lg:flex-row lg:items-center lg:gap-24">
+
+        <!-- Left: Title -->
+        <div class="text-left lg:flex-1 mb-8 lg:mb-0 px-4 sm:px-0">
+            <h1 class="text-3xl sm:text-4xl lg:text-7xl font-bold text-gray-900 whitespace-nowrap">Voice For Change</h1>
+            <p class="text-base sm:text-lg lg:text-5xl text-blue-500 mt-2 lg:mt-6 whitespace-nowrap">
+                เสียงแห่งการเปลี่ยนแปลง</p>
+            <p class="text-gray-500 mt-4 lg:mt-8 text-sm lg:text-xl leading-relaxed">
+                เครื่องมือสื่อสารระหว่างพนักงานและองค์กร<br>
+                เพื่อให้สามารถนำข้อมูลมาปรับปรุงและพัฒนาได้อย่างมีประสิทธิภาพ
+            </p>
+        </div>
+
+        <!-- Right: Action Cards 2x2 -->
+        <div class="w-full max-w-sm sm:max-w-none lg:w-[640px] lg:flex-shrink-0 mx-auto lg:mx-0">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+                <!-- Card 1: ร้องเรียน -->
+                <a href="complaint.html"
+                    class="group bg-white/70 backdrop-blur-xl rounded-[2rem] p-5 py-6 lg:p-7 lg:py-8 shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-4 lg:gap-6 border border-gray-200">
+                    <div
+                        class="w-12 h-12 lg:w-16 lg:h-16 bg-red-50 rounded-full flex items-center justify-center flex-shrink-0 shadow-md shadow-red-200">
+                        <svg class="w-6 h-6 lg:w-8 lg:h-8 text-red-500" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-base lg:text-lg font-semibold text-gray-900">ร้องเรียน</h3>
+                        <p class="text-xs lg:text-sm text-gray-500 mt-1">แจ้งปัญหาที่พบเจอในการทำงาน</p>
+                    </div>
+                    <svg class="w-5 h-5 lg:w-6 lg:h-6 text-gray-300 group-hover:text-red-400 transition-colors"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+
+                <!-- Card 2: ข้อเสนอแนะ -->
+                <a href="suggestion.html"
+                    class="group bg-white/70 backdrop-blur-xl rounded-[2rem] p-5 py-6 lg:p-7 lg:py-8 shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-4 lg:gap-6 border border-gray-200">
+                    <div
+                        class="w-12 h-12 lg:w-16 lg:h-16 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0 shadow-md shadow-blue-200">
+                        <svg class="w-6 h-6 lg:w-8 lg:h-8 text-blue-500" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-base lg:text-lg font-semibold text-gray-900">ข้อเสนอแนะ</h3>
+                        <p class="text-xs lg:text-sm text-gray-500 mt-1">แจ้งข้อเสนอแนะเพื่อพัฒนาองค์กร</p>
+                    </div>
+                    <svg class="w-5 h-5 lg:w-6 lg:h-6 text-gray-300 group-hover:text-blue-400 transition-colors"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+
+                <!-- Card 3: ชมเชย -->
+                <a href="compliment.html"
+                    class="group bg-white/70 backdrop-blur-xl rounded-[2rem] p-5 py-6 lg:p-7 lg:py-8 shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-4 lg:gap-6 border border-gray-200">
+                    <div
+                        class="w-12 h-12 lg:w-16 lg:h-16 bg-green-50 rounded-full flex items-center justify-center flex-shrink-0 shadow-md shadow-green-200">
+                        <svg class="w-6 h-6 lg:w-8 lg:h-8 text-green-500" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-base lg:text-lg font-semibold text-gray-900">ชมเชย</h3>
+                        <p class="text-xs lg:text-sm text-gray-500 mt-1">ส่งคำชมเชยให้กับบุคคลหรือทีม</p>
+                    </div>
+                    <svg class="w-5 h-5 lg:w-6 lg:h-6 text-gray-300 group-hover:text-green-400 transition-colors"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+
+                <!-- Card 4: ติดตามสถานะ -->
+                <a href="track.html"
+                    class="group bg-white/70 backdrop-blur-xl rounded-[2rem] p-5 py-6 lg:p-7 lg:py-8 shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-4 lg:gap-6 border border-gray-200">
+                    <div
+                        class="w-12 h-12 lg:w-16 lg:h-16 bg-purple-50 rounded-full flex items-center justify-center flex-shrink-0 shadow-md shadow-purple-200">
+                        <svg class="w-6 h-6 lg:w-8 lg:h-8 text-purple-500" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-base lg:text-lg font-semibold text-gray-900">ติดตามสถานะ</h3>
+                        <p class="text-xs lg:text-sm text-gray-500 mt-1">ตรวจสอบความคืบหน้าเรื่องที่แจ้ง</p>
+                    </div>
+                    <svg class="w-5 h-5 lg:w-6 lg:h-6 text-gray-300 group-hover:text-purple-400 transition-colors"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

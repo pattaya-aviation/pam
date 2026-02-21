@@ -1,0 +1,324 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ร้องเรียน - Voice for Change</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Shared CSS -->
+    <link rel="stylesheet" href="../../../function/shared/css/fonts.css">
+
+    <!-- User Portal CSS -->
+    <link rel="stylesheet" href="../../../function/home/css/user-base.css">
+
+    <!-- Choices.js for Searchable Dropdowns -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+    <!-- VFC Form Shared CSS -->
+    <link rel="stylesheet" href="../../../function/home/css/vfc-form.css">
+
+    <style>
+        /* Page-specific: Wallpaper handled by user-base.css .bg-complaint class */
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+    <!-- Background Wrapper (iOS Compatible) -->
+    <div class="bg-wrapper bg-complaint"></div>
+
+
+    <!-- Navbar Component -->
+    <div id="navbar-container" data-page-title="ร้องเรียน" data-page-subtitle="แจ้งปัญหาหรือข้อร้องเรียน"
+        data-icon-color="bg-red-100"
+        data-icon-svg="<svg class='w-6 h-6 text-red-600' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'/></svg>">
+    </div>
+    <script src="../../../function/home/components/navbar.js"></script>
+
+    <!-- Main Content -->
+    <div class="pt-4 pb-8 px-4 max-w-2xl lg:max-w-4xl mx-auto">
+
+        <!-- Header -->
+        <div class="flex items-center gap-4 mb-8">
+            <div
+                class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center flex-shrink-0 shadow-md shadow-red-200">
+                <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">ร้องเรียน</h1>
+                <p class="text-gray-500 mt-1">แจ้งปัญหาที่พบเจอในการทำงาน</p>
+            </div>
+        </div>
+
+        <!-- Personal Info Card -->
+        <div
+            class="personal-info-card bg-white/70 backdrop-blur-xl rounded-[2.5rem] p-6 shadow-md border border-gray-200 mb-4">
+            <div class="flex items-center justify-between mb-2">
+                <h2 class="text-lg font-semibold text-gray-900">ข้อมูลส่วนตัว</h2>
+                <div class="flex items-center gap-2">
+                    <span id="identityLabel" class="text-sm text-gray-900 font-medium">ระบุตัวตน</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="identityToggle" class="sr-only peer" checked
+                            onchange="toggleIdentityFields()">
+                        <div
+                            class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-500">
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <p class="text-sm text-gray-500 mb-3">ข้อมูลของท่านจะถูกเก็บเป็นความลับ</p>
+            <div id="identityDivider" class="h-px bg-gray-200 mb-4"></div>
+            <div id="identityFields" class="space-y-4">
+                <!-- Row 1: Name, Surname, Employee ID -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อ</label>
+                        <input type="text" id="firstName"
+                            class="w-full px-4 py-3 rounded-3xl border border-gray-200 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">นามสกุล</label>
+                        <input type="text" id="lastName"
+                            class="w-full px-4 py-3 rounded-3xl border border-gray-200 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">รหัสพนักงาน</label>
+                        <input type="text" id="employeeId"
+                            class="w-full px-4 py-3 rounded-3xl border border-gray-200 outline-none transition-all">
+                    </div>
+                </div>
+
+                <!-- Row 2: Station, Department, Section -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">สถานี</label>
+                        <select id="stationSelect" onchange="updateDepartmentOptions()"
+                            class="w-full px-4 py-3 rounded-3xl border border-gray-200 outline-none transition-all">
+                            <option value="">เลือกสถานี</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ฝ่าย</label>
+                        <select id="departmentSelect" onchange="updateSectionOptions()"
+                            class="w-full px-4 py-3 rounded-3xl border border-gray-200 outline-none transition-all">
+                            <option value="">เลือกฝ่าย</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">แผนก</label>
+                        <select id="sectionSelect"
+                            class="w-full px-4 py-3 rounded-3xl border border-gray-200 outline-none transition-all">
+                            <option value="">เลือกแผนก</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card bg-white/70 backdrop-blur-xl rounded-[2.5rem] p-6 shadow-md border border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900 mb-2">รายละเอียดการร้องเรียน</h2>
+            <p class="text-sm text-gray-500 mb-3">รายละเอียดจะช่วยให้เราดำเนินการได้รวดเร็วขึ้น</p>
+            <div class="h-px bg-gray-200 mb-4"></div>
+            <form id="vfcForm" class="space-y-6">
+                <!-- Subject -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">เรื่องร้องเรียน</label>
+                    <input type="text" id="subjectInput"
+                        class="w-full px-4 py-3 rounded-3xl border border-gray-200 outline-none transition-all">
+                </div>
+
+                <!-- Station, Department, Section (Complaint) - 3 columns on lg -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">สถานีที่ต้องการร้องเรียน</label>
+                        <select id="complaintStationSelect" onchange="updateComplaintDepartmentOptions()"
+                            class="w-full px-4 py-3 rounded-3xl border border-gray-200 outline-none transition-all">
+                            <option value="">เลือกสถานี</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ฝ่ายที่ต้องการร้องเรียน</label>
+                        <select id="complaintDepartmentSelect" onchange="updateComplaintSectionOptions()"
+                            class="w-full px-4 py-3 rounded-3xl border border-gray-200 outline-none transition-all">
+                            <option value="">เลือกฝ่าย</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">แผนกที่ต้องการร้องเรียน</label>
+                        <select id="complaintSectionSelect"
+                            class="w-full px-4 py-3 rounded-3xl border border-gray-200 outline-none transition-all">
+                            <option value="">เลือกแผนก</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- หมวดหมู่ (Category Pills) -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">หมวดหมู่</label>
+                    <div class="flex flex-wrap gap-2" id="categoryPills">
+                        <button type="button" onclick="selectCategory(this, 'work_environment')"
+                            class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-gray-400">
+                            สภาพแวดล้อมในการทำงาน
+                        </button>
+                        <button type="button" onclick="selectCategory(this, 'management')"
+                            class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-gray-400">
+                            การบริหารจัดการ
+                        </button>
+                        <button type="button" onclick="selectCategory(this, 'hr_welfare')"
+                            class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-gray-400">
+                            สวัสดิการและทรัพยากรบุคคล
+                        </button>
+                        <button type="button" onclick="selectCategory(this, 'equipment')"
+                            class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-gray-400">
+                            อุปกรณ์และเครื่องมือ
+                        </button>
+                        <button type="button" onclick="selectCategory(this, 'safety')"
+                            class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-gray-400">
+                            ความปลอดภัย
+                        </button>
+                        <button type="button" onclick="selectCategory(this, 'communication')"
+                            class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-gray-400">
+                            การสื่อสารภายในองค์กร
+                        </button>
+                        <button type="button" onclick="selectCategory(this, 'process')"
+                            class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-gray-400">
+                            กระบวนการทำงาน
+                        </button>
+                        <button type="button" onclick="selectCategory(this, 'colleague')"
+                            class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-gray-400">
+                            เพื่อนร่วมงาน
+                        </button>
+                        <button type="button" onclick="selectCategory(this, 'supervisor')"
+                            class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-gray-400">
+                            หัวหน้างาน
+                        </button>
+                        <button type="button" onclick="selectCategory(this, 'other')"
+                            class="category-pill px-4 py-2 rounded-full border-2 border-gray-200 bg-white text-gray-600 text-sm font-medium transition-all hover:border-gray-400">
+                            อื่นๆ
+                        </button>
+                    </div>
+                    <input type="hidden" id="selectedCategory" name="category" value="">
+                    <!-- Other Category Input -->
+                    <div id="otherCategoryContainer" class="mt-3 hidden">
+                        <input type="text" id="otherCategoryInput" name="otherCategory"
+                            placeholder="กรุณาระบุหมวดหมู่อื่นๆ"
+                            class="w-full px-4 py-3 rounded-3xl border border-gray-200 outline-none transition-all">
+                    </div>
+                </div>
+
+                <!-- Details -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">รายละเอียดของเรื่องร้องเรียน</label>
+                    <textarea rows="1" id="detailText"
+                        oninput="this.style.height='auto'; this.style.height=this.scrollHeight+'px';"
+                        class="w-full px-4 py-3 rounded-3xl border border-gray-200 outline-none transition-all resize-none overflow-hidden"></textarea>
+                </div>
+
+                <!-- What to fix -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">สิ่งที่อยากให้แก้ไข</label>
+                    <textarea rows="1" id="fixText"
+                        oninput="this.style.height='auto'; this.style.height=this.scrollHeight+'px';"
+                        class="w-full px-4 py-3 rounded-3xl border border-gray-200 outline-none transition-all resize-none overflow-hidden"></textarea>
+                </div>
+
+                <!-- File Attachment -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">แนบไฟล์ (ถ้ามี)</label>
+
+                    <!-- File List Container -->
+                    <div id="fileListContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                        <!-- File Item 1 -->
+                        <div class="file-item p-4 bg-gray-50 rounded-3xl border border-gray-200">
+                            <div class="flex items-center gap-3 mb-2">
+                                <label
+                                    class="w-9 h-9 flex items-center justify-center rounded-full bg-gray-900 text-white cursor-pointer hover:bg-gray-800 transition-colors shrink-0">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                                    </svg>
+                                    <input type="file" accept="image/*,.pdf,.doc,.docx" class="hidden"
+                                        onchange="updateFileName(this)">
+                                </label>
+                                <input type="text" placeholder="กรุณาตั้งชื่อไฟล์"
+                                    class="flex-1 px-4 py-2 rounded-3xl border border-gray-200 outline-none transition-all text-sm min-w-0">
+                                <button type="button" onclick="this.closest('.file-item').remove()"
+                                    class="w-9 h-9 flex items-center justify-center rounded-full bg-red-500 hover:bg-red-600 text-white transition-colors shrink-0">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <span class="file-name text-xs text-red-500 pl-1">ยังไม่ได้เลือกไฟล์</span>
+                        </div>
+                        <!-- File Item 2 -->
+                        <div class="file-item p-4 bg-gray-50 rounded-3xl border border-gray-200">
+                            <div class="flex items-center gap-3 mb-2">
+                                <label
+                                    class="w-9 h-9 flex items-center justify-center rounded-full bg-gray-900 text-white cursor-pointer hover:bg-gray-800 transition-colors shrink-0">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                                    </svg>
+                                    <input type="file" accept="image/*,.pdf,.doc,.docx" class="hidden"
+                                        onchange="updateFileName(this)">
+                                </label>
+                                <input type="text" placeholder="กรุณาตั้งชื่อไฟล์"
+                                    class="flex-1 px-4 py-2 rounded-3xl border border-gray-200 outline-none transition-all text-sm min-w-0">
+                                <button type="button" onclick="this.closest('.file-item').remove()"
+                                    class="w-9 h-9 flex items-center justify-center rounded-full bg-red-500 hover:bg-red-600 text-white transition-colors shrink-0">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <span class="file-name text-xs text-red-500 pl-1">ยังไม่ได้เลือกไฟล์</span>
+                        </div>
+                    </div>
+
+                    <!-- Add More Button -->
+                    <button type="button" onclick="addFileItem()"
+                        class="mt-3 mx-auto w-10 h-10 flex items-center justify-center rounded-full bg-green-500 hover:bg-green-600 text-white transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                    </button>
+
+                    <p class="mt-2 text-xs text-gray-400">รองรับไฟล์: รูปภาพ, PDF, Word (ขนาดไม่เกิน 10MB)</p>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit"
+                    class="w-full py-4 bg-gray-900 hover:bg-gray-800 text-white font-semibold rounded-[30px] transition-colors">
+                    ส่งเรื่องร้องเรียน
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../../../function/shared/js/supabase-config.js"></script>
+<script src="../../../function/home/components/vfc-form.js"></script>
+<script>
+    VFCForm.init({ detailPrefix: 'complaint' });
+</script>
+
+</html>

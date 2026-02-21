@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - PA System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../../function/shared/css/fonts.css">
+    <!-- Admin Portal CSS -->
+    <link rel="stylesheet" href="../../function/portal/css/admin-base.css">
+    <script src="../../function/portal/components/admin-nav.js"></script>
+</head>
+
+<body class="bg-white min-h-screen">
+
+    <!-- Admin Navigation (rendered by component) -->
+    <div id="adminNavContainer" data-admin-nav="home"></div>
+
+
+
+    <!-- Main Content -->
+    <div id="mainContent" class="flex items-center justify-center min-h-screen">
+        <div class="text-center">
+            <h1 class="text-2xl font-bold text-gray-900">Admin Portal</h1>
+        </div>
+    </div>
+
+    <script>
+        // Auth check — logout() is provided by admin-nav.js, do NOT redeclare here
+        const user = sessionStorage.getItem('user');
+        if (!user) {
+            window.location.href = '../home/main/pam.html';
+        }
+        // Dead code removed: toggleSearch(), toggleNotifications(), markAllRead(),
+        // and click listener — these referenced non-existent DOM elements causing
+        // TypeError on every click. logout() moved exclusively to admin-nav.js.
+    </script>
+
+</body>
+
+</html>

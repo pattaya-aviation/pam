@@ -1,0 +1,65 @@
+/* ===================================================
+   USER PORTAL - Base Styles
+   ใช้ร่วมกันทุกหน้าของ User Portal
+   =================================================== */
+
+/* Prevent horizontal overflow */
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+/* Body defaults */
+body {
+    background-color: #ffffff;
+    min-height: 100vh;
+    min-height: 100dvh;
+    position: relative;
+}
+
+/* Background wrapper - works on all devices including iOS */
+/* Default gradient fallback — pages override with their own theme color */
+.bg-wrapper {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: -2;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    /* Fallback gradient — used when no page-specific image/gradient is set */
+    background-image: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 40%, #ddd6fe 100%);
+}
+/* Complaint — warm red tint */
+.bg-wrapper.bg-complaint {
+    background-image: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 40%, #fce7f3 100%);
+}
+/* Compliment — soft green */
+.bg-wrapper.bg-compliment {
+    background-image: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 40%, #d1fae5 100%);
+}
+/* Suggestion — cool blue */
+.bg-wrapper.bg-suggestion {
+    background-image: linear-gradient(135deg, #eff6ff 0%, #dbeafe 40%, #e0e7ff 100%);
+}
+/* Track — violet */
+.bg-wrapper.bg-track {
+    background-image: linear-gradient(135deg, #faf5ff 0%, #ede9fe 40%, #ddd6fe 100%);
+}
+/* Tax — indigo-teal */
+.bg-wrapper.bg-tax {
+    background-image: linear-gradient(135deg, #f0f9ff 0%, #cffafe 40%, #e0e7ff 100%);
+}
+
+/* Hide navbar in fullscreen mode */
+:fullscreen nav,
+:-webkit-full-screen nav,
+:-moz-full-screen nav,
+:-ms-fullscreen nav {
+    display: none !important;
+}
+:fullscreen body,
+:-webkit-full-screen body,
+:-moz-full-screen body,
+:-ms-fullscreen body {
+    padding-top: 1.5rem !important;
+}

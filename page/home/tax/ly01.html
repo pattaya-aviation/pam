@@ -1,0 +1,241 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ลดหย่อนภาษี ล.ย.01 - Tax Deduction Form</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Shared CSS -->
+    <link rel="stylesheet" href="../../../function/shared/css/fonts.css">
+
+    <!-- User Portal CSS -->
+    <link rel="stylesheet" href="../../../function/home/css/user-base.css">
+
+    <style>
+        /* Page-specific: Wallpaper handled by user-base.css .bg-tax class */
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+    <!-- Background Wrapper (iOS Compatible) -->
+    <div class="bg-wrapper bg-tax"></div>
+
+
+    <!-- Navbar Component -->
+    <div id="navbar-container" data-page-title="ลดหย่อนภาษี (ล.ย.01)" data-page-subtitle="รายการลดหย่อนและยกเว้นภาษี"
+        data-icon-color="bg-amber-100"
+        data-icon-svg="<svg class='w-6 h-6 text-amber-600' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'/></svg>">
+    </div>
+    <script src="../../../function/home/components/navbar.js"></script>
+
+    <!-- Main Content -->
+    <main class="pt-4 pb-8 px-4 max-w-4xl lg:max-w-4xl mx-auto">
+
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center">
+                    <svg class="w-7 h-7 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">ลดหย่อนภาษี (ล.ย.01)</h1>
+                    <p class="text-gray-500 text-sm">แบบแจ้งรายการเพื่อการหักลดหย่อน</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- LY01 Form -->
+        <div class="bg-white/70 backdrop-blur-xl rounded-[2.5rem] shadow-lg p-6 lg:p-8 border border-gray-200">
+
+            <!-- Personal Information -->
+            <div class="mb-8">
+                <h2 class="text-lg font-semibold text-amber-600 mb-4">ข้อมูลส่วนตัว</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">เลขประจำตัวผู้เสียภาษี</label>
+                        <input type="text" id="taxId"
+                            class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                            placeholder="x-xxxx-xxxxx-xx-x" maxlength="17">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">รหัสพนักงาน</label>
+                        <input type="text" id="empId"
+                            class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                            placeholder="กรอกรหัสพนักงาน">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อ</label>
+                        <input type="text" id="firstName"
+                            class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                            placeholder="กรอกชื่อ">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">นามสกุล</label>
+                        <input type="text" id="lastName"
+                            class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                            placeholder="กรอกนามสกุล">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status -->
+            <div class="mb-8">
+                <h2 class="text-lg font-semibold text-amber-600 mb-4">สถานภาพ</h2>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">สถานภาพสมรส</label>
+                        <select id="maritalStatus"
+                            class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all">
+                            <option value="">เลือกสถานภาพ</option>
+                            <option value="single">โสด</option>
+                            <option value="married">สมรส</option>
+                            <option value="divorced">หย่าร้าง</option>
+                            <option value="widowed">หม้าย</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">จำนวนบุตร</label>
+                        <input type="number" id="children"
+                            class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                            placeholder="0" min="0">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deductions -->
+            <div class="mb-8">
+                <h2 class="text-lg font-semibold text-amber-600 mb-4">รายการลดหย่อน</h2>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">เบี้ยประกันชีวิต (สูงสุด 100,000
+                            บาท)</label>
+                        <div class="relative">
+                            <input type="number" id="lifeInsurance"
+                                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                                placeholder="0.00">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">เบี้ยประกันสุขภาพ (สูงสุด 25,000
+                            บาท)</label>
+                        <div class="relative">
+                            <input type="number" id="healthInsurance"
+                                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                                placeholder="0.00">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">เบี้ยประกันสุขภาพบิดามารดา (สูงสุด
+                            15,000 บาท)</label>
+                        <div class="relative">
+                            <input type="number" id="parentHealthInsurance"
+                                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                                placeholder="0.00">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">เงินสะสมกองทุนสำรองเลี้ยงชีพ</label>
+                        <div class="relative">
+                            <input type="number" id="providentFund"
+                                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                                placeholder="0.00">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ดอกเบี้ยเงินกู้ยืมซื้อบ้าน (สูงสุด
+                            100,000 บาท)</label>
+                        <div class="relative">
+                            <input type="number" id="homeLoanInterest"
+                                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                                placeholder="0.00">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">เงินบริจาคทั่วไป</label>
+                        <div class="relative">
+                            <input type="number" id="donation"
+                                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                                placeholder="0.00">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">เงินบริจาคเพื่อการศึกษา/กีฬา
+                            (ได้ลดหย่อน 2 เท่า)</label>
+                        <div class="relative">
+                            <input type="number" id="educationDonation"
+                                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                                placeholder="0.00">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">บาท</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex gap-4">
+                <button onclick="saveDraft()"
+                    class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-4 rounded-xl transition-colors">
+                    บันทึกร่าง
+                </button>
+                <button onclick="submitForm()"
+                    class="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-semibold py-4 rounded-xl transition-colors shadow-lg shadow-amber-200">
+                    ส่งแบบฟอร์ม
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        function saveDraft() {
+            alert('บันทึกร่างเรียบร้อยแล้ว');
+        }
+
+        function submitForm() {
+            // Validate required fields
+            const taxId = document.getElementById('taxId').value;
+            const empId = document.getElementById('empId').value;
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+
+            if (!taxId || !empId || !firstName || !lastName) {
+                alert('กรุณากรอกข้อมูลส่วนตัวให้ครบถ้วน');
+                return;
+            }
+
+            alert('ส่งแบบฟอร์มเรียบร้อยแล้ว');
+        }
+    </script>
+
+</body>
+
+</html>

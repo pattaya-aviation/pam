@@ -1,0 +1,353 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ติดตามสถานะ - Voice for Change</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Shared CSS -->
+    <link rel="stylesheet" href="../../../function/shared/css/fonts.css">
+
+    <!-- User Portal CSS -->
+    <link rel="stylesheet" href="../../../function/home/css/user-base.css">
+
+    <style>
+        /* Page-specific: Wallpaper handled by user-base.css .bg-track class */
+        /* Timeline tracking styles */
+        .track-timeline {
+            position: relative;
+            padding-left: 32px;
+            margin-top: 16px;
+        }
+
+        .track-step {
+            position: relative;
+            padding-bottom: 28px;
+        }
+
+        .track-step:last-child {
+            padding-bottom: 0;
+        }
+
+        .track-step::before {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 28px;
+            bottom: 0;
+            width: 2px;
+            background: #e5e7eb;
+        }
+
+        .track-step:last-child::before {
+            display: none;
+        }
+
+        .track-step.done::before {
+            background: #a78bfa;
+        }
+
+        .track-dot {
+            position: absolute;
+            left: -32px;
+            top: 4px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 2px #e5e7eb;
+            z-index: 1;
+        }
+
+        .track-step.done .track-dot {
+            background: #8b5cf6;
+            box-shadow: 0 0 0 2px #8b5cf6;
+        }
+
+        .track-step.active .track-dot {
+            background: #8b5cf6;
+            box-shadow: 0 0 0 2px #8b5cf6, 0 0 0 6px rgba(139, 92, 246, 0.2);
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 2px #8b5cf6, 0 0 0 6px rgba(139, 92, 246, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 0 2px #8b5cf6, 0 0 0 10px rgba(139, 92, 246, 0.05);
+            }
+        }
+
+        .track-step.done .track-title,
+        .track-step.active .track-title {
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        .track-step.pending .track-title {
+            color: #9ca3af;
+        }
+
+        .track-step.pending .track-desc {
+            color: #d1d5db;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+    <!-- Background Wrapper (iOS Compatible) -->
+    <div class="bg-wrapper bg-track"></div>
+
+
+    <!-- Navbar Component -->
+    <div id="navbar-container" data-page-title="ติดตามคำร้อง" data-page-subtitle="ตรวจสอบสถานะคำร้องของคุณ"
+        data-icon-color="bg-purple-100"
+        data-icon-svg="<svg class='w-6 h-6 text-purple-600' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4'/></svg>">
+    </div>
+    <script src="../../../function/home/components/navbar.js"></script>
+
+
+
+    <!-- Main Content -->
+    <div class="pt-4 pb-8 px-4 max-w-2xl lg:max-w-4xl mx-auto">
+
+        <!-- Header -->
+        <div class="flex items-center gap-4 mb-8">
+            <div class="w-14 h-14 bg-purple-50 rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+                <svg class="w-7 h-7 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">ติดตามสถานะ</h1>
+                <p class="text-gray-500 mt-1">ตรวจสอบความคืบหน้าเรื่องที่แจ้ง</p>
+            </div>
+        </div>
+
+        <!-- Content Card -->
+        <div class="bg-white/70 backdrop-blur-xl rounded-[2.5rem] p-6 shadow-md border border-gray-200">
+            <!-- Search Box -->
+            <div class="mb-6">
+                <div class="flex gap-3">
+                    <input id="trackingInput" type="text" placeholder="กรอกรหัสติดตาม (เช่น VFC-CP-20260216-1234)"
+                        class="flex-1 px-4 py-3 rounded-full border border-gray-200 focus:border-purple-400 focus:ring-2 focus:ring-purple-100 outline-none transition-all"
+                        onkeydown="if(event.key==='Enter') searchTracking()">
+                    <!-- QR Upload Button -->
+                    <label
+                        class="px-3 py-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors cursor-pointer flex items-center justify-center"
+                        title="สแกน QR Code">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8">
+                            <rect x="3" y="3" width="7" height="7" rx="1" />
+                            <rect x="14" y="3" width="7" height="7" rx="1" />
+                            <rect x="3" y="14" width="7" height="7" rx="1" />
+                            <rect x="14" y="14" width="3" height="3" />
+                            <line x1="21" y1="14" x2="21" y2="17" />
+                            <line x1="17" y1="21" x2="21" y2="21" />
+                            <line x1="14" y1="21" x2="14" y2="18" />
+                        </svg>
+                        <input type="file" accept="image/*" class="hidden" onchange="decodeQRCode(this)">
+                    </label>
+                </div>
+                <button onclick="searchTracking()"
+                    class="w-full mt-3 px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white font-semibold rounded-full transition-colors">
+                    ค้นหา
+                </button>
+                <p id="qrStatus" class="text-xs mt-2 hidden"></p>
+            </div>
+
+            <!-- Search Results -->
+            <div id="searchResults" class="space-y-4 hidden"></div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="../../../function/shared/js/supabase-config.js"></script>
+    <script>
+        // Fix #5: XSS sanitizer — never concatenate DB data directly into innerHTML
+        function esc(str) {
+            const div = document.createElement('div');
+            div.textContent = str || '';
+            return div.innerHTML; // HTML-escaped string
+        }
+
+        const STATUS_MAP = {
+            pending: { label: 'รอดำเนินการ', color: 'text-orange-600 bg-orange-50' },
+            in_progress: { label: 'กำลังดำเนินการ', color: 'text-yellow-600 bg-yellow-50' },
+            done: { label: 'เสร็จสิ้น', color: 'text-green-600 bg-green-50' }
+        };
+
+        const TYPE_MAP = {
+            complaint: { label: 'ร้องเรียน', color: 'text-red-600 bg-red-50' },
+            compliment: { label: 'ชมเชย', color: 'text-green-600 bg-green-50' },
+            suggestion: { label: 'ข้อเสนอแนะ', color: 'text-blue-600 bg-blue-50' }
+        };
+
+        function formatDate(dateStr) {
+            const d = new Date(dateStr);
+            const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+            return d.getDate() + ' ' + months[d.getMonth()] + ' ' + (d.getFullYear() + 543);
+        }
+
+        function renderCard(item) {
+            const type = TYPE_MAP[item.type] || TYPE_MAP.suggestion;
+            const subject = item.subject || (item.detail_text ? item.detail_text.substring(0, 60) : 'ไม่มีหัวข้อ');
+            const st = item.status || 'pending';
+
+            // Define timeline steps
+            const steps = [
+                { key: 'submitted', title: 'ส่งเรื่องแล้ว', desc: 'ส่งเมื่อ ' + formatDate(item.created_at) },
+                { key: 'received', title: 'รับเรื่องแล้ว', desc: 'เจ้าหน้าที่รับเรื่องเรียบร้อย' },
+                { key: 'in_progress', title: 'กำลังดำเนินการ', desc: 'อยู่ระหว่างการตรวจสอบและดำเนินการ' },
+                { key: 'done', title: 'เสร็จสิ้น', desc: 'ดำเนินการเสร็จสิ้นแล้ว' }
+            ];
+
+            // Determine which steps are done/active/pending
+            const statusOrder = { pending: 0, in_progress: 2, resolved: 3, closed: 3, done: 3 };
+            const currentIdx = statusOrder[st] !== undefined ? statusOrder[st] : 0;
+            // If pending → step 0 is active (submitted done, rest pending)
+            // If in_progress → steps 0,1 done, step 2 active
+            // If done/resolved/closed → all done
+            let activeIdx = currentIdx;
+            if (st === 'pending') activeIdx = 0;
+            else if (st === 'in_progress') activeIdx = 2;
+            else activeIdx = 3;
+
+            let html = '<div class="bg-gray-50 rounded-2xl p-5 border border-gray-100 mt-3">';
+            // Header — esc() prevents XSS from DB data
+            html += '<div class="flex items-center gap-2 flex-wrap mb-1">';
+            html += '<span class="text-sm font-bold text-purple-600">' + esc(item.tracking_number) + '</span>';
+            html += '<span class="text-xs font-medium ' + type.color + ' px-2 py-0.5 rounded-full">' + esc(type.label) + '</span>';
+            html += '</div>';
+            html += '<h3 class="font-semibold text-gray-900 text-base">' + esc(subject) + '</h3>';
+            if (item.detail_station) html += '<p class="text-xs text-gray-400 mt-1">สถานี: ' + esc(item.detail_station) + '</p>';
+
+            // Timeline
+            html += '<div class="track-timeline">';
+            steps.forEach(function (step, idx) {
+                let cls = 'pending';
+                if (idx < activeIdx) cls = 'done';
+                else if (idx === activeIdx) cls = 'active';
+
+                html += '<div class="track-step ' + cls + '">';
+                html += '<div class="track-dot"></div>';
+                html += '<div>';
+                html += '<div class="track-title text-sm">' + step.title + '</div>';
+                html += '<div class="track-desc text-xs text-gray-400 mt-0.5">' + (cls !== 'pending' ? step.desc : 'รอดำเนินการ') + '</div>';
+                html += '</div></div>';
+            });
+            html += '</div>';
+
+            // Admin response (if any)
+            if (item.admin_response) {
+                html += '<div style="margin-top:16px;padding:14px 16px;background:#eff6ff;border-radius:12px;border:1px solid #dbeafe;">';
+                html += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">';
+                html += '<svg style="width:16px;height:16px;color:#3b82f6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>';
+                html += '<span style="font-size:0.75rem;font-weight:600;color:#2563eb;">คำตอบจากเจ้าหน้าที่</span>';
+                html += '</div>';
+                html += '<div style="font-size:0.8125rem;color:#1e40af;line-height:1.6;white-space:pre-wrap;">' + esc(item.admin_response) + '</div>';
+                html += '</div>';
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        // Search by tracking number
+        async function searchTracking() {
+            const input = document.getElementById('trackingInput').value.trim();
+            if (!input) return;
+
+            const resultsDiv = document.getElementById('searchResults');
+            resultsDiv.classList.remove('hidden');
+            resultsDiv.innerHTML = '<div class="text-center py-4 text-gray-400">กำลังค้นหา...</div>';
+
+            const { data, error } = await window.supabaseClient
+                .from('vfc_submissions')
+                .select('*')
+                .ilike('tracking_number', '%' + input + '%')
+                .order('created_at', { ascending: false })
+                .limit(10);
+
+            if (error) {
+                resultsDiv.innerHTML = '<div class="text-center py-4 text-red-500">เกิดข้อผิดพลาดในการค้นหา</div>';
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                resultsDiv.innerHTML = '<div class="text-center py-8 text-gray-400">' +
+                    '<svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+                    '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>' +
+                    '</svg>' +
+                    '<p>ไม่พบรายการสำหรับ "' + input + '"</p>' +
+                    '</div>';
+                return;
+            }
+
+            resultsDiv.innerHTML = '<h2 class="text-lg font-semibold text-gray-800">ผลการค้นหา (' + data.length + ' รายการ)</h2>' +
+                data.map(renderCard).join('');
+            // Search term in 'not found' message is also escaped
+        }
+
+        // QR Code decoder
+        function decodeQRCode(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const status = document.getElementById('qrStatus');
+            status.classList.remove('hidden', 'text-red-500', 'text-green-500');
+            status.classList.add('text-gray-500');
+            status.textContent = 'กำลังอ่าน QR Code...';
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('https://api.qrserver.com/v1/read-qr-code/', {
+                method: 'POST',
+                body: formData
+            })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    var result = data && data[0] && data[0].symbol && data[0].symbol[0] && data[0].symbol[0].data;
+                    if (result) {
+                        document.getElementById('trackingInput').value = result;
+                        status.classList.remove('text-gray-500');
+                        status.classList.add('text-green-500');
+                        status.textContent = 'อ่าน QR Code สำเร็จ: ' + result;
+                        searchTracking();
+                    } else {
+                        status.classList.remove('text-gray-500');
+                        status.classList.add('text-red-500');
+                        status.textContent = 'ไม่สามารถอ่าน QR Code ได้ กรุณาลองใหม่';
+                    }
+                })
+                .catch(function () {
+                    status.classList.remove('text-gray-500');
+                    status.classList.add('text-red-500');
+                    status.textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่';
+                });
+
+            input.value = '';
+        }
+
+        // Init — no auto-load, only search
+    </script>
+
+</body>
+
+</html>

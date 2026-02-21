@@ -1,0 +1,1930 @@
+﻿<!doctype html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VFC Admin - Voice for Change</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../../../function/shared/css/fonts.css" />
+  <link rel="stylesheet" href="../../../function/portal/css/admin-base.css" />
+  <script src="../../../function/portal/components/admin-nav.js"></script>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../../../function/shared/js/supabase-config.js"></script>
+
+  <!-- VFC Admin CSS (extracted) -->
+  <link rel="stylesheet" href="../../../function/portal/css/vfc.css">
+
+</head>
+
+<body class="bg-white min-h-screen">
+  <!-- Admin Navigation -->
+  <div id="adminNavContainer" data-admin-nav="vfc"></div>
+
+  <!-- Main Content -->
+  <div class="admin-content">
+
+    <!-- Header -->
+    <div class="mb-6" id="pageHeader">
+      <h1 class="text-2xl font-bold text-gray-900">Voice for Change</h1>
+      <p class="text-base text-gray-500 mt-1">จัดการคำร้องเรียน ชมเชย และข้อเสนอแนะ</p>
+    </div>
+
+    <!-- Floating pill header (shows on scroll) -->
+    <div class="floating-header" id="floatingHeader">
+      <h1>Voice for Change</h1>
+      <p>จัดการคำร้องเรียน ชมเชย และข้อเสนอแนะ</p>
+    </div>
+
+
+
+    <!-- Tab Bar -->
+    <div class="tab-bar" style="margin-bottom:16px">
+      <button class="tab-btn active" id="tabInbox" onclick="switchTab('inbox')">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1" />
+        </svg>
+        หน้าแรก
+      </button>
+      <button class="tab-btn" id="tabCards" onclick="switchTab('cards')">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+        การ์ด
+      </button>
+      <button class="tab-btn" id="tabBoard" onclick="switchTab('board')">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
+        </svg>
+        กระดาน
+      </button>
+      <button class="tab-btn" id="tabTable" onclick="switchTab('table')">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+        </svg>
+        รายการ
+      </button>
+      <button class="tab-btn" id="tabCalendar" onclick="switchTab('calendar')">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        ปฏิทิน
+      </button>
+      <button class="tab-btn" id="tabTrash" onclick="switchTab('trash')">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+        ถังขยะ <span id="trashCount"
+          style="background:#ef4444;color:white;border-radius:9999px;padding:1px 6px;font-size:0.65rem;margin-left:2px;display:none">0</span>
+      </button>
+      <button class="tab-btn" id="tabSettings" onclick="switchTab('settings')">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        ตั้งค่า
+      </button>
+    </div>
+
+    <!-- Tab: Inbox -->
+    <div id="contentInbox" class="tab-content">
+
+      <!-- Stats -->
+      <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
+        <div class="stat-card">
+          <div class="stat-icon bg-indigo-50">
+            <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <div>
+            <div class="stat-val" id="sTotal">-</div>
+            <div class="stat-lbl">ทั้งหมด</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon bg-amber-50">
+            <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <div class="stat-val" id="sPending">-</div>
+            <div class="stat-lbl">รอดำเนินการ</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon bg-blue-50">
+            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <div>
+            <div class="stat-val" id="sProgress">-</div>
+            <div class="stat-lbl">กำลังดำเนินการ</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#fef3c7">
+            <svg class="w-5 h-5" style="color:#f97316" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <div>
+            <div class="stat-val" id="sInvestigating">-</div>
+            <div class="stat-lbl">กำลังตรวจสอบ</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:#f0f9ff">
+            <svg class="w-5 h-5" style="color:#0ea5e9" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            </svg>
+          </div>
+          <div>
+            <div class="stat-val" id="sFollowUp">-</div>
+            <div class="stat-lbl">ติดตามผล</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon bg-green-50">
+            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <div class="stat-val" id="sResolved">-</div>
+            <div class="stat-lbl">เสร็จสิ้น</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard: Interactive Charts -->
+      <div id="dashCharts"></div>
+
+    </div>
+
+    <!-- Tab: Cards -->
+    <div id="contentCards" class="tab-content hidden">
+      <div class="cards-grid" id="cardsGrid"></div>
+    </div>
+
+    <!-- Tab: Kanban Board -->
+    <div id="contentBoard" class="tab-content hidden">
+      <div class="board-filter-bar" id="boardFilterBar"></div>
+      <div class="kanban-wrap" id="kanbanBoard"></div>
+    </div>
+
+
+
+    <!-- Tab: Trash -->
+    <div id="contentTrash" class="tab-content hidden">
+      <div style="padding:24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <h3 style="font-size:1.1rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:8px">
+            <svg style="width:20px;height:20px" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            ถังขยะ
+          </h3>
+          <button onclick="emptyTrash()"
+            style="background:#ef4444;color:white;border:none;border-radius:10px;padding:8px 16px;font-size:0.8rem;font-weight:600;cursor:pointer">ล้างถังขยะ</button>
+        </div>
+        <div id="trashList"></div>
+      </div>
+    </div>
+
+    <!-- Tab: Settings -->
+    <div id="contentSettings" class="tab-content hidden">
+      <div class="tab-placeholder">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        <p>ตั้งค่า — Settings</p>
+      </div>
+    </div>
+
+    <!-- Tab: Calendar -->
+    <div id="contentCalendar" class="tab-content hidden">
+      <div id="calendarView" style="padding:24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+          <button onclick="changeCalMonth(-1)"
+            style="background:none;border:1px solid #e5e7eb;border-radius:10px;padding:8px 14px;cursor:pointer;font-size:0.85rem;color:#374151">◀
+            เดือนก่อน</button>
+          <h3 id="calMonthLabel" style="font-size:1.1rem;font-weight:700;color:#111827"></h3>
+          <button onclick="changeCalMonth(1)"
+            style="background:none;border:1px solid #e5e7eb;border-radius:10px;padding:8px 14px;cursor:pointer;font-size:0.85rem;color:#374151">เดือนถัดไป
+            ▶</button>
+        </div>
+        <div id="calGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px"></div>
+      </div>
+    </div>
+
+    <!-- Tab: Table -->
+    <div id="contentTable" class="tab-content hidden">
+      <!-- Filter Card -->
+      <div class="filter-card">
+        <div class="flex items-center justify-between flex-wrap gap-3">
+          <div class="flex items-center gap-2 flex-wrap">
+            <select id="fType" onchange="applyFilters()" class="f-select">
+              <option value="">ทุกประเภท</option>
+              <option value="complaint">ร้องเรียน</option>
+              <option value="compliment">ชมเชย</option>
+              <option value="suggestion">เสนอแนะ</option>
+            </select>
+            <select id="fStatus" onchange="applyFilters()" class="f-select">
+              <option value="">ทุกสถานะ</option>
+              <option value="pending">รอดำเนินการ</option>
+              <option value="in_progress">กำลังดำเนินการ</option>
+              <option value="investigating">กำลังตรวจสอบ</option>
+              <option value="follow_up">ติดตามผล</option>
+              <option value="resolved">เสร็จสิ้น</option>
+            </select>
+            <div class="flex items-center gap-1.5">
+              <input type="date" id="fDateFrom" onchange="applyFilters()" class="f-select" title="ตั้งแต่วันที่">
+              <span class="text-gray-400 text-xs">ถึง</span>
+              <input type="date" id="fDateTo" onchange="applyFilters()" class="f-select" title="ถึงวันที่">
+            </div>
+            <select id="fRead" onchange="applyFilters()" class="f-select">
+              <option value="">ทั้งหมด</option>
+              <option value="unread">ยังไม่ได้อ่าน</option>
+              <option value="read">อ่านแล้ว</option>
+              <option value="pinned">ปักมุด</option>
+            </select>
+          </div>
+          <div class="relative">
+            <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input type="text" id="fSearch" placeholder="ค้นหา..." class="f-search" oninput="applyFilters()">
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Card -->
+      <div class="tbl-card">
+
+        <!-- Table -->
+        <div class="tbl-scroll">
+          <table class="dtbl">
+            <thead>
+              <tr>
+                <th style="width:36px"></th>
+                <th>หมายเลขหนังสือ</th>
+                <th>เลขติดตาม</th>
+                <th>ประเภท</th>
+                <th>หัวข้อ</th>
+                <th>หมวดหมู่</th>
+                <th>สถานี</th>
+                <th>ฝ่าย</th>
+                <th>สถานะ</th>
+                <th>วันที่</th>
+                <th style="width:40px"></th>
+              </tr>
+            </thead>
+            <tbody id="tBody">
+              <tr class="msg-row">
+                <td colspan="11">กำลังโหลดข้อมูล...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pgn">
+          <div class="pgn-info" id="pInfo">-</div>
+          <div class="pgn-btns" id="pBtns"></div>
+        </div>
+      </div>
+    </div><!-- /contentTable -->
+
+  </div><!-- /admin-content -->
+  <!-- Detail Modal -->
+  <div id="detailModal" class="modal-overlay" onclick="if(event.target===this)minimizeActiveTab()">
+    <div class="modal-wrap" style="position:relative">
+      <!-- Window controls (outside modal-box, in modal-wrap) -->
+      <div class="m-win-ctrl">
+        <button type="button" onclick="event.stopPropagation(); minimizeAllTabs()" class="m-win-btn m-win-min"
+          title="ย่อทั้งหมด">−</button>
+        <button type="button" onclick="event.stopPropagation(); closeAllTabs()" class="m-win-btn m-win-close"
+          title="ปิดทั้งหมด">✕</button>
+      </div>
+      <!-- Floating pill tab bar (above modal) -->
+      <div class="m-tab-bar">
+        <div class="m-dot-rail" id="mDotRail"></div>
+      </div>
+      <!-- Modal box -->
+      <div class="modal-box">
+        <div class="m-inner">
+          <div class="m-info" id="mInfo"></div>
+          <div class="m-content" id="mContent"></div>
+          <div class="m-sidebar" id="mSidebar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Minimized dock -->
+  <div class="m-dock" id="mDock"></div>
+
+  <script>
+    // ========================================
+    // Floating pill header on scroll
+    // ========================================
+    (function () {
+      const header = document.getElementById('pageHeader');
+      const pill = document.getElementById('floatingHeader');
+      if (header && pill) {
+        const obs = new IntersectionObserver(([e]) => {
+          pill.classList.toggle('visible', !e.isIntersecting);
+        }, { threshold: 0 });
+        obs.observe(header);
+      }
+    })();
+
+    // ========================================
+    // VFC Admin — Supabase Data Table
+    // ========================================
+    let allData = [], filtered = [], page = 1;
+    let trashData = JSON.parse(localStorage.getItem('vfc_trash') || '[]');
+    const PER = 20;
+
+    // Category EN → TH mapping
+    const CATEGORIES = {
+      // Complaint
+      work_environment: 'สภาพแวดล้อมในการทำงาน',
+      management: 'การบริหารจัดการ',
+      hr_welfare: 'สวัสดิการและทรัพยากรบุคคล',
+      equipment: 'อุปกรณ์และเครื่องมือ',
+      safety: 'ความปลอดภัย',
+      communication: 'การสื่อสารภายในองค์กร',
+      process: 'กระบวนการทำงาน',
+      colleague: 'เพื่อนร่วมงาน',
+      supervisor: 'หัวหน้างาน',
+      // Compliment
+      service: 'การบริการ',
+      teamwork: 'การทำงานเป็นทีม',
+      leadership: 'ภาวะผู้นำ',
+      problem_solving: 'การแก้ปัญหา',
+      dedication: 'ความทุ่มเท',
+      helping: 'การช่วยเหลือ',
+      // Suggestion
+      facility: 'สิ่งอำนวยความสะดวก',
+      welfare: 'สวัสดิการ',
+      policy: 'นโยบาย',
+      technology: 'เทคโนโลยี',
+      training: 'การฝึกอบรม',
+      // Common
+      other: 'อื่นๆ'
+    };
+    function catTh(key) { return CATEGORIES[key] || key || '-'; }
+
+    // Tab switching
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.querySelectorAll('.tab-content').forEach(c => {
+        c.classList.add('hidden');
+      });
+      const btnId = 'tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1);
+      const contentId = 'content' + tabName.charAt(0).toUpperCase() + tabName.slice(1);
+      document.getElementById(btnId).classList.add('active');
+      document.getElementById(contentId).classList.remove('hidden');
+      if (tabName === 'board') renderBoard();
+      if (tabName === 'inbox') renderDashboard();
+      if (tabName === 'cards') renderCards();
+      if (tabName === 'calendar') renderCalendar();
+      if (tabName === 'trash') renderTrash();
+    }
+
+    // Dashboard — Power BI style
+    let dashTypeFilter = '';
+    let dashYear = new Date().getFullYear();
+    let dashMonth = '';
+    let dashFilterYear = '';
+    let dashDept = '';
+    function setDashFilter(type) {
+      dashTypeFilter = type;
+      renderDashboard();
+    }
+    function setDashYear(y) {
+      dashYear = parseInt(y);
+      renderDashboard();
+    }
+    function setDashMonth(m) {
+      dashMonth = m;
+      renderDashboard();
+    }
+    function setDashFilterYear(y) {
+      dashFilterYear = y;
+      renderDashboard();
+    }
+    function setDashDept(d) {
+      dashDept = d;
+      renderDashboard();
+    }
+    function renderDashboard() {
+      // Apply all dashboard filters
+      let src = [...allData];
+      if (dashTypeFilter) src = src.filter(d => d.type === dashTypeFilter);
+      if (dashFilterYear) src = src.filter(d => d.created_at && new Date(d.created_at).getFullYear() === parseInt(dashFilterYear));
+      if (dashMonth) src = src.filter(d => d.created_at && (new Date(d.created_at).getMonth() + 1) === parseInt(dashMonth));
+      if (dashDept) src = src.filter(d => (d.detail_department || '') === dashDept);
+      const total = src.length;
+      const allTotal = allData.length;
+      const container = document.getElementById('dashCharts');
+      if (!allTotal) { container.innerHTML = ''; return; }
+
+      // Available years from data
+      const yearsSet = new Set();
+      allData.forEach(r => { if (r.created_at) yearsSet.add(new Date(r.created_at).getFullYear()); });
+      yearsSet.add(new Date().getFullYear());
+      const availYears = [...yearsSet].sort((a, b) => b - a);
+
+      // Available departments from data
+      const deptSet = new Set();
+      allData.forEach(r => { if (r.detail_department) deptSet.add(r.detail_department); });
+      const availDepts = [...deptSet].sort();
+
+      // Counts by type (from filtered src)
+      const cComplaint = src.filter(d => d.type === 'complaint').length;
+      const cSuggestion = src.filter(d => d.type === 'suggestion').length;
+      const cCompliment = src.filter(d => d.type === 'compliment').length;
+
+      // Status counts
+      const pending = src.filter(d => !d.status || d.status === 'pending').length;
+      const inProg = src.filter(d => d.status === 'in_progress').length;
+      const resolved = src.filter(d => d.status === 'resolved').length;
+      const closed = src.filter(d => d.status === 'closed').length;
+      const done = resolved + closed;
+
+      // MoM / YoY
+      const now = new Date();
+      const getMonthKey = (y, m) => y + '-' + String(m + 1).padStart(2, '0');
+      const curMonthKey = getMonthKey(now.getFullYear(), now.getMonth());
+      const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const prevMonthKey = getMonthKey(prevMonth.getFullYear(), prevMonth.getMonth());
+      const sameMonthLastYear = new Date(now.getFullYear() - 1, now.getMonth(), 1);
+      const yoyKey = getMonthKey(sameMonthLastYear.getFullYear(), sameMonthLastYear.getMonth());
+
+      const countByKey = (key) => src.filter(r => r.created_at && r.created_at.startsWith(key)).length;
+      const curCount = countByKey(curMonthKey);
+      const prevCount = countByKey(prevMonthKey);
+      const yoyCount = countByKey(yoyKey);
+
+      const momPct = prevCount ? Math.round((curCount - prevCount) / prevCount * 100) : (curCount ? 100 : 0);
+      const yoyPct = yoyCount ? Math.round((curCount - yoyCount) / yoyCount * 100) : (curCount ? 100 : 0);
+
+      const badge = (pct) => {
+        if (pct > 0) return `<span class="mom-badge mom-up">▲ +${pct}%</span>`;
+        if (pct < 0) return `<span class="mom-badge mom-down">▼ ${pct}%</span>`;
+        return `<span class="mom-badge mom-flat">— 0%</span>`;
+      };
+
+      // Monthly Jan-Dec for selected year
+      const monthFull = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+      const monthShort = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+      const isWide = window.innerWidth >= 768;
+      const months = [];
+      for (let m = 0; m < 12; m++) {
+        const key = dashYear + '-' + String(m + 1).padStart(2, '0');
+        const count = src.filter(r => r.created_at && r.created_at.startsWith(key)).length;
+        months.push({ label: isWide ? monthFull[m] : monthShort[m], count, key });
+      }
+      const maxMonth = Math.max(...months.map(m => m.count), 1);
+
+      // Donut
+      const donutData = [
+        { label: 'รอดำเนินการ', val: pending, color: '#f59e0b' },
+        { label: 'กำลังดำเนินการ', val: inProg, color: '#3b82f6' },
+        { label: 'เสร็จสิ้น', val: resolved, color: '#22c55e' },
+        { label: 'ปิดแล้ว', val: closed, color: '#9ca3af' }
+      ];
+      const R = 60, CX = 80, CY = 80, C = 2 * Math.PI * R;
+      let offset = 0;
+      let donutPaths = '';
+      donutData.forEach(s => {
+        const pct = total ? s.val / total : 0;
+        const dash = pct * C;
+        donutPaths += `<circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="${s.color}" stroke-width="20" stroke-dasharray="${dash} ${C - dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${CX} ${CY})"/>`;
+        offset += dash;
+      });
+
+      // Bar colors by type filter
+      const barColor = dashTypeFilter === 'complaint' ? '#ef4444' : dashTypeFilter === 'compliment' ? '#22c55e' : dashTypeFilter === 'suggestion' ? '#eab308' : '#6366f1';
+
+      // Type bar data
+      const typeMax = Math.max(cComplaint, cSuggestion, cCompliment, 1);
+      const pctOf = (v) => total ? Math.round(v / allTotal * 100) : 0;
+
+      // Progress %
+      const pctDone = total ? Math.round(done / total * 100) : 0;
+      const pctProg = total ? Math.round(inProg / total * 100) : 0;
+      const pctPend = total ? Math.round(pending / total * 100) : 0;
+
+      // ====== Build HTML ======
+      let h = '';
+
+      // Filter bar
+      const selStyle = 'padding:6px 12px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:0.8125rem;color:#374151;background:white;cursor:pointer;outline:none';
+      h += `<div class="dash-filter-bar">`;
+      h += `<span style="font-size:0.75rem;color:#6b7280;font-weight:500;margin-right:4px">ตัวกรอง:</span>`;
+
+      // ประเภท
+      h += `<select onchange="setDashFilter(this.value)" style="${selStyle}">`;
+      h += `<option value="">ประเภท: ทั้งหมด</option>`;
+      h += `<option value="complaint"${dashTypeFilter === 'complaint' ? ' selected' : ''}>🔴 ร้องเรียน</option>`;
+      h += `<option value="suggestion"${dashTypeFilter === 'suggestion' ? ' selected' : ''}>🟡 เสนอแนะ</option>`;
+      h += `<option value="compliment"${dashTypeFilter === 'compliment' ? ' selected' : ''}>🟢 ชมเชย</option>`;
+      h += `</select>`;
+
+      // ปี
+      h += `<select onchange="setDashFilterYear(this.value)" style="${selStyle}">`;
+      h += `<option value="">ปี: ทั้งหมด</option>`;
+      availYears.forEach(y => {
+        h += `<option value="${y}"${dashFilterYear == String(y) ? ' selected' : ''}>${y + 543}</option>`;
+      });
+      h += `</select>`;
+
+      // เดือน
+      const monthNames = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+      h += `<select onchange="setDashMonth(this.value)" style="${selStyle}">`;
+      h += `<option value="">เดือน: ทั้งหมด</option>`;
+      monthNames.forEach((name, idx) => {
+        h += `<option value="${idx + 1}"${dashMonth == String(idx + 1) ? ' selected' : ''}>${name}</option>`;
+      });
+      h += `</select>`;
+
+      // ส่วนงาน
+      h += `<select onchange="setDashDept(this.value)" style="${selStyle}">`;
+      h += `<option value="">ส่วนงาน: ทั้งหมด</option>`;
+      availDepts.forEach(d => {
+        h += `<option value="${d}"${dashDept === d ? ' selected' : ''}>${d}</option>`;
+      });
+      h += `</select>`;
+
+      h += `</div>`;
+
+      h += `<div class="dash-grid">`;
+
+      // ── Card 1: Donut ──
+      h += `<div class="dash-card">`;
+      h += `<div class="dash-card-head"><div><div class="dash-card-title">สถานะรวม</div><div class="dash-card-sub">สัดส่วนตามสถานะปัจจุบัน</div></div></div>`;
+      h += `<div class="donut-wrap">`;
+      h += `<svg class="donut-svg" width="160" height="160" viewBox="0 0 160 160">`;
+      if (total) {
+        h += donutPaths;
+      } else {
+        h += `<circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="#f3f4f6" stroke-width="20"/>`;
+      }
+      h += `<text x="${CX}" y="${CY - 4}" class="donut-center" text-anchor="middle">${total}</text>`;
+      h += `<text x="${CX}" y="${CY + 14}" class="donut-center-lbl" text-anchor="middle">รายการ</text>`;
+      h += `</svg>`;
+      h += `<div class="donut-legend">`;
+      donutData.forEach(s => {
+        h += `<div class="donut-legend-item"><span class="donut-dot" style="background:${s.color}"></span>${s.label}<span class="donut-legend-val">${s.val}</span></div>`;
+      });
+      h += `</div></div></div>`;
+
+      // ── Card 2: MoM / YoY ──
+      h += `<div class="dash-card">`;
+      h += `<div class="dash-card-head"><div><div class="dash-card-title">เปรียบเทียบ</div><div class="dash-card-sub">เดือนนี้ vs เดือนก่อน / ปีก่อน</div></div></div>`;
+      h += `<div class="mom-grid">`;
+      // MoM
+      h += `<div class="mom-card">`;
+      h += `<div class="mom-label">MoM (เดือนต่อเดือน)</div>`;
+      h += `<div class="mom-row"><span class="mom-val">${curCount}</span>${badge(momPct)}</div>`;
+      h += `<div class="mom-desc">เดือนก่อน: ${prevCount} รายการ</div>`;
+      h += `</div>`;
+      // YoY
+      h += `<div class="mom-card">`;
+      h += `<div class="mom-label">YoY (ปีต่อปี)</div>`;
+      h += `<div class="mom-row"><span class="mom-val">${curCount}</span>${badge(yoyPct)}</div>`;
+      h += `<div class="mom-desc">เดือนเดียวกันปีก่อน: ${yoyCount} รายการ</div>`;
+      h += `</div>`;
+      h += `</div></div>`;
+
+      // ── Card 3: Monthly trend ──
+      h += `<div class="dash-card">`;
+      h += `<div class="dash-card-head"><div><div class="dash-card-title">แนวโน้มรายเดือน</div><div class="dash-card-sub">ม.ค. — ธ.ค. ${dashYear + 543}${dashTypeFilter ? ' — ' + (TYPES[dashTypeFilter]?.th || '') : ''}</div></div>`;
+      h += `<select onchange="setDashYear(this.value)" style="padding:4px 10px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:0.75rem;color:#374151;background:white;cursor:pointer;outline:none">`;
+      availYears.forEach(y => {
+        h += `<option value="${y}"${y === dashYear ? ' selected' : ''}>${y + 543}</option>`;
+      });
+      h += `</select></div>`;
+      h += `<div class="bar-chart-wrap">`;
+      months.forEach(m => {
+        const pct = m.count ? Math.max((m.count / maxMonth) * 100, 4) : 2;
+        h += `<div class="bar-col"><div class="bar-val">${m.count || ''}</div><div class="bar-fill" style="height:${pct}%;background:${barColor}" title="${m.label}: ${m.count}"></div><div class="bar-lbl">${m.label}</div></div>`;
+      });
+      h += `</div></div>`;
+
+      // ── Card 4: Type breakdown ──
+      h += `<div class="dash-card">`;
+      h += `<div class="dash-card-head"><div><div class="dash-card-title">ประเภทข้อความ</div><div class="dash-card-sub">จำนวนตามประเภท</div></div></div>`;
+      h += `<div class="hbar-row"><span class="hbar-label">ร้องเรียน</span><div class="hbar-track"><div class="hbar-fill" style="width:${cComplaint / typeMax * 100}%;background:#ef4444"></div></div><span class="hbar-val">${cComplaint}</span><span class="hbar-pct">${pctOf(cComplaint)}%</span></div>`;
+      h += `<div class="hbar-row"><span class="hbar-label">เสนอแนะ</span><div class="hbar-track"><div class="hbar-fill" style="width:${cSuggestion / typeMax * 100}%;background:#eab308"></div></div><span class="hbar-val">${cSuggestion}</span><span class="hbar-pct">${pctOf(cSuggestion)}%</span></div>`;
+      h += `<div class="hbar-row"><span class="hbar-label">ชมเชย</span><div class="hbar-track"><div class="hbar-fill" style="width:${cCompliment / typeMax * 100}%;background:#22c55e"></div></div><span class="hbar-val">${cCompliment}</span><span class="hbar-pct">${pctOf(cCompliment)}%</span></div>`;
+      h += `</div>`;
+
+      // ── Card 5: Progress ──
+      h += `<div class="dash-card">`;
+      h += `<div class="dash-card-head"><div><div class="dash-card-title">ความคืบหน้า</div><div class="dash-card-sub">สถานะการดำเนินงาน${dashTypeFilter ? ' — ' + (TYPES[dashTypeFilter]?.th || '') : ''}</div></div></div>`;
+      h += `<div class="prog-bar">`;
+      if (pctDone) h += `<div class="prog-fill" style="width:${pctDone}%;background:#22c55e"></div>`;
+      if (pctProg) h += `<div class="prog-fill" style="width:${pctProg}%;background:#3b82f6"></div>`;
+      if (pctPend) h += `<div class="prog-fill" style="width:${pctPend}%;background:#f59e0b"></div>`;
+      h += `</div><div class="prog-stats">`;
+      h += `<div class="prog-item"><span class="pval" style="color:#22c55e">${pctDone}%</span><span class="plbl">เสร็จสิ้น</span></div>`;
+      h += `<div class="prog-item"><span class="pval" style="color:#3b82f6">${pctProg}%</span><span class="plbl">กำลังดำเนินการ</span></div>`;
+      h += `<div class="prog-item"><span class="pval" style="color:#f59e0b">${pctPend}%</span><span class="plbl">รอดำเนินการ</span></div>`;
+      h += `</div></div>`;
+
+      // ── Card 6: Top 10 Stations ──
+      const stationCount = {};
+      src.forEach(d => {
+        const st = d.detail_station || 'ไม่ระบุ';
+        stationCount[st] = (stationCount[st] || 0) + 1;
+      });
+      const topStations = Object.entries(stationCount)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10);
+      const maxStation = topStations.length ? topStations[0][1] : 1;
+      const stColors = ['#6366f1', '#8b5cf6', '#a78bfa', '#c4b5fd', '#7c3aed', '#4f46e5', '#818cf8', '#6d28d9', '#5b21b6', '#a5b4fc'];
+
+      h += `<div class="dash-card" style="grid-column:1/-1">`;
+      h += `<div class="dash-card-head"><div><div class="dash-card-title">Top 10 สถานี</div><div class="dash-card-sub">สถานีที่มีรายการมากที่สุด</div></div></div>`;
+      if (topStations.length) {
+        topStations.forEach(([name, count], idx) => {
+          const pct = (count / maxStation) * 100;
+          h += `<div class="hbar-row">`;
+          h += `<span style="font-size:0.6875rem;color:#9ca3af;min-width:22px;text-align:center;font-weight:600">${idx + 1}</span>`;
+          h += `<span class="hbar-label">${name}</span>`;
+          h += `<div class="hbar-track"><div class="hbar-fill" style="width:${pct}%;background:${stColors[idx % stColors.length]}"></div></div>`;
+          h += `<span class="hbar-val">${count}</span>`;
+          h += `<span class="hbar-pct">${total ? Math.round(count / total * 100) : 0}%</span>`;
+          h += `</div>`;
+        });
+      } else {
+        h += `<div style="padding:20px;text-align:center;color:#9ca3af;font-size:0.8125rem">ไม่มีข้อมูล</div>`;
+      }
+      h += `</div>`;
+
+      h += `</div>`; // close dash-grid
+      container.innerHTML = h;
+    }
+
+    // ── Calendar view ──
+    let calYear = new Date().getFullYear();
+    let calMonth = new Date().getMonth();
+
+    function changeCalMonth(dir) {
+      calMonth += dir;
+      if (calMonth < 0) { calMonth = 11; calYear--; }
+      if (calMonth > 11) { calMonth = 0; calYear++; }
+      renderCalendar();
+    }
+
+    function renderCalendar() {
+      const thMonths = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+        'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+      const thDays = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
+      document.getElementById('calMonthLabel').textContent = thMonths[calMonth] + ' ' + (calYear + 543);
+
+      const firstDay = new Date(calYear, calMonth, 1).getDay();
+      const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+      // Group items by date
+      const itemsByDate = {};
+      allData.forEach(item => {
+        if (!item.timestamp) return;
+        const d = new Date(item.timestamp);
+        if (d.getFullYear() === calYear && d.getMonth() === calMonth) {
+          const day = d.getDate();
+          if (!itemsByDate[day]) itemsByDate[day] = [];
+          itemsByDate[day].push(item);
+        }
+      });
+
+      let h = '';
+      // Day headers
+      thDays.forEach(d => {
+        h += `<div style="padding:8px 4px;text-align:center;font-size:0.7rem;font-weight:700;color:#9ca3af">${d}</div>`;
+      });
+
+      // Empty cells before first day
+      for (let i = 0; i < firstDay; i++) {
+        h += `<div></div>`;
+      }
+
+      // Date cells
+      for (let day = 1; day <= daysInMonth; day++) {
+        const items = itemsByDate[day] || [];
+        const isToday = (day === new Date().getDate() && calMonth === new Date().getMonth() && calYear === new Date().getFullYear());
+        const hasItems = items.length > 0;
+
+        let cellStyle = 'padding:6px 4px;text-align:center;border-radius:12px;min-height:56px;font-size:0.8rem;transition:all 0.15s;';
+        if (isToday) cellStyle += 'background:#eff6ff;border:2px solid #3b82f6;font-weight:700;color:#3b82f6;';
+        else if (hasItems) cellStyle += 'background:#f9fafb;cursor:pointer;';
+        else cellStyle += 'color:#6b7280;';
+
+        const onclick = hasItems ? ` onclick="openTab('${items[0].id}')"` : '';
+
+        h += `<div style="${cellStyle}"${onclick}>`;
+        h += `<div style="font-weight:${isToday ? '700' : '600'};margin-bottom:2px">${day}</div>`;
+
+        if (hasItems) {
+          h += `<div style="display:flex;gap:3px;justify-content:center;flex-wrap:wrap">`;
+          items.slice(0, 4).forEach(item => {
+            const tc = getTabColor(item.type);
+            h += `<span style="width:8px;height:8px;border-radius:50%;background:${tc.dot};display:inline-block" title="${item.subject || ''}"></span>`;
+          });
+          if (items.length > 4) h += `<span style="font-size:0.55rem;color:#9ca3af">+${items.length - 4}</span>`;
+          h += `</div>`;
+        }
+        h += `</div>`;
+      }
+
+      document.getElementById('calGrid').innerHTML = h;
+    }
+
+    // ── Trash functions ──
+    function moveToTrash(id) {
+      const idx = allData.findIndex(d => String(d.id) === String(id));
+      if (idx === -1) return;
+      if (!confirm('ย้ายรายการนี้ไปถังขยะ?')) return;
+      const item = allData.splice(idx, 1)[0];
+      item._trashedAt = new Date().toISOString();
+      trashData.push(item);
+      localStorage.setItem('vfc_trash', JSON.stringify(trashData));
+      // Close modal tab if open
+      closeTab(String(id));
+      applyFilters();
+      renderDashboard();
+      updateTrashCount();
+    }
+
+    function restoreFromTrash(id) {
+      const idx = trashData.findIndex(d => String(d.id) === String(id));
+      if (idx === -1) return;
+      const item = trashData.splice(idx, 1)[0];
+      delete item._trashedAt;
+      allData.push(item);
+      localStorage.setItem('vfc_trash', JSON.stringify(trashData));
+      applyFilters();
+      renderDashboard();
+      renderTrash();
+      updateTrashCount();
+    }
+
+    function emptyTrash() {
+      if (!trashData.length) return;
+      if (!confirm(`ลบถาวร ${trashData.length} รายการ? การกระทำนี้ไม่สามารถย้อนกลับได้`)) return;
+      trashData = [];
+      localStorage.setItem('vfc_trash', JSON.stringify(trashData));
+      renderTrash();
+      updateTrashCount();
+    }
+
+    function updateTrashCount() {
+      const el = document.getElementById('trashCount');
+      if (!el) return;
+      if (trashData.length > 0) {
+        el.textContent = trashData.length;
+        el.style.display = 'inline';
+      } else {
+        el.style.display = 'none';
+      }
+    }
+
+    function renderTrash() {
+      const container = document.getElementById('trashList');
+      if (!container) return;
+      if (!trashData.length) {
+        container.innerHTML = `<div style="text-align:center;padding:60px 20px;color:#9ca3af">
+          <svg style="width:48px;height:48px;margin:0 auto 12px;opacity:0.3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          <p style="font-size:0.9rem;font-weight:600">ถังขยะว่าง</p>
+          <p style="font-size:0.75rem">รายการที่ลบจะแสดงที่นี่</p>
+        </div>`;
+        return;
+      }
+
+      let h = '';
+      trashData.forEach(item => {
+        const tp = TYPES[item.type] || { th: item.type, cls: '' };
+        const tc = getTabColor(item.type);
+        const trashedDate = item._trashedAt ? fmtDate(item._trashedAt) : '-';
+        h += `<div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;background:#fafafa;border:1px solid #f3f4f6;margin-bottom:8px;transition:all 0.15s">`;
+        h += `<div style="width:36px;height:36px;border-radius:50%;background:${tc.bg};display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.8rem;flex-shrink:0">${(item.reporter_name || item.subject || '?').charAt(0)}</div>`;
+        h += `<div style="flex:1;min-width:0">`;
+        h += `<div style="font-weight:600;font-size:0.85rem;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${item.subject || 'ไม่มีหัวข้อ'}</div>`;
+        h += `<div style="font-size:0.72rem;color:#9ca3af;display:flex;gap:8px;align-items:center;margin-top:2px">`;
+        h += `<span class="badge ${tp.cls}" style="font-size:0.65rem;padding:2px 8px">${tp.th}</span>`;
+        h += `<span>ลบเมื่อ ${trashedDate}</span>`;
+        h += `</div></div>`;
+        h += `<button onclick="restoreFromTrash('${item.id}')" style="background:#3b82f6;color:white;border:none;border-radius:8px;padding:6px 12px;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap">กู้คืน</button>`;
+        h += `<button onclick="permanentDelete('${item.id}')" style="background:none;color:#ef4444;border:1px solid #fecaca;border-radius:8px;padding:6px 12px;font-size:0.72rem;font-weight:600;cursor:pointer;white-space:nowrap">ลบถาวร</button>`;
+        h += `</div>`;
+      });
+      container.innerHTML = h;
+    }
+
+    function permanentDelete(id) {
+      if (!confirm('ลบรายการนี้ถาวร?')) return;
+      trashData = trashData.filter(d => String(d.id) !== String(id));
+      localStorage.setItem('vfc_trash', JSON.stringify(trashData));
+      renderTrash();
+      updateTrashCount();
+    }
+    let boardFilter = '';
+    // ── Card Grid View ──
+    function renderCards() {
+      const grid = document.getElementById('cardsGrid');
+      if (!grid) return;
+      const data = filtered.length ? filtered : allData;
+      if (!data.length) {
+        grid.innerHTML = '<div class="tab-placeholder"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg><p>ไม่มีรายการ</p></div>';
+        return;
+      }
+      const stripColors = { complaint: '#ef4444', compliment: '#22c55e', suggestion: '#eab308' };
+      let h = '';
+      data.forEach(r => {
+        const tp = TYPES[r.type] || { th: r.type, cls: '' };
+        const st = r.status || 'pending';
+        const unread = !isRead(r.id);
+        const stripColor = stripColors[r.type] || '#6366f1';
+        const senderName = r.is_anonymous ? 'ไม่ระบุตัวตน' : (r.reporter_name || '-');
+        h += `<div class="vfc-card" onclick="openDetail('${r.id}')">`;
+        h += `<div class="vfc-card-strip" style="background:${stripColor}"></div>`;
+        h += '<div class="vfc-card-body">';
+        if (unread) h += '<div class="vfc-card-unread"></div>';
+        h += '<div class="vfc-card-head">';
+        h += `<span class="badge ${tp.cls}">${tp.th}</span>`;
+        h += `<span class="s-badge s-${st}"><span class="dot"></span>${STATUS[st] || st}</span>`;
+        if (r.tracking_number) h += `<span class="trk">${r.tracking_number}</span>`;
+        h += '</div>';
+        h += `<div class="vfc-card-title">${r.subject || 'ไม่มีหัวข้อ'}</div>`;
+        h += `<div class="vfc-card-sender"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>${senderName}</div>`;
+        h += '<div class="vfc-card-footer">';
+        if (r.category) h += `<span class="m-info-pill" style="font-size:0.7rem;padding:2px 8px">${catTh(r.category)}</span>`;
+        else h += '<span></span>';
+        h += `<span class="vfc-card-date">${fmtDate(r.created_at)}</span>`;
+        h += '</div></div></div>';
+      });
+      grid.innerHTML = h;
+    }
+
+    function setBoardFilter(status) {
+      boardFilter = (boardFilter === status) ? '' : status;
+      renderBoard();
+    }
+    function renderBoard() {
+      const cols = [
+        { key: 'pending', label: 'รอดำเนินการ', icon: '<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' },
+        { key: 'in_progress', label: 'กำลังดำเนินการ', icon: '<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>' },
+        { key: 'investigating', label: 'กำลังตรวจสอบ', icon: '<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>' },
+        { key: 'follow_up', label: 'ติดตามผล', icon: '<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>' },
+        { key: 'resolved', label: 'เสร็จสิ้น', icon: '<svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' }
+      ];
+
+      const avatarColors = { complaint: '#ef4444', compliment: '#22c55e', suggestion: '#eab308' };
+      const tagStyles = {
+        complaint: 'background:#fee2e2;color:#dc2626',
+        compliment: 'background:#dcfce7;color:#16a34a',
+        suggestion: 'background:#fef9c3;color:#ca8a04'
+      };
+
+      // Render filter bar (mobile)
+      const filterBar = document.getElementById('boardFilterBar');
+      if (filterBar) {
+        let fh = '';
+        cols.forEach(col => {
+          const count = allData.filter(d => (d.status || 'pending') === col.key).length;
+          const isActive = boardFilter === col.key;
+          fh += `<button class="board-filter-pill${isActive ? ' active' : ''}" onclick="setBoardFilter('${col.key}')">`;
+          fh += `${col.label}<span class="bf-count">${count}</span></button>`;
+        });
+        filterBar.innerHTML = fh;
+      }
+
+      const board = document.getElementById('kanbanBoard');
+      const isFiltered = boardFilter !== '';
+      board.className = 'kanban-wrap' + (isFiltered ? ' filtered' : '');
+
+      let html = '';
+      cols.forEach(col => {
+        const items = allData.filter(d => (d.status || 'pending') === col.key);
+        const showCls = (!isFiltered || boardFilter === col.key) ? ' show' : '';
+        html += `<div class="kanban-col${showCls}" data-status="${col.key}">`;
+        html += `<div class="kanban-col-head">${col.icon}<span class="col-label">${col.label}</span><span class="col-count">${items.length}</span></div>`;
+        html += `<div class="kanban-cards">`;
+        if (!items.length) {
+          html += `<div class="kanban-empty">ไม่มีรายการ</div>`;
+        } else {
+          items.forEach(r => {
+            const tp = TYPES[r.type] || { th: r.type, cls: '' };
+            const tStyle = tagStyles[r.type] || 'background:#f3f4f6;color:#6b7280';
+            const avColor = avatarColors[r.type] || '#6366f1';
+            const initial = r.is_anonymous ? '?' : ((r.reporter_name || r.subject || '?').charAt(0));
+            const desc = (r.detail_text || '').replace(/<[^>]*>/g, '').substring(0, 80);
+            const catLabel = r.category ? catTh(r.category) : '';
+            html += `<div class="kanban-card" draggable="true" data-id="${r.id}" onclick="openDetail('${r.id}')">`;
+            html += `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">`;
+            html += `<span class="kanban-card-tag" style="${tStyle};margin-bottom:0">${tp.th}</span>`;
+            const docNum = docNumMap[r.id] || '';
+            if (docNum) html += `<span style="font-size:0.65rem;color:#6366f1;font-family:'SF Mono','Fira Code',monospace">${docNum}</span>`;
+            html += `</div>`;
+            html += `<div class="kanban-card-title">${r.subject || 'ไม่มีหัวข้อ'}</div>`;
+            if (desc) html += `<div class="kanban-card-desc">${desc}</div>`;
+            if (catLabel) html += `<span class="kanban-card-tag" style="background:#e0e7ff;color:#4338ca">${catLabel}</span>`;
+            html += '<div class="kanban-card-footer">';
+            html += `<div class="kanban-card-avatar" style="background:${avColor}">${initial}</div>`;
+            html += '<div class="kanban-card-stats">';
+            html += `<span><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>${fmtDate(r.created_at).split(' ')[0]}</span>`;
+            html += '</div></div></div>';
+          });
+        }
+        html += `</div></div>`;
+      });
+      board.innerHTML = html;
+      initDragAndDrop();
+    }
+
+    // ── Drag & Drop ──
+    function initDragAndDrop() {
+      const cards = document.querySelectorAll('.kanban-card[draggable]');
+      const cols = document.querySelectorAll('.kanban-col');
+
+      cards.forEach(card => {
+        card.addEventListener('dragstart', e => {
+          card.classList.add('dragging');
+          e.dataTransfer.setData('text/plain', card.dataset.id);
+          e.dataTransfer.effectAllowed = 'move';
+        });
+        card.addEventListener('dragend', () => {
+          card.classList.remove('dragging');
+          cols.forEach(c => c.classList.remove('drag-over'));
+        });
+      });
+
+      cols.forEach(col => {
+        col.addEventListener('dragover', e => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          col.classList.add('drag-over');
+        });
+        col.addEventListener('dragleave', e => {
+          if (!col.contains(e.relatedTarget)) col.classList.remove('drag-over');
+        });
+        col.addEventListener('drop', async e => {
+          e.preventDefault();
+          col.classList.remove('drag-over');
+          const itemId = e.dataTransfer.getData('text/plain');
+          const newStatus = col.dataset.status;
+          const item = allData.find(d => String(d.id) === String(itemId));
+          if (!item || item.status === newStatus) return;
+
+          // Optimistic update
+          const oldStatus = item.status;
+          item.status = newStatus;
+          updateStats(); applyFilters(); renderBoard(); renderDashboard();
+
+          // Save to Supabase
+          try {
+            const client = await waitSB();
+            const { error } = await client
+              .from('vfc_submissions')
+              .update({ status: newStatus })
+              .eq('id', itemId);
+            if (error) {
+              item.status = oldStatus;
+              updateStats(); applyFilters(); renderBoard(); renderDashboard();
+              alert('❌ บันทึกไม่สำเร็จ: ' + error.message);
+            }
+          } catch (err) {
+            item.status = oldStatus;
+            updateStats(); applyFilters(); renderBoard(); renderDashboard();
+            alert('❌ เกิดข้อผิดพลาด: ' + err.message);
+          }
+        });
+      });
+    }
+
+    // Read status (localStorage)
+    const READ_KEY = 'vfc_read_ids';
+    function getReadIds() {
+      try { return JSON.parse(localStorage.getItem(READ_KEY) || '[]'); }
+      catch { return []; }
+    }
+    function markAsRead(id) {
+      const ids = getReadIds();
+      if (!ids.includes(String(id))) {
+        ids.push(String(id));
+        localStorage.setItem(READ_KEY, JSON.stringify(ids));
+      }
+    }
+    function markAsUnread(id) {
+      let ids = getReadIds();
+      ids = ids.filter(x => x !== String(id));
+      localStorage.setItem(READ_KEY, JSON.stringify(ids));
+    }
+    function isRead(id) {
+      return getReadIds().includes(String(id));
+    }
+    function isNew(item) {
+      if (!item.created_at) return false;
+      return (Date.now() - new Date(item.created_at).getTime()) < 24 * 60 * 60 * 1000;
+    }
+
+    // Pin status (localStorage)
+    const PIN_KEY = 'vfc_pinned_ids';
+    function getPinnedIds() {
+      try { return JSON.parse(localStorage.getItem(PIN_KEY) || '[]'); }
+      catch { return []; }
+    }
+    function togglePin(id, e) {
+      if (e) { e.stopPropagation(); }
+      let ids = getPinnedIds();
+      const sid = String(id);
+      if (ids.includes(sid)) {
+        ids = ids.filter(x => x !== sid);
+      } else {
+        ids.push(sid);
+      }
+      localStorage.setItem(PIN_KEY, JSON.stringify(ids));
+      render();
+    }
+    function isPinned(id) {
+      return getPinnedIds().includes(String(id));
+    }
+
+    // Supabase helper
+    const sb = () => window.supabaseClient;
+    function waitSB() {
+      return new Promise(r => { const c = () => sb() ? r(sb()) : setTimeout(c, 100); c(); });
+    }
+
+    // Type config
+    const TYPES = {
+      complaint: { th: 'ร้องเรียน', cls: 'b-complaint' },
+      compliment: { th: 'ชมเชย', cls: 'b-compliment' },
+      suggestion: { th: 'เสนอแนะ', cls: 'b-suggestion' }
+    };
+    const STATUS = {
+      pending: 'รอดำเนินการ',
+      in_progress: 'กำลังดำเนินการ',
+      investigating: 'กำลังตรวจสอบ',
+      follow_up: 'ติดตามผล',
+      resolved: 'เสร็จสิ้น'
+    };
+
+    // Format date → DD/MM/YYYY HH:MM
+    function fmtDate(s) {
+      if (!s) return '-';
+      const d = new Date(s);
+      const pad = n => String(n).padStart(2, '0');
+      return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear() + 543} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+
+    // Generate document number: VFC-YYMM-DeptCode-001 (reset per year)
+    function genDocNums(data) {
+      const counters = {};
+      // Sort by created_at ascending for correct numbering
+      const sorted = [...data].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+      const docMap = {};
+
+      sorted.forEach(item => {
+        if (!item.created_at) { docMap[item.id] = '-'; return; }
+        const d = new Date(item.created_at);
+        const yy = String(d.getFullYear() + 543).slice(-2);
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        // ใช้ BH เป็นรหัสฝ่ายทั้งหมดตอนนี้
+        const deptCode = 'BH';
+        // Counter resets per year + dept
+        const counterKey = `${yy}-${deptCode}`;
+        counters[counterKey] = (counters[counterKey] || 0) + 1;
+        const seq = String(counters[counterKey]).padStart(3, '0');
+        docMap[item.id] = `VFC-${yy}${mm}-${deptCode}-${seq}`;
+      });
+
+      return docMap;
+    }
+
+    let docNumMap = {};
+
+    // Fetch
+    async function fetchData() {
+      const client = await waitSB();
+      const { data, error } = await client
+        .from('vfc_submissions')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        document.getElementById('tBody').innerHTML = `<tr class="msg-row"><td colspan="11">❌ ${error.message}</td></tr>`;
+        return;
+      }
+      allData = data || [];
+      // Exclude items already in trash
+      const trashIds = new Set(trashData.map(t => String(t.id)));
+      allData = allData.filter(d => !trashIds.has(String(d.id)));
+      docNumMap = genDocNums(allData);
+      updateStats();
+      applyFilters();
+      renderDashboard();
+      updateTrashCount();
+    }
+
+    // Stats
+    function updateStats() {
+      document.getElementById('sTotal').textContent = allData.length;
+      document.getElementById('sPending').textContent = allData.filter(d => d.status === 'pending').length;
+      document.getElementById('sProgress').textContent = allData.filter(d => d.status === 'in_progress').length;
+      document.getElementById('sInvestigating').textContent = allData.filter(d => d.status === 'investigating').length;
+      document.getElementById('sFollowUp').textContent = allData.filter(d => d.status === 'follow_up').length;
+      document.getElementById('sResolved').textContent = allData.filter(d => d.status === 'resolved').length;
+    }
+
+    // Filter
+    function applyFilters() {
+      const t = document.getElementById('fType').value;
+      const s = document.getElementById('fStatus').value;
+      const q = document.getElementById('fSearch').value.toLowerCase().trim();
+      const dateFrom = document.getElementById('fDateFrom').value;
+      const dateTo = document.getElementById('fDateTo').value;
+
+      const rd = document.getElementById('fRead').value;
+
+      filtered = allData.filter(item => {
+        if (t && item.type !== t) return false;
+        if (s && item.status !== s) return false;
+        if (rd === 'unread' && isRead(item.id)) return false;
+        if (rd === 'read' && !isRead(item.id)) return false;
+        if (rd === 'pinned' && !isPinned(item.id)) return false;
+        if (dateFrom && item.created_at) {
+          const itemDate = new Date(item.created_at).toISOString().slice(0, 10);
+          if (itemDate < dateFrom) return false;
+        }
+        if (dateTo && item.created_at) {
+          const itemDate = new Date(item.created_at).toISOString().slice(0, 10);
+          if (itemDate > dateTo) return false;
+        }
+        if (q) {
+          const txt = [item.tracking_number, item.subject, item.category,
+          item.detail_station, item.detail_department, item.reporter_name
+          ].filter(Boolean).join(' ').toLowerCase();
+          if (!txt.includes(q)) return false;
+        }
+        return true;
+      });
+      // Sort: pinned first
+      filtered.sort((a, b) => {
+        const pa = isPinned(a.id) ? 0 : 1;
+        const pb = isPinned(b.id) ? 0 : 1;
+        return pa - pb;
+      });
+      page = 1;
+      render();
+    }
+
+    // Render table
+    function render() {
+      const tbody = document.getElementById('tBody');
+      const start = (page - 1) * PER, end = start + PER;
+      const rows = filtered.slice(start, end);
+
+      if (!rows.length) {
+        tbody.innerHTML = '<tr class="msg-row"><td colspan="11">ไม่พบข้อมูล</td></tr>';
+        renderPgn();
+        return;
+      }
+
+      tbody.innerHTML = rows.map(r => {
+        const tp = TYPES[r.type] || { th: r.type, cls: '' };
+        const st = r.status || 'pending';
+        const docNum = docNumMap[r.id] || '-';
+        const unread = !isRead(r.id);
+        const isNewItem = isNew(r);
+        const pinned = isPinned(r.id);
+        let rowCls = '';
+        if (pinned) rowCls += ' row-pinned';
+        if (unread) rowCls += ' row-unread';
+        const pinSvg = pinned
+          ? '<svg fill="currentColor" viewBox="0 0 16 16"><path d="M4.146.146A.5.5 0 014.5 0h7a.5.5 0 01.5.5c0 .68-.342 1.174-.646 1.479-.126.125-.25.224-.354.298v4.431l.078.048c.203.127.476.314.751.555C12.36 7.775 13 8.527 13 9.5a.5.5 0 01-.5.5H8.5v5.5a.5.5 0 01-1 0V10H3.5a.5.5 0 01-.5-.5c0-.973.64-1.725 1.17-2.189A5.921 5.921 0 015 6.708V2.277a2.77 2.77 0 01-.354-.298C4.342 1.674 4 1.18 4 .5a.5.5 0 01.146-.354z"/></svg>'
+          : '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>';
+        return `<tr class="${rowCls.trim()}" onclick="openDetail('${r.id}')">
+          <td style="text-align:center;width:36px;padding:0">
+            ${unread ? (isNewItem ? '<span class="new-tag">new</span>' : '<span class="unread-dot"></span>') : ''}
+          </td>
+          <td style="white-space:nowrap;font-weight:500">${pinned ? '<span class="pin-icon">📌</span> ' : ''}${docNum}</td>
+          <td><span class="trk">${r.tracking_number || '-'}</span></td>
+          <td><span class="badge ${tp.cls}">${tp.th}</span></td>
+          <td><span class="txt-trunc">${r.subject || '-'}</span></td>
+          <td>${catTh(r.category)}</td>
+          <td>${r.detail_station || '-'}</td>
+          <td>${r.detail_department || '-'}</td>
+          <td><span class="s-badge s-${st}"><span class="dot"></span>${STATUS[st] || st}</span></td>
+          <td style="white-space:nowrap">${fmtDate(r.created_at)}</td>
+          <td><button class="act-btn ${pinned ? 'pinned' : ''}" onclick="togglePin('${r.id}', event)" title="${pinned ? 'เลิกปักมุด' : 'ปักมุด'}">${pinSvg}</button></td>
+        </tr>`;
+      }).join('');
+      renderPgn();
+    }
+
+    // Pagination
+    function renderPgn() {
+      const total = Math.ceil(filtered.length / PER);
+      const s = (page - 1) * PER + 1, e = Math.min(page * PER, filtered.length);
+      document.getElementById('pInfo').textContent = filtered.length ? `${s}-${e} จาก ${filtered.length}` : 'ไม่มีรายการ';
+
+      const el = document.getElementById('pBtns');
+      if (total <= 1) { el.innerHTML = ''; return; }
+
+      let h = `<button class="pg-btn" onclick="goPage(${page - 1})" ${page === 1 ? 'disabled' : ''}>‹</button>`;
+      for (let i = 1; i <= total; i++) {
+        if (i === 1 || i === total || (i >= page - 1 && i <= page + 1))
+          h += `<button class="pg-btn ${i === page ? 'act' : ''}" onclick="goPage(${i})">${i}</button>`;
+        else if (i === page - 2 || i === page + 2)
+          h += `<span style="padding:5px 3px;color:#ccc">…</span>`;
+      }
+      h += `<button class="pg-btn" onclick="goPage(${page + 1})" ${page === total ? 'disabled' : ''}>›</button>`;
+      el.innerHTML = h;
+    }
+
+    function goPage(p) {
+      const total = Math.ceil(filtered.length / PER);
+      if (p < 1 || p > total) return;
+      page = p; render();
+    }
+
+    // ========================================
+    // Tab-based Modal System
+    // ========================================
+    const openTabs = []; // { id, minimized }
+    let activeTabId = null;
+
+    const TAB_COLORS = {
+      complaint: { bg: 'linear-gradient(135deg,#f87171,#ef4444)', dot: '#ef4444' },
+      suggestion: { bg: 'linear-gradient(135deg,#60a5fa,#3b82f6)', dot: '#3b82f6' },
+      compliment: { bg: 'linear-gradient(135deg,#34d399,#10b981)', dot: '#10b981' },
+    };
+
+    function getTabColor(type) { return TAB_COLORS[type] || { bg: 'linear-gradient(135deg,#9ca3af,#6b7280)', dot: '#6b7280' }; }
+
+    // ── Render pill rail (vertical tab pills) ──
+    function renderTabBar() {
+      const rail = document.getElementById('mDotRail');
+      const visibleTabs = openTabs.filter(t => !t.minimized);
+      let h = '';
+      visibleTabs.forEach(tab => {
+        const item = allData.find(d => String(d.id) === String(tab.id));
+        if (!item) return;
+        const tp = TYPES[item.type] || { th: item.type };
+        const isActive = tab.id === activeTabId;
+        const label = (item.subject || tp.th || 'รายการ').substring(0, 14);
+        h += `<div class="m-dot ${isActive ? 'active' : ''}" onclick="switchModalTab('${tab.id}')">`;
+        h += `<span class="m-dot-label">${label}</span>`;
+        h += `<button class="m-dot-x" onclick="event.stopPropagation(); closeTab('${tab.id}')">✕</button>`;
+        h += `</div>`;
+      });
+      rail.innerHTML = h;
+    }
+
+    // ── Render minimized dock ──
+    function renderDock() {
+      const dock = document.getElementById('mDock');
+      const minimized = openTabs.filter(t => t.minimized);
+      if (!minimized.length) { dock.innerHTML = ''; return; }
+
+      let h = '';
+      minimized.forEach(tab => {
+        const item = allData.find(d => String(d.id) === String(tab.id));
+        if (!item) return;
+        const tp = TYPES[item.type] || { th: item.type };
+        const tc = getTabColor(item.type);
+        const initials = item.is_anonymous ? '?' : ((item.reporter_name || item.subject || '?').charAt(0));
+        const label = (item.subject || tp.th || 'รายการ').substring(0, 20);
+        h += `<div class="m-dock-item" onclick="restoreTab('${tab.id}')">`;
+        h += `<span class="m-dock-icon" style="background:${tc.bg}">${initials}</span>`;
+        h += `<span class="m-dock-label">${label}</span>`;
+        h += `</div>`;
+      });
+      dock.innerHTML = h;
+    }
+
+    // ── Render content for a tab ──
+    function renderTabContent(id) {
+      const item = allData.find(d => String(d.id) === String(id));
+      if (!item) return;
+
+      const tp = TYPES[item.type] || { th: item.type, cls: '' };
+      const st = item.status || 'pending';
+      const subject = item.subject || 'ไม่มีหัวข้อ';
+      const senderName = item.is_anonymous ? 'ไม่ระบุตัวตน' : (item.reporter_name || 'ไม่ระบุชื่อ');
+      const initials = item.is_anonymous ? '?' : (senderName.charAt(0) || '?');
+      const empId = item.reporter_employee_id || '';
+      const senderPills = [item.reporter_station, item.reporter_department].filter(Boolean);
+
+      // ── Info panel (metadata) ──
+      let info = '';
+      info += '<div class="m-meta">';
+      info += `<span class="badge ${tp.cls}">${tp.th}</span>`;
+      info += `<span class="s-badge s-${st}"><span class="dot"></span>${STATUS[st] || st}</span>`;
+      info += `<span class="trk">${item.tracking_number || ''}</span>`;
+      info += `<span style="margin-left:auto">${fmtDate(item.created_at)}</span>`;
+      info += '</div>';
+      info += `<div class="m-subject">${subject}</div>`;
+      info += '<div class="m-sender-card">';
+      info += '<div>';
+      info += `<div class="m-sender-name">${senderName}${empId ? ` <span style="margin-left:6px">${empId}</span>` : ''}</div>`;
+      if (senderPills.length) {
+        info += '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px">';
+        senderPills.forEach(v => {
+          info += `<span class="m-info-pill" style="padding:3px 10px;font-size:0.75rem">${v}</span>`;
+        });
+        info += '</div>';
+      }
+      info += '</div></div>';
+      const infoItems = [
+        ['หมวดหมู่', item.category ? catTh(item.category) : null], ['สถานี', item.detail_station],
+        ['ฝ่าย', item.detail_department], ['แผนก', item.detail_section],
+      ].filter(([, v]) => v);
+      if (infoItems.length) {
+        info += '<div class="m-label">ข้อมูลเพิ่มเติม</div>';
+        info += '<div class="m-info-pills">';
+        infoItems.forEach(([l, v]) => {
+          info += `<span class="m-info-pill"><span class="m-info-pill-label">${l}</span> <span class="m-info-pill-val">${v}</span></span>`;
+        });
+        info += '</div>';
+      }
+      document.getElementById('mInfo').innerHTML = info;
+
+      // ── Middle content (detail) ──
+      let left = '';
+      // ── Detail text + Fix text (combined edit) ──
+      const hasDetail = item.detail_text;
+      const hasFix = item.fix_text;
+      const history = item.edit_history || [];
+      const hasOriginal = history.length > 0;
+      // Find original values from first history entry
+      let origDetail = '', origFix = '';
+      if (hasOriginal) {
+        const detailHist = history.filter(h => h.field === 'รายละเอียด');
+        const fixHist = history.filter(h => h.field === 'สิ่งที่ต้องการแก้ไข');
+        origDetail = detailHist.length ? detailHist[0].old_value : (item.detail_text || '');
+        origFix = fixHist.length ? fixHist[0].old_value : (item.fix_text || '');
+      }
+      if (hasDetail || hasFix) {
+        // Version tabs (only show if has edit history)
+        if (hasOriginal) {
+          left += '<div class="m-ver-tabs">';
+          left += `<button class="m-ver-tab active" onclick="switchDetailVer('${id}','current')">ฉบับปัจจุบัน</button>`;
+          left += `<button class="m-ver-tab" onclick="switchDetailVer('${id}','original')">ฉบับต้นฉบับ</button>`;
+          left += '</div>';
+        }
+
+        left += '<div class="m-label-row">';
+        left += '<div class="m-label">รายละเอียด</div>';
+        left += `<button class="m-edit-btn" id="editBtn_${id}" onclick="toggleEditDetail('${id}')">`;
+        left += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>';
+        left += 'แก้ไข</button>';
+        left += '</div>';
+
+        // Current version (view mode)
+        left += `<div id="detailViewWrap_${id}">`;
+        if (hasDetail) left += `<div class="m-body">${item.detail_text}</div>`;
+        if (hasFix) {
+          left += '<div class="m-fix">';
+          left += '<svg class="m-fix-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+          left += `<div><strong>สิ่งที่ต้องการแก้ไข</strong><br>${item.fix_text}</div>`;
+          left += '</div>';
+        }
+        left += '</div>';
+
+        // Original version (hidden)
+        if (hasOriginal) {
+          left += `<div id="detailOrigWrap_${id}" style="display:none">`;
+          if (origDetail) {
+            left += '<div class="m-ver-original-label">';
+            left += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>';
+            left += 'รายละเอียด (ต้นฉบับ)</div>';
+            left += `<div class="m-ver-original">${origDetail}</div>`;
+          }
+          if (origFix) {
+            left += '<div class="m-ver-original-label">';
+            left += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+            left += 'สิ่งที่ต้องการแก้ไข (ต้นฉบับ)</div>';
+            left += `<div class="m-ver-original">${origFix}</div>`;
+          }
+          left += '</div>';
+        }
+
+        // Edit mode (hidden)
+        left += `<div id="detailEditWrap_${id}" style="display:none">`;
+        // Toolbar
+        left += '<div class="m-toolbar">';
+        const pd = 'onmousedown="event.preventDefault()"';
+        // Text style group
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('bold')" title="ตัวหนา"><b>B</b></button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('italic')" title="ตัวเอียง"><i>I</i></button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('underline')" title="ขีดเส้นใต้"><u>U</u></button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('strikeThrough')" title="ขีดทับ"><s>S</s></button>`;
+        left += '<div class="m-toolbar-sep"></div>';
+        // List group
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('insertUnorderedList')" title="รายการจุด"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('insertOrderedList')" title="รายการตัวเลข"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 6h14M7 12h14M7 18h14"/><text x="2" y="7" font-size="6" fill="currentColor" font-weight="700">1</text><text x="2" y="13" font-size="6" fill="currentColor" font-weight="700">2</text><text x="2" y="19" font-size="6" fill="currentColor" font-weight="700">3</text></svg></button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('indent')" title="เพิ่มย่อหน้า"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18M3 20h18M13 8h8M13 12h8M13 16h8M3 8l4 4-4 4"/></svg></button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('outdent')" title="ลดย่อหน้า"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18M3 20h18M13 8h8M13 12h8M13 16h8M7 8L3 12l4 4"/></svg></button>`;
+        left += '<div class="m-toolbar-sep"></div>';
+        // Color & highlight group
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtHighlight()" title="ไฮไลท์สีเหลือง" style="background:#fef08a;color:#854d0e;font-weight:700;font-size:12px">H</button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('foreColor','#ef4444')" title="ข้อความสีแดง" style="color:#ef4444;font-weight:700">A</button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('foreColor','#3b82f6')" title="ข้อความสีน้ำเงิน" style="color:#3b82f6;font-weight:700">A</button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('removeFormat')" title="ล้าง format"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>`;
+        left += '<div class="m-toolbar-sep"></div>';
+        // Undo/Redo
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('undo')" title="เลิกทำ"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a5 5 0 010 10H9M3 10l4-4M3 10l4 4"/></svg></button>`;
+        left += `<button class="m-toolbar-btn" ${pd} onclick="fmtCmd('redo')" title="ทำซ้ำ"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10H11a5 5 0 000 10h4M21 10l-4-4M21 10l-4 4"/></svg></button>`;
+        left += '</div>';
+        // Detail editable
+        if (hasDetail) {
+          left += `<div style="font-size:0.6875rem;font-weight:600;color:#9ca3af;margin:10px 0 4px;text-transform:uppercase;letter-spacing:0.04em">รายละเอียด</div>`;
+          left += `<div id="detailTextEdit_${id}" class="m-editable" contenteditable="true" style="border-radius:12px">${item.detail_text}</div>`;
+        }
+        // Fix editable
+        if (hasFix) {
+          left += `<div style="font-size:0.6875rem;font-weight:600;color:#9ca3af;margin:10px 0 4px;text-transform:uppercase;letter-spacing:0.04em">สิ่งที่ต้องการแก้ไข</div>`;
+          left += `<div id="fixTextEdit_${id}" class="m-editable" contenteditable="true" style="border-radius:12px;min-height:80px">${item.fix_text}</div>`;
+        }
+        left += '</div>';
+
+        // Edit actions
+        left += `<div id="detailEditActions_${id}" class="m-edit-actions" style="display:none">`;
+        left += `<button class="m-edit-save" onclick="saveDetailText('${id}')">บันทึก</button>`;
+        left += `<button class="m-edit-cancel" onclick="toggleEditDetail('${id}')">ยกเลิก</button>`;
+        left += `<span id="detailEditMsg_${id}" class="m-edit-msg"></span>`;
+        left += '</div>';
+
+        // Version history
+        const history = item.edit_history || [];
+        if (history.length) {
+          left += `<button class="m-history-toggle" onclick="document.getElementById('historyList_${id}').style.display = document.getElementById('historyList_${id}').style.display === 'none' ? 'block' : 'none'">`;
+          left += `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
+          left += `ประวัติการแก้ไข (${history.length})</button>`;
+          left += `<div id="historyList_${id}" class="m-history-list" style="display:none">`;
+          [...history].reverse().forEach((h, idx) => {
+            const d = h.edited_at ? new Date(h.edited_at).toLocaleString('th-TH') : '';
+            const uid = `${id}_${idx}`;
+            left += '<div class="m-history-item">';
+            left += `<div class="m-history-date">`;
+            left += `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>`;
+            left += `${d}${h.field ? ' · <b>' + h.field + '</b>' : ''}`;
+            left += '</div>';
+            // Tabs
+            left += '<div class="m-history-tabs">';
+            left += `<button class="m-history-tab tab-old active" onclick="showHistoryVer('${uid}','old')">ก่อนแก้</button>`;
+            left += `<button class="m-history-tab tab-new" onclick="showHistoryVer('${uid}','new')">หลังแก้</button>`;
+            left += '</div>';
+            // Content boxes
+            left += `<div id="hv_old_${uid}" class="m-history-content ver-old">${h.old_value || '<em>ไม่มีข้อมูลเดิม</em>'}</div>`;
+            left += `<div id="hv_new_${uid}" class="m-history-content ver-new" style="display:none">${h.new_value || ''}</div>`;
+            left += '</div>';
+          });
+          left += '</div>';
+        }
+      }
+      document.getElementById('mContent').innerHTML = left;
+
+      // ── Right sidebar ──
+      let right = '';
+      const statusOpts = [
+        { val: 'pending', label: 'รอดำเนินการ' },
+        { val: 'in_progress', label: 'กำลังดำเนินการ' },
+        { val: 'investigating', label: 'กำลังตรวจสอบ' },
+        { val: 'follow_up', label: 'ติดตามผล' },
+        { val: 'resolved', label: 'เสร็จสิ้น' }
+      ];
+      right += '<div class="m-sb-section">';
+      right += '<div class="m-sb-label">สถานะ</div>';
+      right += '<div class="m-status-pills" id="mStatusPills">';
+      statusOpts.forEach(o => {
+        right += `<button class="m-s-pill ${o.val === st ? 'active' : ''}" data-val="${o.val}" onclick="selectStatusPill(this)">${o.label}</button>`;
+      });
+      right += '</div>';
+      right += `<button class="m-sb-btn" onclick="updateStatus('${id}')">บันทึกสถานะ</button>`;
+      right += '<div id="statusMsg" class="m-sb-msg"></div>';
+      right += '</div>';
+
+      right += '<div class="m-sb-section">';
+      right += '<div class="m-sb-label">ตอบกลับ</div>';
+      right += `<textarea id="mReplyText" class="m-sb-textarea" placeholder="พิมพ์คำตอบหรือบันทึกการดำเนินการ...">${item.admin_response || ''}</textarea>`;
+      right += `<button class="m-sb-btn" onclick="saveReply('${id}')">บันทึกคำตอบ</button>`;
+      right += '<div id="replyMsg" class="m-sb-msg"></div>';
+      right += '</div>';
+
+      const pinned = isPinned(id);
+      right += '<div class="m-sb-actions">';
+      right += `<button class="m-act-btn2" onclick="togglePin('${id}'); render()">`;
+      right += `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>`;
+      right += `${pinned ? 'เลิกปักมุด' : 'ปักมุด'}</button>`;
+      right += `<button class="m-act-btn2" onclick="markAsUnread('${id}'); closeTab('${id}'); render()">`;
+      right += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>';
+      right += 'ยังไม่อ่าน</button>';
+      right += `<button class="m-act-btn2" style="color:#ef4444" onclick="moveToTrash('${id}')">`;
+      right += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>';
+      right += 'ย้ายไปถังขยะ</button>';
+      right += '</div>';
+      document.getElementById('mSidebar').innerHTML = right;
+    }
+
+    // ── Open detail (add or switch tab) ──
+    function openDetail(id) {
+      const sid = String(id);
+      const existing = openTabs.find(t => t.id === sid);
+      if (existing) {
+        existing.minimized = false;
+        activeTabId = sid;
+      } else {
+        openTabs.push({ id: sid, minimized: false });
+        activeTabId = sid;
+      }
+
+      // Restore all minimized tabs so they show in the tab bar
+      openTabs.forEach(t => t.minimized = false);
+
+      renderTabContent(activeTabId);
+      renderTabBar();
+      renderDock();
+      document.getElementById('detailModal').classList.add('open');
+      markAsRead(id);
+      render();
+    }
+
+    // ── Switch modal tab ──
+    function switchModalTab(id) {
+      activeTabId = String(id);
+      renderTabContent(activeTabId);
+      renderTabBar();
+    }
+
+    // ── Close tab ──
+    function closeTab(id) {
+      const idx = openTabs.findIndex(t => t.id === String(id));
+      if (idx === -1) return;
+      openTabs.splice(idx, 1);
+
+      if (openTabs.length === 0) {
+        activeTabId = null;
+        document.getElementById('detailModal').classList.remove('open');
+      } else {
+        // Switch to nearest visible tab
+        const visible = openTabs.filter(t => !t.minimized);
+        if (visible.length) {
+          activeTabId = visible[visible.length - 1].id;
+          renderTabContent(activeTabId);
+          renderTabBar();
+        } else {
+          activeTabId = null;
+          document.getElementById('detailModal').classList.remove('open');
+        }
+      }
+      renderTabBar();
+      renderDock();
+    }
+
+    function closeActiveTab() {
+      if (activeTabId) closeTab(activeTabId);
+    }
+
+    // ── Minimize ──
+    function minimizeActiveTab() {
+      if (!activeTabId) return;
+      const tab = openTabs.find(t => t.id === activeTabId);
+      if (tab) tab.minimized = true;
+
+      // Find next visible tab
+      const visible = openTabs.filter(t => !t.minimized);
+      if (visible.length) {
+        activeTabId = visible[visible.length - 1].id;
+        renderTabContent(activeTabId);
+        renderTabBar();
+      } else {
+        activeTabId = null;
+        document.getElementById('detailModal').classList.remove('open');
+      }
+      renderTabBar();
+      renderDock();
+    }
+
+    // ── Minimize ALL tabs ──
+    function minimizeAllTabs() {
+      openTabs.forEach(t => t.minimized = true);
+      activeTabId = null;
+      document.getElementById('detailModal').classList.remove('open');
+      renderTabBar();
+      renderDock();
+    }
+
+    // ── Close ALL tabs ──
+    function closeAllTabs() {
+      openTabs.length = 0;
+      activeTabId = null;
+      document.getElementById('detailModal').classList.remove('open');
+      renderTabBar();
+      renderDock();
+    }
+
+    // ── Restore from dock ──
+    function restoreTab(id) {
+      // Restore ALL minimized tabs
+      openTabs.forEach(t => t.minimized = false);
+      activeTabId = String(id);
+
+      renderTabContent(activeTabId);
+      renderTabBar();
+      renderDock();
+      document.getElementById('detailModal').classList.add('open');
+    }
+
+    // ── Close modal (legacy) ──
+    function closeModal() {
+      if (activeTabId) minimizeActiveTab();
+      else document.getElementById('detailModal').classList.remove('open');
+    }
+
+    // Status pill selector
+    function selectStatusPill(el) {
+      el.closest('.m-status-pills').querySelectorAll('.m-s-pill').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    // Update status in Supabase
+    async function updateStatus(id) {
+      const activeP = document.querySelector('.m-s-pill.active');
+      const newStatus = activeP ? activeP.dataset.val : 'pending';
+      const msgEl = document.getElementById('statusMsg');
+      msgEl.textContent = 'กำลังบันทึก...';
+      msgEl.style.color = '#6b7280';
+
+      const client = await waitSB();
+      const { error } = await client
+        .from('vfc_submissions')
+        .update({ status: newStatus })
+        .eq('id', id);
+
+      if (error) {
+        msgEl.textContent = '❌ เกิดข้อผิดพลาด: ' + error.message;
+        msgEl.style.color = '#ef4444';
+        return;
+      }
+
+      const item = allData.find(d => String(d.id) === String(id));
+      if (item) item.status = newStatus;
+
+      msgEl.textContent = '✅ บันทึกสถานะเรียบร้อย';
+      msgEl.style.color = '#22c55e';
+      updateStats();
+      applyFilters();
+      renderDashboard();
+      setTimeout(() => { msgEl.textContent = ''; }, 3000);
+    }
+
+    // Save admin reply to Supabase
+    async function saveReply(id) {
+      const text = document.getElementById('mReplyText').value.trim();
+      const msgEl = document.getElementById('replyMsg');
+      msgEl.textContent = 'กำลังบันทึก...';
+      msgEl.style.color = '#6b7280';
+
+      const client = await waitSB();
+      const { error } = await client
+        .from('vfc_submissions')
+        .update({ admin_response: text })
+        .eq('id', id);
+
+      if (error) {
+        msgEl.textContent = '❌ เกิดข้อผิดพลาด: ' + error.message;
+        msgEl.style.color = '#ef4444';
+        return;
+      }
+
+      const item = allData.find(d => String(d.id) === String(id));
+      if (item) item.admin_response = text;
+
+      msgEl.textContent = '✅ บันทึกคำตอบเรียบร้อย';
+      msgEl.style.color = '#22c55e';
+      setTimeout(() => { msgEl.textContent = ''; }, 3000);
+    }
+    // ── Switch detail version (current / original) ──
+    function switchDetailVer(id, ver) {
+      const viewWrap = document.getElementById('detailViewWrap_' + id);
+      const origWrap = document.getElementById('detailOrigWrap_' + id);
+      const editBtn = document.getElementById('editBtn_' + id);
+      const editWrap = document.getElementById('detailEditWrap_' + id);
+      const actions = document.getElementById('detailEditActions_' + id);
+      if (!viewWrap || !origWrap) return;
+
+      // Find tabs container
+      const tabsContainer = viewWrap.closest('.m-content') || viewWrap.parentElement;
+      const tabs = tabsContainer.querySelectorAll('.m-ver-tab');
+      tabs.forEach(t => { t.classList.remove('active', 'active-orig'); });
+
+      if (ver === 'current') {
+        viewWrap.style.display = '';
+        origWrap.style.display = 'none';
+        if (editBtn) editBtn.style.display = '';
+        tabs[0].classList.add('active');
+      } else {
+        viewWrap.style.display = 'none';
+        origWrap.style.display = '';
+        if (editBtn) editBtn.style.display = 'none';
+        if (editWrap) editWrap.style.display = 'none';
+        if (actions) actions.style.display = 'none';
+        tabs[1].classList.add('active-orig');
+      }
+    }
+
+    // ── History version toggle ──
+    function showHistoryVer(uid, ver) {
+      const oldEl = document.getElementById('hv_old_' + uid);
+      const newEl = document.getElementById('hv_new_' + uid);
+      if (!oldEl || !newEl) return;
+      const parent = oldEl.closest('.m-history-item');
+      parent.querySelectorAll('.m-history-tab').forEach(t => t.classList.remove('active'));
+      if (ver === 'old') {
+        oldEl.style.display = '';
+        newEl.style.display = 'none';
+        parent.querySelector('.tab-old').classList.add('active');
+      } else {
+        oldEl.style.display = 'none';
+        newEl.style.display = '';
+        parent.querySelector('.tab-new').classList.add('active');
+      }
+    }
+
+    // ── Formatting commands ──
+    function fmtCmd(cmd, val) {
+      document.execCommand(cmd, false, val || null);
+    }
+    function fmtHighlight() {
+      const sel = window.getSelection();
+      if (!sel.rangeCount || sel.isCollapsed) return;
+      // Toggle: if already highlighted, remove it
+      const parent = sel.anchorNode.parentElement;
+      if (parent && parent.tagName === 'MARK') {
+        const text = document.createTextNode(parent.textContent);
+        parent.parentNode.replaceChild(text, parent);
+      } else {
+        document.execCommand('hiliteColor', false, '#fef08a');
+      }
+    }
+
+    // ── Edit detail text ──
+    function toggleEditDetail(id) {
+      const viewWrap = document.getElementById('detailViewWrap_' + id);
+      const editWrap = document.getElementById('detailEditWrap_' + id);
+      const actions = document.getElementById('detailEditActions_' + id);
+      const btn = document.getElementById('editBtn_' + id);
+      if (!viewWrap || !editWrap) return;
+      const isEditing = editWrap.style.display !== 'none';
+      if (isEditing) {
+        // Cancel — restore original
+        viewWrap.style.display = '';
+        editWrap.style.display = 'none';
+        actions.style.display = 'none';
+        if (btn) btn.style.display = '';
+      } else {
+        // Enter edit mode
+        viewWrap.style.display = 'none';
+        editWrap.style.display = '';
+        actions.style.display = '';
+        if (btn) btn.style.display = 'none';
+        const editEl = document.getElementById('detailTextEdit_' + id);
+        if (editEl) editEl.focus();
+      }
+    }
+
+    async function saveDetailText(id) {
+      const msgEl = document.getElementById('detailEditMsg_' + id);
+      const item = allData.find(d => String(d.id) === String(id));
+      if (!item) return;
+
+      const detailEl = document.getElementById('detailTextEdit_' + id);
+      const fixEl = document.getElementById('fixTextEdit_' + id);
+      const newDetail = detailEl ? detailEl.innerHTML.trim() : (item.detail_text || '');
+      const newFix = fixEl ? fixEl.innerHTML.trim() : (item.fix_text || '');
+      const oldDetail = item.detail_text || '';
+      const oldFix = item.fix_text || '';
+
+      const detailChanged = newDetail !== oldDetail;
+      const fixChanged = newFix !== oldFix;
+
+      if (!detailChanged && !fixChanged) {
+        msgEl.textContent = 'ℹ️ ไม่มีการเปลี่ยนแปลง';
+        msgEl.style.color = '#6b7280';
+        return;
+      }
+
+      msgEl.textContent = 'กำลังบันทึก...';
+      msgEl.style.color = '#6b7280';
+
+      // Build version history
+      const history = Array.isArray(item.edit_history) ? [...item.edit_history] : [];
+      if (detailChanged) {
+        history.push({
+          field: 'รายละเอียด',
+          old_value: oldDetail,
+          new_value: newDetail,
+          edited_at: new Date().toISOString()
+        });
+      }
+      if (fixChanged) {
+        history.push({
+          field: 'สิ่งที่ต้องการแก้ไข',
+          old_value: oldFix,
+          new_value: newFix,
+          edited_at: new Date().toISOString()
+        });
+      }
+
+      const updateObj = { edit_history: history };
+      if (detailChanged) updateObj.detail_text = newDetail;
+      if (fixChanged) updateObj.fix_text = newFix;
+
+      const client = await waitSB();
+      const { error } = await client
+        .from('vfc_submissions')
+        .update(updateObj)
+        .eq('id', id);
+
+      if (error) {
+        msgEl.textContent = '❌ เกิดข้อผิดพลาด: ' + error.message;
+        msgEl.style.color = '#ef4444';
+        return;
+      }
+
+      // Update local data
+      if (detailChanged) item.detail_text = newDetail;
+      if (fixChanged) item.fix_text = newFix;
+      item.edit_history = history;
+
+      msgEl.textContent = '✅ บันทึกเรียบร้อย';
+      msgEl.style.color = '#22c55e';
+
+      // Re-render
+      setTimeout(() => { renderTabContent(id); }, 800);
+    }
+
+    // Keyboard
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') minimizeActiveTab(); });
+
+    // Refresh
+    function refreshData() {
+      document.getElementById('tBody').innerHTML = '<tr class="msg-row"><td colspan="11">กำลังโหลดข้อมูล...</td></tr>';
+      fetchData();
+    }
+
+    // Notification
+    function updateNotifDot() {
+      const unreadCount = allData.filter(d => !isRead(d.id)).length;
+      const dot = document.getElementById('notifDot');
+      if (dot) dot.style.display = unreadCount > 0 ? 'block' : 'none';
+    }
+    function toggleNotifPanel() {
+      const unreadCount = allData.filter(d => !isRead(d.id)).length;
+      if (unreadCount > 0) {
+        alert('คุณมี ' + unreadCount + ' รายการที่ยังไม่ได้อ่าน');
+      } else {
+        alert('ไม่มีการแจ้งเตือนใหม่');
+      }
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', async () => {
+      await fetchData();
+      updateNotifDot();
+    });
+  </script>
+</body>
+
+</html>
