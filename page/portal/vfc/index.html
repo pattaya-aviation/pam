@@ -1002,6 +1002,7 @@
             cur.style.transform = 'translateY(0) scale(1)';
             setTimeout(() => { deckAnimating = false; }, 200);
           }, 180);
+          showDeckStartToast();
         }
         return;
       }
@@ -1038,6 +1039,32 @@
       setTimeout(() => {
         toast.style.opacity = '0';
         toast.style.transform = 'translateX(-50%) translateY(8px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 2000);
+    }
+
+    function showDeckStartToast() {
+      if (document.getElementById('deckStartToast')) return;
+      const toast = document.createElement('div');
+      toast.id = 'deckStartToast';
+      toast.style.cssText = [
+        'position:fixed', 'top:90px', 'left:50%', 'transform:translateX(-50%) translateY(-16px)',
+        'background:rgba(17,24,39,0.88)', 'backdrop-filter:blur(12px)',
+        'color:white', 'font-size:0.8rem', 'font-weight:600',
+        'padding:10px 22px', 'border-radius:9999px',
+        'box-shadow:0 4px 20px rgba(0,0,0,0.25)',
+        'opacity:0', 'transition:opacity 0.25s, transform 0.25s',
+        'pointer-events:none', 'z-index:9999', 'white-space:nowrap'
+      ].join(';');
+      toast.textContent = '\u2b06 \u0e23\u0e32\u0e22\u0e01\u0e32\u0e23\u0e41\u0e23\u0e01';
+      document.body.appendChild(toast);
+      requestAnimationFrame(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+      });
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(-8px)';
         setTimeout(() => toast.remove(), 300);
       }, 2000);
     }
