@@ -629,16 +629,26 @@
                         .includes(window.location.hostname);
                     if (IS_DEV && email === 'test' && password === '1234') {
                         sessionStorage.setItem('user', JSON.stringify({
-                            name: 'Test User',
-                            email: 'test@pattayaaviation.com',
+                            name: 'Test Admin',
+                            email: 'admin@pattayaaviation.com',
                             id: 'test-user-local'
                         }));
 
-                        showModalSuccess('ยินดีต้อนรับ Test User!');
+                        // Sign in Supabase ด้วยเพื่อให้ RLS ทำงาน (Settings → Approval tab)
+                        if (window.supabaseClient) {
+                            window.supabaseClient.auth.signInWithPassword({
+                                email: 'admin@pattayaaviation.com',
+                                password: 'PAMadmin2024!'
+                            }).catch(() => {
+                                // ถ้า Supabase login ล้มเหลว ก็ยังเข้าได้ปกติ
+                                console.warn('Supabase admin session unavailable');
+                            });
+                        }
+
+                        showModalSuccess('ยินดีต้อนรับ Test Admin!');
 
                         setTimeout(() => {
                             closeLoginModal();
-                            // Use getBasePath() — window.__navbarBasePath is never set (issue #6)
                             window.location.href = getBasePath() + 'page/portal/index.html';
                         }, 1500);
                     } else {
