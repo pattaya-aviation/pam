@@ -991,7 +991,21 @@
     }
 
     function deckPrev() {
-      if (deckAnimating || deckIdx <= 0) return;
+      // At first card: bounce up instead of navigating
+      if (deckIdx <= 0) {
+        const cur = document.querySelector('.ic-dc-card.ic-current');
+        if (cur && !deckAnimating) {
+          deckAnimating = true;
+          cur.style.transition = 'transform 0.18s ease';
+          cur.style.transform = 'translateY(-18px) scale(0.97)';
+          setTimeout(() => {
+            cur.style.transform = 'translateY(0) scale(1)';
+            setTimeout(() => { deckAnimating = false; }, 200);
+          }, 180);
+        }
+        return;
+      }
+      if (deckAnimating) return;
       deckAnimating = true;
       const cur = document.querySelector('.ic-dc-card.ic-current');
       if (cur) {
