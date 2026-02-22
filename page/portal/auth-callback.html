@@ -32,84 +32,122 @@
     </div>
 
     <script>
-        (async function () {
+        (function () {
             const ALLOWED_DOMAIN = '@pattayaaviation.com';
+            const HOME_URL = '../../page/home/main/pam.html';
+            const PORTAL_URL = '../../page/portal/index.html';
+            const PENDING_URL = '../../page/portal/pending.html';
+            const STATUS_EL = document.getElementById('statusText');
+
+            function setStatus(msg) { STATUS_EL.textContent = msg; }
+
+            // ── สร้าง client ใหม่ใน callback page เพื่อ detect session จาก URL ──
+            // window.supabaseClient ถูกสร้างใน supabase-config.js ก่อนหน้า
+            // แต่ PKCE code exchange เป็น async จึง listen ผ่าน onAuthStateChange แทน
             const db = window.supabaseClient;
 
             if (!db) {
-                document.getElementById('statusText').textContent = 'ไม่สามารถเชื่อมต่อฐานข้อมูลได้';
+                setStatus('ไม่สามารถเชื่อมต่อฐานข้อมูลได้');
+                setTimeout(() => { window.location.href = HOME_URL; }, 2000);
                 return;
             }
 
-            // Supabase แปลง URL hash → session อัตโนมัติ
-            const { data: { session }, error } = await db.auth.getSession();
+            let handled = false;
 
-            if (error || !session) {
-                document.getElementById('statusText').textContent = 'เกิดข้อผิดพลาด กรุณาลองใหม่';
-                setTimeout(() => { window.location.href = '../../page/home/main/pam.html'; }, 2000);
-                return;
-            }
+            // onAuthStateChange จะยิงเมื่อ PKCE code exchange เสร็จ
+            const { data: { subscription } } = db.auth.onAuthStateChange(async (event, session) => {
+                if (handled) return;
+                // รอ SIGNED_IN หรือ INITIAL_SESSION ที่มี session จริง
+                if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session) {
+                    handled = true;
+                    subscription.unsubscribe();
+                    await processSession(session);
+                }
+                // ถ้า INITIAL_SESSION แต่ session = null → ไม่มี session
+                if (event === 'INITIAL_SESSION' && !session) {
+                    handled = true;
+                    subscription.unsubscribe();
+                    setStatus('ไม่พบ session กรุณาลองใหม่');
+                    setTimeout(() => { window.location.href = HOME_URL; }, 2000);
+                }
+            });
 
-            const user = session.user;
+            // Timeout fallback ถ้า onAuthStateChange ไม่ยิงภายใน 10 วินาที
+            setTimeout(() => {
+                if (!handled) {
+                    handled = true;
+                    subscription.unsubscribe();
+                    setStatus('หมดเวลา กรุณาลองใหม่');
+                    setTimeout(() => { window.location.href = HOME_URL; }, 2000);
+                }
+            }, 10000);
 
-            // บันทึก sessionStorage
-            sessionStorage.setItem('user', JSON.stringify({
-                name: user.user_metadata?.full_name || user.email,
-                email: user.email,
-                id: user.id
-            }));
+            async function processSession(session) {
+                const user = session.user;
+                setStatus('ตรวจสอบสิทธิ์...');
 
-            // ── Domain check ─────────────────────────────────────────────────────
-            if (!user.email.endsWith(ALLOWED_DOMAIN)) {
-                // Auto-reject: domain ไม่ใช่ pattayaaviation.com
-                await db.from('portal_users').upsert({
-                    email: user.email,
+                // บันทึก sessionStorage
+                sessionStorage.setItem('user', JSON.stringify({
                     name: user.user_metadata?.full_name || user.email,
-                    ms_id: user.user_metadata?.provider_id || '',
-                    status: 'rejected',
-                    last_login: new Date().toISOString()
-                }, { onConflict: 'email', ignoreDuplicates: false });
-
-                await db.auth.signOut();
-                sessionStorage.removeItem('user');
-                document.getElementById('statusText').textContent = 'อีเมลนี้ไม่ได้รับอนุญาตให้เข้าใช้ระบบ';
-                setTimeout(() => { window.location.href = '../../page/home/main/pam.html'; }, 2500);
-                return;
-            }
-
-            // ── ตรวจสอบว่า user มีอยู่แล้วหรือเปล่า (ไม่ reset status ถ้า login ซ้ำ) ──
-            const { data: existing } = await db
-                .from('portal_users')
-                .select('status')
-                .eq('email', user.email)
-                .maybeSingle();
-
-            if (!existing) {
-                // ครั้งแรก → insert status: pending รอ admin อนุมัติ
-                await db.from('portal_users').insert({
                     email: user.email,
-                    name: user.user_metadata?.full_name || user.email,
-                    ms_id: user.user_metadata?.provider_id || '',
-                    status: 'pending',
-                    last_login: new Date().toISOString()
-                });
-            } else {
-                // login ซ้ำ → อัปเดตแค่ last_login ไม่แตะ status
-                await db.from('portal_users')
-                    .update({ last_login: new Date().toISOString() })
-                    .eq('email', user.email);
+                    id: user.id
+                }));
+
+                // ── Domain check ──────────────────────────────────────────
+                if (!user.email?.endsWith(ALLOWED_DOMAIN)) {
+                    await db.from('portal_users').upsert({
+                        email: user.email,
+                        name: user.user_metadata?.full_name || user.email,
+                        ms_id: user.user_metadata?.provider_id || '',
+                        status: 'rejected',
+                        last_login: new Date().toISOString()
+                    }, { onConflict: 'email' });
+
+                    await db.auth.signOut();
+                    sessionStorage.removeItem('user');
+                    setStatus('อีเมลนี้ไม่ได้รับอนุญาตให้เข้าใช้ระบบ');
+                    setTimeout(() => { window.location.href = HOME_URL; }, 2500);
+                    return;
+                }
+
+                setStatus('บันทึกข้อมูล...');
+
+                // ── ตรวจสอบ record เดิม ───────────────────────────────────
+                const { data: existing, error: selErr } = await db
+                    .from('portal_users')
+                    .select('status')
+                    .eq('email', user.email)
+                    .maybeSingle();
+
+                console.log('[auth-callback] select:', existing, selErr);
+
+                if (!existing) {
+                    // ครั้งแรก → insert pending
+                    const { error: insErr } = await db.from('portal_users').insert({
+                        email: user.email,
+                        name: user.user_metadata?.full_name || user.email,
+                        ms_id: user.user_metadata?.provider_id || '',
+                        status: 'pending',
+                        last_login: new Date().toISOString()
+                    });
+                    console.log('[auth-callback] insert err:', insErr);
+                } else {
+                    // login ซ้ำ → update last_login เท่านั้น
+                    const { error: updErr } = await db.from('portal_users')
+                        .update({ last_login: new Date().toISOString() })
+                        .eq('email', user.email);
+                    console.log('[auth-callback] update err:', updErr);
+                }
+
+                const status = existing?.status || 'pending';
+                setStatus('กำลังนำทาง...');
+
+                if (status === 'approved') {
+                    window.location.href = PORTAL_URL;
+                } else {
+                    window.location.href = PENDING_URL;
+                }
             }
-
-            const status = existing?.status || 'pending';
-
-            // ── Redirect ตาม status ───────────────────────────────────────────────
-            if (status === 'approved') {
-                window.location.href = '../../page/portal/index.html';
-            } else {
-                // pending หรือ rejected → หน้ารอการอนุมัติ
-                window.location.href = '../../page/portal/pending.html';
-            }
-
         })();
     </script>
 
