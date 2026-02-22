@@ -942,11 +942,6 @@
 
       grid.innerHTML = `
       <div class="ic-deck-view" id="icDeckView">
-        <div class="ic-deck-stage" id="icDeckStage">
-          ${buildDeckCard(data[i + 2], 'ic-peek-2')}
-          ${buildDeckCard(data[i + 1], 'ic-peek-1')}
-          ${buildDeckCard(data[i], 'ic-current')}
-        </div>
         <div class="ic-deck-nav">
           <button class="ic-nav-btn" onclick="deckPrev()" ${i === 0 ? 'disabled' : ''} title="ก่อนหน้า">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg>
@@ -956,7 +951,13 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
           </button>
         </div>
+        <div class="ic-deck-stage" id="icDeckStage">
+          ${buildDeckCard(data[i + 2], 'ic-peek-2')}
+          ${buildDeckCard(data[i + 1], 'ic-peek-1')}
+          ${buildDeckCard(data[i], 'ic-current')}
+        </div>
       </div>`;
+
 
       attachDeckHandlers();
     }
