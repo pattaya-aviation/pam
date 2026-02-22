@@ -14,7 +14,7 @@ body {
     padding: 24px 32px;
     height: 100vh;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: clip;
     box-sizing: border-box;
 }
 
@@ -1462,43 +1462,58 @@ body {
 .tab-bar {
     display: flex;
     align-items: center;
-    gap: 0;
-    border-bottom: 2px solid #e5e7eb;
+    gap: 4px;
     width: 100%;
     margin-bottom: 20px;
+    background: #f3f4f6;
+    border-radius: 999px;
+    padding: 4px;
+    border-bottom: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.tab-bar::-webkit-scrollbar {
+    display: none;
 }
 
 .tab-btn {
-    padding: 10px 20px;
+    padding: 7px 16px;
     border: none;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -2px;
+    border-bottom: none;
+    margin-bottom: 0;
     font-size: 0.8125rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     background: transparent;
     color: #6b7280;
     white-space: nowrap;
+    border-radius: 999px;
     display: flex;
     align-items: center;
     gap: 6px;
+    flex-shrink: 0;
 }
 
 .tab-btn:hover {
     color: #111827;
+    background: rgba(255, 255, 255, 0.6);
 }
 
 .tab-btn.active {
-    color: #2563eb;
-    border-bottom-color: #2563eb;
+    color: #1d4ed8;
+    background: white;
     font-weight: 600;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.10), 0 0 0 1px rgba(0, 0, 0, 0.04);
+    border-bottom-color: transparent;
 }
 
 .tab-btn.active:hover {
     color: #1d4ed8;
-    border-bottom-color: #1d4ed8;
+    border-bottom-color: transparent;
 }
+
 
 /* Floating pill header */
 .floating-header {
