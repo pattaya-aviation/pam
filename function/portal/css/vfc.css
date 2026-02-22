@@ -748,31 +748,18 @@ body {
 /* Minimized dock */
 .m-dock {
     position: fixed;
-    left: 0;
-    right: 0;
+    left: 16px;
     bottom: 16px;
     z-index: 99;
     display: flex;
-    flex-direction: row;
+    flex-direction: column-reverse;
     gap: 8px;
-    padding: 0 16px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.m-dock::-webkit-scrollbar {
-    display: none;
 }
 
 @media (min-width: 768px) {
     .m-dock {
         left: auto;
         right: 16px;
-        bottom: 16px;
-        padding: 0;
-        overflow-x: visible;
-        flex-direction: column-reverse;
         align-items: flex-end;
     }
 }
@@ -790,13 +777,11 @@ body {
     cursor: pointer;
     transition: all 0.2s;
     animation: dockPop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-    flex-shrink: 0;
 }
 
 .m-dock-item:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
-    flex-shrink: 0;
 }
 
 .m-dock-icon {
@@ -2656,17 +2641,6 @@ body {
     pointer-events: none;
     filter: brightness(0.94);
     overflow: hidden;
-}
-
-/* Mobile: peek cards stack to the right instead of down */
-@media (max-width: 640px) {
-    .ic-dc-card.ic-peek-1 {
-        transform: translateX(10px) scale(0.965);
-    }
-
-    .ic-dc-card.ic-peek-2 {
-        transform: translateX(19px) scale(0.93);
-    }
 }
 
 /* Nav bar */
