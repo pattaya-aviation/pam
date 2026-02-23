@@ -2578,6 +2578,23 @@ body {
     padding: 0 0 28px;
 }
 
+/* Tablet (iPad) — tab bar + header take more space */
+@media (max-width: 1023px) and (min-width: 641px) {
+    .cards-grid {
+        height: calc(100vh - 220px);
+        min-height: 400px;
+    }
+}
+
+/* Mobile — even more compact */
+@media (max-width: 640px) {
+    .cards-grid {
+        height: calc(100vh - 260px);
+        min-height: 360px;
+    }
+}
+
+
 .ic-deck-view {
     display: flex;
     flex-direction: column;
