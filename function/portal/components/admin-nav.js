@@ -308,11 +308,9 @@ function renderMobileMenu(currentPage) {
     });
 
     return '<div class="admin-mobile-nav fixed top-4 right-4 z-50">' +
-        // Profile pill button (replaces hamburger)
-        '<button onclick="toggleAdminMobileMenu()" class="flex items-center gap-2 pl-2 pr-4 py-2 bg-white/85 backdrop-blur-xl rounded-full border border-gray-200 hover:bg-gray-50 transition-all shadow-lg" style="backdrop-filter:blur(20px)">' +
-        '<div class="pill-avatar" style="width:38px;height:38px">' + getUserAvatarHTML() + '</div>' +
-        '<span style="font-size:0.8125rem;font-weight:600;color:#111827;white-space:nowrap;max-width:100px;overflow:hidden;text-overflow:ellipsis">' + firstName + '</span>' +
-        '<svg style="width:14px;height:14px;color:#9ca3af;flex-shrink:0;transition:transform 0.2s" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>' +
+        // Hamburger button (original style)
+        '<button onclick="toggleAdminMobileMenu()" class="flex items-center justify-center w-14 h-14 bg-white/80 backdrop-blur-xl rounded-full border border-gray-200 hover:bg-gray-50 transition-colors shadow-lg">' +
+        '<svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>' +
         '</button>' +
         // Dropdown
         '<div id="adminMobileMenu" class="hidden absolute top-14 right-0 w-64 bg-white/95 backdrop-blur-xl rounded-2xl border border-gray-200 shadow-xl overflow-hidden" style="backdrop-filter:blur(20px)">' +
