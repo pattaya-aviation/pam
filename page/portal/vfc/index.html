@@ -412,6 +412,13 @@
       const contentId = 'content' + tabName.charAt(0).toUpperCase() + tabName.slice(1);
       document.getElementById(btnId).classList.add('active');
       document.getElementById(contentId).classList.remove('hidden');
+
+      // Lock scroll on card deck view — swipe owns all scroll/touch
+      const adminContent = document.querySelector('.admin-content');
+      if (adminContent) {
+        adminContent.style.overflowY = (tabName === 'cards') ? 'hidden' : 'auto';
+      }
+
       if (tabName === 'board') renderBoard();
       if (tabName === 'inbox') renderDashboard();
       if (tabName === 'cards') renderCards();
@@ -1294,7 +1301,12 @@
       };
 
       view.addEventListener('touchstart', e => onStart(e.touches[0].clientY, e.target), { passive: true });
-      view.addEventListener('touchmove', e => { if (dragging && !touchOnBody) onMove(e.touches[0].clientY); }, { passive: true });
+      view.addEventListener('touchmove', e => {
+        if (dragging && !touchOnBody) {
+          e.preventDefault(); // block page scroll while swiping card
+          onMove(e.touches[0].clientY);
+        }
+      }, { passive: false });
       view.addEventListener('touchend', onEnd);
       view.addEventListener('mousedown', e => { if (!e.target.closest('button,a')) onStart(e.clientY, e.target); });
       window.addEventListener('mousemove', e => { if (dragging && !touchOnBody) onMove(e.clientY); });
