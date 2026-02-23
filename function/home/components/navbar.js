@@ -496,6 +496,10 @@
 
     window.signInWithMicrosoft = async function () {
         // ── Path A: Supabase Auth OAuth (recommended — enables RLS) ──
+        // Wait briefly for supabaseClient if not yet ready (mobile may be slow to init)
+        if (!window.supabaseClient) {
+            await new Promise(r => setTimeout(r, 800));
+        }
         if (window.supabaseClient) {
             const { error } = await window.supabaseClient.auth.signInWithOAuth({
                 provider: 'azure',
@@ -515,12 +519,23 @@
             return;
         }
         const loginRequest = { scopes: ['openid', 'profile', 'email'] };
+
+        // On mobile browsers, popup is blocked — use redirect directly
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (isMobile) {
+            msalInstance.loginRedirect(loginRequest);
+            return;
+        }
+
         try {
             const response = await msalInstance.loginPopup(loginRequest);
             handleMSLoginSuccess(response.account);
         } catch (error) {
             console.error('Login error:', error);
-            if (error.errorCode === 'popup_window_error') {
+            // popup blocked OR hash error on some mobile browsers → fall back to redirect
+            const useRedirect = error.errorCode === 'popup_window_error' ||
+                error.errorCode === 'hash_does_not_contain_known_properties';
+            if (useRedirect) {
                 msalInstance.loginRedirect(loginRequest);
             } else {
                 showModalError('เกิดข้อผิดพลาด: ' + error.message);
