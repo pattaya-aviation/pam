@@ -164,35 +164,22 @@
             btn.textContent = 'กำลังตรวจสอบ...';
 
             try {
-                // ใช้ window.supabaseClient ที่มี session ของ user อยู่แล้ว
                 const db = window.supabaseClient;
                 if (!db) throw new Error('no client');
 
-                const { data, error } = await db
-                    .from('portal_users')
-                    .select('status')
-                    .eq('email', user.email)
-                    .maybeSingle();          // ← ไม่ throw error ถ้าไม่มี row
+                // ใช้ RPC (security definer) → ไม่พึ่ง session หรือ RLS
+                const { data: rpcData, error: rpcErr } = await db.rpc(
+                    'register_pending_user',
+                    { p_email: user.email, p_name: user.name || user.email }
+                );
 
-                // ถ้ายังไม่มี record เลย → สร้างใหม่เป็น pending
-                if (!data && !error) {
-                    await db.from('portal_users').upsert({
-                        email: user.email,
-                        name: user.name || user.email,
-                        status: 'pending',
-                        last_login: new Date().toISOString()
-                    }, { onConflict: 'email' });
+                if (rpcErr) throw rpcErr;
 
-                    btn.textContent = 'ส่งคำขอแล้ว — รอการอนุมัติ';
-                    btn.disabled = false;
-                    return;
-                }
+                const status = rpcData?.status || 'pending';
 
-                if (error) throw error;
-
-                if (data.status === 'approved') {
+                if (status === 'approved') {
                     window.location.href = '../../page/portal/index.html';
-                } else if (data.status === 'rejected') {
+                } else if (status === 'rejected') {
                     showRejected();
                 } else {
                     btn.textContent = 'ยังรออยู่ — ลองอีกครั้ง';
@@ -216,6 +203,9 @@
 
         // Auto-check ทุก 30 วินาที
         setInterval(checkStatus, 30000);
+
+        // ตรวจสอบทันทีเมื่อโหลดหน้า
+        checkStatus();
     </script>
 </body>
 
