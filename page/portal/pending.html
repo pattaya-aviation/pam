@@ -172,7 +172,21 @@
                     .from('portal_users')
                     .select('status')
                     .eq('email', user.email)
-                    .single();
+                    .maybeSingle();          // ← ไม่ throw error ถ้าไม่มี row
+
+                // ถ้ายังไม่มี record เลย → สร้างใหม่เป็น pending
+                if (!data && !error) {
+                    await db.from('portal_users').upsert({
+                        email: user.email,
+                        name: user.name || user.email,
+                        status: 'pending',
+                        last_login: new Date().toISOString()
+                    }, { onConflict: 'email' });
+
+                    btn.textContent = 'ส่งคำขอแล้ว — รอการอนุมัติ';
+                    btn.disabled = false;
+                    return;
+                }
 
                 if (error) throw error;
 
