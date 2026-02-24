@@ -14,9 +14,9 @@ let tblFilterStatus = 'all';
 let selectMode = false;
 
 // ========================================
-// Mockup Data
+// Mockup Data (fallback when Supabase unavailable)
 // ========================================
-const mockupMessages = {
+let mockupMessages = {
   1: {
     id: 1,
     type: "complaint",
@@ -127,6 +127,121 @@ const mockupMessages = {
     status: "pending",
   },
 };
+
+// ========================================
+// Supabase Data Loading
+// ========================================
+
+function transformSubmission(row) {
+  const typeMap = {
+    complaint: { thai: 'ร้องเรียน', color: 'red' },
+    suggestion: { thai: 'เสนอแนะ', color: 'yellow' },
+    compliment: { thai: 'คำชม', color: 'green' }
+  };
+  const t = typeMap[row.type] || typeMap.suggestion;
+  const sender = row.is_anonymous ? 'ไม่ระบุตัวตน' : (row.reporter_name || 'ไม่ระบุ');
+  const initials = sender.substring(0, 2);
+  const d = new Date(row.created_at);
+  const dateStr = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear() + 543} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+
+  return {
+    id: row.id,
+    type: row.type,
+    typeThai: t.thai,
+    typeColor: t.color,
+    sender: sender,
+    senderInitials: initials,
+    date: dateStr,
+    title: row.subject || (row.detail_text ? row.detail_text.substring(0, 60) : 'ไม่มีหัวข้อ'),
+    station: row.detail_station || '',
+    department: row.detail_department || '',
+    section: row.detail_section || '',
+    category: row.category || '',
+    detail: row.detail_text || '',
+    resolution: row.fix_text || '',
+    status: row.status || 'pending',
+    trackingNumber: row.tracking_number || '',
+    adminResponse: row.admin_response || '',
+    attachments: row.attachments ? (typeof row.attachments === 'string' ? JSON.parse(row.attachments) : row.attachments) : []
+  };
+}
+
+async function loadSubmissions() {
+  if (!window.supabaseClient) {
+    console.warn('Supabase not ready, using fallback data');
+    return;
+  }
+  try {
+    const { data, error } = await window.supabaseClient
+      .from('vfc_submissions')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Load submissions error:', error);
+      return;
+    }
+
+    if (data && data.length > 0) {
+      mockupMessages = {};
+      data.forEach(row => {
+        mockupMessages[row.id] = transformSubmission(row);
+      });
+      // Re-render current view
+      try {
+        if (typeof renderTableView === 'function') renderTableView();
+      } catch (e) { /* view not ready yet */ }
+    }
+  } catch (err) {
+    console.error('Load submissions error:', err);
+  }
+}
+
+async function submitAdminResponse(id) {
+  const textarea = document.getElementById('adminResponseText_' + id);
+  if (!textarea) return;
+  const response = textarea.value.trim();
+  if (!response) {
+    alert('กรุณาพิมพ์คำตอบ');
+    return;
+  }
+  if (!window.supabaseClient) {
+    alert('Supabase ไม่พร้อม');
+    return;
+  }
+  try {
+    const { error } = await window.supabaseClient
+      .from('vfc_submissions')
+      .update({ admin_response: response })
+      .eq('id', id);
+    if (error) {
+      alert('เกิดข้อผิดพลาด: ' + error.message);
+      return;
+    }
+    if (mockupMessages[id]) mockupMessages[id].adminResponse = response;
+    alert('✅ ส่งคำตอบสำเร็จ');
+    selectMessage(id);
+  } catch (err) {
+    alert('เกิดข้อผิดพลาด: ' + err.message);
+  }
+}
+
+async function updateSubmissionStatus(id, newStatus) {
+  if (!window.supabaseClient) return;
+  try {
+    const { error } = await window.supabaseClient
+      .from('vfc_submissions')
+      .update({ status: newStatus })
+      .eq('id', id);
+    if (error) {
+      alert('เกิดข้อผิดพลาด: ' + error.message);
+      return;
+    }
+    if (mockupMessages[id]) mockupMessages[id].status = newStatus;
+  } catch (err) {
+    alert('เกิดข้อผิดพลาด: ' + err.message);
+  }
+}
 
 // ========================================
 // Tab Switching
@@ -245,6 +360,11 @@ function logout() {
   sessionStorage.removeItem("user");
   window.location.href = "../../Home/pa-system.html";
 }
+
+// Load real data from Supabase on page load
+document.addEventListener('DOMContentLoaded', function () {
+  loadSubmissions();
+});
 
 // ========================================
 // Select Mode (Multi-select)
@@ -448,16 +568,15 @@ function selectMessage(id) {
                       <div class="text-sm text-gray-600 leading-relaxed whitespace-pre-line bg-white p-4 rounded-xl border border-gray-100">${message.detail}</div>
                   </div>
                   
-                  ${
-                    message.resolution
-                      ? `
+                  ${message.resolution
+        ? `
                   <div class="mb-6">
                       <h3 class="text-sm font-semibold text-gray-900 mb-3">สิ่งที่อยากให้แก้ไข</h3>
                       <div class="text-sm text-gray-600 leading-relaxed whitespace-pre-line bg-green-50 p-4 rounded-xl border border-green-100">${message.resolution}</div>
                   </div>
                   `
-                      : ""
-                  }
+        : ""
+      }
                   
                   <!-- Action Buttons -->
                   <div class="flex items-center gap-3 pt-4">
@@ -582,13 +701,13 @@ function selectCategory(category, label) {
   document.getElementById('categoryLabel').textContent = label;
   document.getElementById('categoryDropdownMenu').classList.add('hidden');
   document.getElementById('categoryArrow').classList.remove('rotate-180');
-  
+
   // Update the list header label
   const headerLabel = document.getElementById('listHeaderLabel');
   if (headerLabel) {
     headerLabel.textContent = label;
   }
-  
+
   // Filter message items
   const messages = document.querySelectorAll('.message-item');
   let visibleCount = 0;
@@ -622,7 +741,7 @@ function selectStatus(status, label) {
   document.getElementById('statusLabel').textContent = label;
   document.getElementById('statusDropdownMenu').classList.add('hidden');
   document.getElementById('statusArrow').classList.remove('rotate-180');
-  
+
   // Filter message items by read/unread
   const messages = document.querySelectorAll('.message-item');
   messages.forEach(msg => {
@@ -641,7 +760,7 @@ function applyFilters() {
   let visibleCount = 0;
   messages.forEach(msg => {
     const statusHidden = msg.dataset.statusHidden === 'true';
-    
+
     if (statusHidden) {
       msg.style.display = 'none';
     } else {
@@ -701,7 +820,7 @@ function setFilter(filterType) {
 // ========================================
 
 // Category & Status dropdowns
-document.addEventListener('click', function(e) {
+document.addEventListener('click', function (e) {
   const catBtn = document.getElementById('categoryDropdownBtn');
   const catMenu = document.getElementById('categoryDropdownMenu');
   if (catBtn && catMenu && !catBtn.contains(e.target) && !catMenu.contains(e.target)) {
@@ -740,14 +859,14 @@ document.addEventListener("click", function (e) {
 // ========================================
 // Panel Resizer
 // ========================================
-(function() {
+(function () {
   const resizer = document.getElementById('panelResizer');
   const leftPanel = document.getElementById('leftPanel');
   if (!resizer || !leftPanel) return;
 
   let isResizing = false;
 
-  resizer.addEventListener('mousedown', function(e) {
+  resizer.addEventListener('mousedown', function (e) {
     isResizing = true;
     resizer.classList.add('active');
     document.body.style.cursor = 'col-resize';
@@ -755,7 +874,7 @@ document.addEventListener("click", function (e) {
     e.preventDefault();
   });
 
-  document.addEventListener('mousemove', function(e) {
+  document.addEventListener('mousemove', function (e) {
     if (!isResizing) return;
     const container = leftPanel.parentElement;
     const containerRect = container.getBoundingClientRect();
@@ -764,7 +883,7 @@ document.addEventListener("click", function (e) {
     leftPanel.style.width = newWidth + '%';
   });
 
-  document.addEventListener('mouseup', function() {
+  document.addEventListener('mouseup', function () {
     if (isResizing) {
       isResizing = false;
       resizer.classList.remove('active');
@@ -832,7 +951,7 @@ document.querySelectorAll('.message-item').forEach(item => {
 // ========================================
 // DOM Init: Date section dividers
 // ========================================
-(function() {
+(function () {
   const list = document.querySelector('.flex-1.overflow-y-auto.custom-scrollbar');
   if (!list) return;
 
@@ -874,7 +993,7 @@ document.querySelectorAll('.message-item').forEach(item => {
     </svg>
     <span class="text-xs font-semibold text-blue-600">ปักมุด</span>
   `;
-  pinnedHeader.addEventListener('click', function() {
+  pinnedHeader.addEventListener('click', function () {
     const chevron = this.querySelector('.section-chevron');
     const isCollapsed = chevron.classList.contains('-rotate-90');
     chevron.classList.toggle('-rotate-90');
@@ -907,7 +1026,7 @@ document.querySelectorAll('.message-item').forEach(item => {
         </svg>
         <span class="text-xs font-semibold text-amber-600">${section}</span>
       `;
-      header.addEventListener('click', function() {
+      header.addEventListener('click', function () {
         const chevron = this.querySelector('.section-chevron');
         const isCollapsed = chevron.classList.contains('-rotate-90');
         chevron.classList.toggle('-rotate-90');
