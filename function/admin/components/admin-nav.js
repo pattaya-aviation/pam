@@ -5,7 +5,7 @@
  */
 
 // Detect basePath: if inside a subfolder of admin_portal, prefix '../'
-const adminNavBasePath = (function() {
+const adminNavBasePath = (function () {
     const path = window.location.pathname;
     // Check if we're inside a subfolder like /vfc-admin/index.html
     const adminPortalMatch = path.match(/\/admin_portal\/([^/]+)\//);
@@ -39,7 +39,7 @@ const adminMenuItems = [
     },
     {
         id: 'tax',
-        href: adminNavBasePath + 'tax-admin.html',
+        href: adminNavBasePath + '../tax/tax-home.html', // Note: No admin tax page yet, links to user tax home
         label: 'Tax System',
         hoverWidth: '155px',
         icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -168,7 +168,7 @@ function toggleAdminMobileMenu() {
 // Render desktop floating menu
 function renderDesktopMenu(currentPage) {
     let html = '';
-    
+
     adminMenuItems.forEach(item => {
         const isActive = currentPage === item.id;
         html += `
@@ -180,7 +180,7 @@ function renderDesktopMenu(currentPage) {
             </a>
         `;
     });
-    
+
     // Add divider and logout
     html += `
         <div class="menu-divider"></div>
@@ -193,14 +193,14 @@ function renderDesktopMenu(currentPage) {
             <span class="menu-text text-gray-500">ออกจากระบบ</span>
         </button>
     `;
-    
+
     return `<nav class="floating-menu fixed top-4 left-4 z-40">${html}</nav>`;
 }
 
 // Render mobile menu
 function renderMobileMenu(currentPage) {
     let menuItems = '';
-    
+
     adminMenuItems.forEach(item => {
         const isActive = currentPage === item.id;
         menuItems += `
@@ -210,7 +210,7 @@ function renderMobileMenu(currentPage) {
             </a>
         `;
     });
-    
+
     return `
         <div class="admin-mobile-nav fixed bottom-4 right-4 z-50">
             <button onclick="toggleAdminMobileMenu()" class="flex items-center justify-center w-14 h-14 bg-white/80 backdrop-blur-xl rounded-full border border-gray-200 hover:bg-gray-50 transition-colors shadow-lg">
@@ -244,7 +244,7 @@ function logout() {
 // Main render function
 function renderAdminNav(containerId, currentPage = 'home') {
     injectAdminNavStyles();
-    
+
     const container = document.getElementById(containerId);
     if (container) {
         container.innerHTML = renderDesktopMenu(currentPage) + renderMobileMenu(currentPage);
@@ -256,7 +256,7 @@ function renderAdminNav(containerId, currentPage = 'home') {
 
 // ── Theme Auto-Load ──
 // Apply immediately (before DOMContentLoaded) to prevent white flash
-(function() {
+(function () {
     const saved = localStorage.getItem('admin-theme');
     if (saved && saved !== 'light') {
         document.documentElement.className = saved; // apply on <html> immediately
@@ -264,7 +264,7 @@ function renderAdminNav(containerId, currentPage = 'home') {
 })();
 
 // Auto-initialize if data attribute is present
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const navContainer = document.querySelector('[data-admin-nav]');
     if (navContainer) {
         const currentPage = navContainer.dataset.adminNav || 'home';
