@@ -9,7 +9,7 @@
  *   <script>renderNavbar();</script>
  */
 
-(function() {
+(function () {
     'use strict';
 
     // Auto-detect base path from current page location (always return relative path)
@@ -25,15 +25,15 @@
         const isHomePage = currentPath.includes('/Home/');
         const isVFCPage = currentPath.includes('/vfc/');
         const isTaxPage = currentPath.includes('/tax/');
-        
+
         // Check if this is a sub/detail page
-        const isSubPage = (currentPath.includes('complaint.html') || 
-                          currentPath.includes('compliment.html') || 
-                          currentPath.includes('suggestion.html') || 
-                          currentPath.includes('track.html') ||
-                          currentPath.includes('tax-calculator.html') ||
-                          currentPath.includes('pa-ly01.html'));
-        
+        const isSubPage = (currentPath.includes('complaint.html') ||
+            currentPath.includes('compliment.html') ||
+            currentPath.includes('suggestion.html') ||
+            currentPath.includes('track.html') ||
+            currentPath.includes('tax-calculator.html') ||
+            currentPath.includes('pa-ly01.html'));
+
         // Generate relative paths
         const paths = {
             logo: `${basePath}function/shared/logo/Pattaya Aviation.png`,
@@ -45,13 +45,12 @@
             track: `${basePath}page/vfc/track.html`,
             taxHome: `${basePath}page/tax/tax-home.html`,
             taxCalculator: `${basePath}page/tax/tax-calculator.html`,
-            paLy01: `${basePath}page/tax/pa-ly01.html`,
-            login: `${basePath}page/login/login.html`
+            paLy01: `${basePath}page/tax/pa-ly01.html`
         };
-        
+
         // Determine back URL based on current section
         const backUrl = isVFCPage ? paths.vfcHome : isTaxPage ? paths.taxHome : paths.home;
-        
+
         // If sub page, return simple navbar with back button and title
         if (isSubPage) {
             return `
@@ -371,15 +370,15 @@
     }
 
     // Toggle mobile menu function
-    window.toggleMobileMenu = function() {
+    window.toggleMobileMenu = function () {
         const dropdownMenu = document.getElementById('dropdownMenu');
         const hamburgerIcon = document.getElementById('hamburgerIcon');
         const closeIcon = document.getElementById('closeIcon');
-        
+
         if (!dropdownMenu) return;
-        
+
         dropdownMenu.classList.toggle('hidden');
-        
+
         // Toggle icons
         if (dropdownMenu.classList.contains('hidden')) {
             hamburgerIcon.classList.remove('hidden');
@@ -391,7 +390,7 @@
     };
 
     // Toggle submenu function
-    window.toggleSubmenu = function(submenuId, arrowId) {
+    window.toggleSubmenu = function (submenuId, arrowId) {
         const submenu = document.getElementById(submenuId);
         const arrow = document.getElementById(arrowId);
         if (submenu && arrow) {
@@ -401,7 +400,7 @@
     };
 
     // Login Modal Functions
-    window.openLoginModal = function() {
+    window.openLoginModal = function () {
         const modal = document.getElementById('loginModal');
         if (modal) {
             modal.classList.remove('hidden');
@@ -409,7 +408,7 @@
         }
     };
 
-    window.closeLoginModal = function() {
+    window.closeLoginModal = function () {
         const modal = document.getElementById('loginModal');
         if (modal) {
             modal.classList.add('hidden');
@@ -424,11 +423,11 @@
         }
     };
 
-    window.toggleModalPassword = function() {
+    window.toggleModalPassword = function () {
         const passwordInput = document.getElementById('modalPassword');
         const eyeIcon = document.getElementById('modalEyeIcon');
         const eyeOffIcon = document.getElementById('modalEyeOffIcon');
-        
+
         if (passwordInput && eyeIcon && eyeOffIcon) {
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
@@ -450,7 +449,7 @@
             console.log('MSAL not loaded yet');
             return;
         }
-        
+
         const msalConfig = {
             auth: {
                 clientId: "478683b2-7ba3-4fee-98b7-02c15ae1b798",
@@ -464,7 +463,7 @@
         };
 
         msalInstance = new msal.PublicClientApplication(msalConfig);
-        
+
         // Handle redirect response
         msalInstance.handleRedirectPromise().then(response => {
             if (response) {
@@ -475,7 +474,7 @@
         });
     }
 
-    window.signInWithMicrosoft = async function() {
+    window.signInWithMicrosoft = async function () {
         if (!msalInstance) {
             showModalError("กรุณารอสักครู่ กำลังโหลด...");
             return;
@@ -508,12 +507,11 @@
         }));
 
         showModalSuccess("ยินดีต้อนรับ " + account.name + "!");
-        
+
         setTimeout(() => {
             closeLoginModal();
-            // Redirect to admin portal after login
-            const basePath = window.__navbarBasePath || '/';
-            window.location.href = `${basePath}page/admin_portal/index.html`;
+            // Redirect to admin portal after login (use relative path)
+            window.location.href = `${getBasePath()}page/admin_portal/index.html`;
         }, 1500);
     }
 
@@ -539,7 +537,7 @@
             initMSAL();
             return;
         }
-        
+
         const script = document.createElement('script');
         script.src = 'https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js';
         script.onload = initMSAL;
@@ -547,19 +545,19 @@
     }
 
     // Initialize on DOM ready
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         loadMSAL();
-        
+
         // Handle modal form submit - with test user support
         setTimeout(() => {
             const form = document.getElementById('modalLoginForm');
             if (form) {
-                form.addEventListener('submit', function(e) {
+                form.addEventListener('submit', function (e) {
                     e.preventDefault();
-                    
+
                     const email = document.getElementById('modalEmail').value;
                     const password = document.getElementById('modalPassword').value;
-                    
+
                     // Test user for local development
                     if (email === 'test' && password === '1234') {
                         sessionStorage.setItem('user', JSON.stringify({
@@ -567,13 +565,13 @@
                             email: 'test@pattayaaviation.com',
                             id: 'test-user-local'
                         }));
-                        
+
                         showModalSuccess("ยินดีต้อนรับ Test User!");
-                        
+
                         setTimeout(() => {
                             closeLoginModal();
-                            const basePath = window.__navbarBasePath || '/';
-                            window.location.href = `${basePath}page/admin_portal/index.html`;
+                            // Redirect to admin portal after login (use relative path)
+                            window.location.href = `${getBasePath()}page/admin_portal/index.html`;
                         }, 1500);
                     } else {
                         showModalError("กรุณาใช้ปุ่ม 'เข้าสู่ระบบด้วย Microsoft' หรือใช้ test user (email: test, password: 1234)");
@@ -584,7 +582,7 @@
     });
 
     // Main render function
-    window.renderNavbar = function(options = {}) {
+    window.renderNavbar = function (options = {}) {
         const container = document.getElementById('navbar-container');
         if (!container) {
             console.error('Navbar container not found. Please add <div id="navbar-container"></div> to your HTML.');
@@ -596,20 +594,20 @@
 
         // Check if this is a detail page (not a home page)
         const currentPath = window.location.pathname;
-        const isDetailPage = (currentPath.includes('complaint.html') || 
-                              currentPath.includes('compliment.html') || 
-                              currentPath.includes('suggestion.html') || 
-                              currentPath.includes('track.html') ||
-                              currentPath.includes('tax-calculator.html') ||
-                              currentPath.includes('pa-ly01.html'));
-        
+        const isDetailPage = (currentPath.includes('complaint.html') ||
+            currentPath.includes('compliment.html') ||
+            currentPath.includes('suggestion.html') ||
+            currentPath.includes('track.html') ||
+            currentPath.includes('tax-calculator.html') ||
+            currentPath.includes('pa-ly01.html'));
+
         if (isDetailPage) {
             // Set page title
             const titleElement = document.getElementById('navbarPageTitle');
             if (titleElement) {
                 titleElement.textContent = container.dataset.pageTitle || document.title.split(' - ')[0];
             }
-            
+
             // Set page subtitle
             const subtitleElement = document.getElementById('navbarPageSubtitle');
             if (subtitleElement && container.dataset.pageSubtitle) {
@@ -619,7 +617,7 @@
     };
 
     // Auto-render if container exists when script loads
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const container = document.getElementById('navbar-container');
         if (container && !container.innerHTML.trim()) {
             window.renderNavbar();
