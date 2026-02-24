@@ -373,4 +373,51 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.classList.remove('dark-grey', 'dark-navy');
         document.body.classList.add(savedTheme);
     }
+
+    // ── Approval Guard ──────────────────────────────────────────────
+    // ตรวจสอบสถานะ approved จาก Supabase ทุกครั้งที่โหลดหน้าใน portal
+    verifyApprovalStatus();
 });
+
+async function verifyApprovalStatus() {
+    const storedUser = sessionStorage.getItem('user');
+    if (!storedUser) return; // auth check อื่นจัดการ redirect แล้ว
+
+    const user = JSON.parse(storedUser);
+    if (!user?.email) return;
+
+    const db = window.supabaseClient;
+    if (!db) return; // ถ้าไม่มี db client ให้ผ่าน (fallback)
+
+    try {
+        // ใช้ RPC ที่ bypass RLS ได้แม้ไม่มี session สมบูรณ์
+        const { data, error } = await db.rpc(
+            'register_pending_user',
+            { p_email: user.email, p_name: user.name || user.email }
+        );
+
+        if (error) {
+            console.warn('[ApprovalGuard] RPC error:', error.message);
+            return; // ถ้า RPC fail ให้ผ่านไปก่อน ไม่ block user
+        }
+
+        const status = data?.status;
+
+        if (status === 'pending') {
+            // ยังรอการอนุมัติ → redirect ออก
+            sessionStorage.removeItem('user');
+            const pendingPath = adminNavBasePath + '../pending.html';
+            window.location.replace(pendingPath);
+        } else if (status === 'rejected') {
+            // ถูกปฏิเสธ → logout และ redirect ออก
+            sessionStorage.removeItem('user');
+            if (db.auth) await db.auth.signOut();
+            window.location.replace(adminNavBasePath + '../../page/home/main/pam.html');
+        }
+        // approved → ผ่านได้ ทำอะไรเพิ่มเติม
+    } catch (e) {
+        console.warn('[ApprovalGuard] error:', e);
+        // ถ้า error ให้ผ่านไปก่อน (ไม่ block)
+    }
+}
+
