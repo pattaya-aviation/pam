@@ -239,6 +239,45 @@ const adminNavStyles = `
         background: #fee2e2;
         color: #ef4444;
     }
+
+    /* ── Mobile Admin Pill Navbar ── */
+    .admin-mobile-nav { display: block; }
+    @media (min-width: 1024px) { .admin-mobile-nav { display: none; } }
+
+    .admin-mobile-pill {
+        background: rgba(255,255,255,0.25);
+        backdrop-filter: blur(12px) saturate(1.8) brightness(1.1);
+        -webkit-backdrop-filter: blur(12px) saturate(1.8) brightness(1.1);
+        border: 1px solid rgba(255,255,255,0.3);
+        box-shadow:
+            0 8px 32px 0 rgba(31,38,135,0.2),
+            0 2px 16px 0 rgba(31,38,135,0.1),
+            inset 0 1px 0 0 rgba(255,255,255,0.4),
+            inset 0 -1px 0 0 rgba(255,255,255,0.2);
+        border-radius: 9999px;
+        padding: 6px 10px 6px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        cursor: pointer;
+        transition: box-shadow 0.2s;
+    }
+    .admin-mobile-pill:hover {
+        box-shadow:
+            0 12px 40px 0 rgba(31,38,135,0.25),
+            inset 0 1px 0 0 rgba(255,255,255,0.5);
+    }
+    .admin-mobile-dropdown {
+        margin-top: 8px;
+        background: rgba(255,255,255,0.88);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(229,231,235,0.6);
+        border-radius: 1.5rem;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+        overflow: hidden;
+    }
 `;
 
 // Inject styles
@@ -291,48 +330,88 @@ function renderProfilePill() {
         '</div>';
 }
 
-// Render mobile menu
+// Render mobile menu — floating pill style matching home navbar
 function renderMobileMenu(currentPage) {
     const user = getAdminUser();
     const name = getUserDisplayName(user);
     const email = getUserEmail(user);
-    const firstName = (user.name || '').split(' ')[0] || name;
+
+    const pageTitles = {
+        home: 'Admin Portal',
+        vfc: 'Voice for Change',
+        tax: 'Tax System',
+        settings: 'ตั้งค่าระบบ'
+    };
+    const pageTitle = pageTitles[currentPage] || 'Admin Portal';
 
     let menuItems = '';
     adminMenuItems.forEach(function (item) {
         const isActive = currentPage === item.id;
-        menuItems += '<a href="' + item.href + '" class="flex items-center gap-3 px-4 py-3 ' +
-            (isActive ? 'bg-gray-100 text-gray-900 font-medium' : 'hover:bg-gray-50 text-gray-700') + '">' +
-            '<span class="' + (isActive ? 'text-blue-500' : item.iconColor) + ' w-5 h-5">' + item.icon.replace(/w-6 h-6/g, 'w-5 h-5') + '</span>' +
-            item.label + '</a>';
+        const activeBg = isActive ? '#eff6ff' : 'transparent';
+        const activeClr = isActive ? '#1d4ed8' : '#374151';
+        const iconClr = isActive ? '#3b82f6' : '#6b7280';
+        menuItems +=
+            '<a href="' + item.href + '" style="display:flex;align-items:center;gap:12px;padding:11px 16px;' +
+            'background:' + activeBg + ';font-weight:' + (isActive ? '600' : '400') + ';' +
+            'text-decoration:none;color:' + activeClr + ';transition:background 0.15s"' +
+            ' onmouseover="this.style.background=\'#f9fafb\'" onmouseout="this.style.background=\'' + activeBg + '\'">' +
+            '<span style="color:' + iconClr + ';flex-shrink:0;display:flex">' +
+            item.icon.replace(/w-6 h-6/g, 'w-5 h-5') + '</span>' +
+            '<span style="font-size:0.875rem">' + item.label + '</span>' +
+            '</a>';
     });
 
-    return '<div class="admin-mobile-nav fixed top-4 right-4 z-50">' +
-        // Hamburger button (original style)
-        '<button onclick="toggleAdminMobileMenu()" class="flex items-center justify-center w-14 h-14 bg-white/80 backdrop-blur-xl rounded-full border border-gray-200 hover:bg-gray-50 transition-colors shadow-lg">' +
-        '<svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>' +
-        '</button>' +
-        // Dropdown
-        '<div id="adminMobileMenu" class="hidden absolute top-14 right-0 w-64 bg-white/95 backdrop-blur-xl rounded-2xl border border-gray-200 shadow-xl overflow-hidden" style="backdrop-filter:blur(20px)">' +
-        // User info header
-        '<div style="display:flex;align-items:center;gap:12px;padding:16px 16px 14px;border-bottom:1px solid #f3f4f6">' +
-        '<div class="pill-avatar" style="width:44px;height:44px;flex-shrink:0">' + getUserAvatarHTML() + '</div>' +
+    return (
+        '<div class="admin-mobile-nav" style="position:fixed;top:16px;left:50%;transform:translateX(-50%);' +
+        'width:calc(100% - 2rem);max-width:420px;z-index:50">' +
+
+        // ── Pill ─────────────────────────────────────────────────────
+        '<div class="admin-mobile-pill" onclick="toggleAdminMobileMenu()">' +
+
+        // Left: logo (same as home navbar)
+        '<img src="' + adminNavBasePath + '../function/shared/logo/Pattaya Aviation.png" ' +
+        'alt="Pattaya Aviation" style="height:28px;object-fit:contain;flex-shrink:0;margin-left:2px">' +
+
+        // Right: hamburger icon
+        '<div style="width:34px;height:34px;display:flex;align-items:center;justify-content:center;' +
+        'border-radius:50%;background:rgba(255,255,255,0.6);flex-shrink:0">' +
+        '<svg width="18" height="18" fill="none" stroke="#374151" viewBox="0 0 24 24">' +
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/>' +
+        '</svg></div>' +
+
+        '</div>' + // end pill
+
+        // ── Dropdown ─────────────────────────────────────────────────
+        '<div id="adminMobileMenu" class="admin-mobile-dropdown hidden">' +
+
+        // User header
+        '<div style="display:flex;align-items:center;gap:12px;padding:14px 16px 12px;border-bottom:1px solid rgba(229,231,235,0.6)">' +
+        '<div class="pill-avatar" style="width:40px;height:40px;flex-shrink:0;background:linear-gradient(135deg,#3b82f6,#2563eb)">' +
+        getUserAvatarHTML() + '</div>' +
         '<div style="min-width:0;flex:1">' +
         '<div style="font-size:0.875rem;font-weight:700;color:#111827;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + name + '</div>' +
         '<div style="font-size:0.72rem;color:#6b7280;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px">' + email + '</div>' +
-        '</div>' +
-        '</div>' +
-        '<nav class="py-2">' +
-        menuItems +
-        '<div class="border-t border-gray-100 my-2"></div>' +
-        '<button onclick="logout()" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 text-gray-500 w-full text-left">' +
-        '<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>' +
-        'ออกจากระบบ' +
-        '</button>' +
-        '</nav>' +
-        '</div>' +
-        '</div>';
+        '</div></div>' +
+
+        // Nav items
+        '<nav style="padding:6px 0">' + menuItems + '</nav>' +
+
+        // Logout
+        '<div style="border-top:1px solid rgba(229,231,235,0.6);padding:4px 0">' +
+        '<button onclick="logout()" style="display:flex;align-items:center;gap:12px;padding:11px 16px;width:100%;' +
+        'border:none;background:transparent;cursor:pointer;font-size:0.875rem;color:#9ca3af;text-align:left;transition:background 0.15s,color 0.15s"' +
+        ' onmouseover="this.style.background=\'#fef2f2\';this.style.color=\'#ef4444\'"' +
+        ' onmouseout="this.style.background=\'transparent\';this.style.color=\'#9ca3af\'">' +
+        '<svg style="flex-shrink:0" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>' +
+        '</svg>ออกจากระบบ' +
+        '</button></div>' +
+
+        '</div>' + // end dropdown
+        '</div>'   // end wrapper
+    );
 }
+
 
 // Global logout function — works from any admin page
 function logout() {
