@@ -33,7 +33,7 @@
     }
 
     // Generate navbar HTML
-    function generateNavbarHTML(basePath) {
+    function generateNavbarHTML(basePath, portalMode) {
         // Determine current page for active states
         const currentPath = window.location.pathname;
         const isHomePage = currentPath.includes('/main/') || currentPath.includes('/home/main/');
@@ -199,6 +199,30 @@
         <!-- Mobile Dropdown Menu -->
         <div id="dropdownMenu" class="hidden bg-white/40 backdrop-blur-2xl rounded-b-3xl shadow-xl border-x border-b border-white/30 py-3 max-h-[calc(100vh-4rem)] overflow-y-auto">
             <div class="flex flex-col">
+${portalMode ? `
+                <!-- Admin Portal Links — flat list, identical classes for alignment -->
+                <a href="${basePath}page/portal/index.html" class="flex items-center gap-3 mx-2 px-4 py-3 hover:bg-gray-50/70 rounded-xl transition-colors">
+                    <svg class="w-5 h-5 flex-shrink-0 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    <span class="text-gray-800 font-medium text-sm">Admin Portal</span>
+                </a>
+                <a href="${basePath}page/portal/vfc/index.html" class="flex items-center gap-3 mx-2 px-4 py-3 hover:bg-gray-50/70 rounded-xl transition-colors">
+                    <svg class="w-5 h-5 flex-shrink-0 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                    <span class="text-gray-800 font-medium text-sm">Voice for Change</span>
+                </a>
+                <a href="${basePath}page/portal/tax/index.html" class="flex items-center gap-3 mx-2 px-4 py-3 hover:bg-gray-50/70 rounded-xl transition-colors">
+                    <svg class="w-5 h-5 flex-shrink-0 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    <span class="text-gray-800 font-medium text-sm">Tax System</span>
+                </a>
+                <a href="${basePath}page/portal/settings/index.html" class="flex items-center gap-3 mx-2 px-4 py-3 hover:bg-gray-50/70 rounded-xl transition-colors">
+                    <svg class="w-5 h-5 flex-shrink-0 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <span class="text-gray-800 font-medium text-sm">ตั้งค่าระบบ</span>
+                </a>
+                <div class="mx-4 my-1 border-t border-gray-100/60"></div>
+                <button onclick="(typeof logout === 'function' ? logout() : (sessionStorage.removeItem('user'), window.location.href='${basePath}page/home/main/pam.html'))" class="flex items-center gap-3 mx-2 px-4 py-3 hover:bg-red-50/70 rounded-xl w-full text-left transition-colors">
+                    <svg class="w-5 h-5 flex-shrink-0 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                    <span class="text-gray-500 font-medium text-sm">ออกจากระบบ</span>
+                </button>
+` : `
                 <a href="${paths.home}" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-50/70 rounded-xl mx-2 transition-colors">
                     <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
@@ -281,6 +305,7 @@
                         </a>
                     </div>
                 </div>
+`}
             </div>
         </div>
     </nav>
@@ -683,7 +708,8 @@
         }
 
         const basePath = options.basePath || getBasePath();
-        container.innerHTML = generateNavbarHTML(basePath);
+        const portalMode = options.portalMode || window.NAVBAR_PORTAL_MODE || false;
+        container.innerHTML = generateNavbarHTML(basePath, portalMode);
 
         // Check if this is a detail page (not a home page)
         const currentPath = window.location.pathname;
