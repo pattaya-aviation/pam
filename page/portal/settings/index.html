@@ -11,6 +11,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="../../../function/shared/js/supabase-config.js"></script>
     <script src="../../../function/portal/components/admin-nav.js"></script>
+    <!-- Home Navbar (mobile pill) -->
+    <script>window.NAVBAR_PORTAL_MODE = true;</script>
+    <script src="../../../function/home/components/navbar.js"></script>
     <style>
         .admin-content {
             margin-left: 80px;
@@ -20,7 +23,8 @@
         @media (max-width: 1023px) {
             .admin-content {
                 margin-left: 0;
-                padding: 20px 16px 24px;
+                padding: 16px;
+                min-height: calc(100vh - 56px);
             }
         }
 
@@ -651,6 +655,8 @@
 
 <body class="bg-white min-h-screen">
     <div id="adminNavContainer" data-admin-nav="settings"></div>
+    <div id="navbar-container"></div>
+    <script>renderNavbar();</script>
 
     <div class="admin-content">
         <div class="mb-4">
