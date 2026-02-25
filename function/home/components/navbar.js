@@ -176,24 +176,29 @@
     
     <!-- Mobile Navbar (Top Fixed Style) -->
     <nav class="lg:hidden fixed top-0 left-0 right-0 z-50">
-        <div class="bg-white/40 backdrop-blur-2xl px-4 py-3 flex items-center justify-between border-b border-white/30 shadow-sm">
+        <div class="bg-white/40 backdrop-blur-2xl px-4 py-3 flex items-center gap-3 border-b border-white/30 shadow-sm">
             <!-- Logo -->
-            <a href="${paths.home}" class="shrink-0" id="mobileLogoLink">
-                <img src="${paths.logo}" alt="Logo" class="h-8 object-contain" id="navbarLogo">
+            <a href="${portalMode ? basePath + 'page/portal/index.html' : paths.home}" class="shrink-0" id="mobileLogoLink">
+                <img src="${paths.logo}" alt="Logo" class="h-7 object-contain" id="navbarLogo">
             </a>
-            
-            <!-- Right Side Buttons -->
-            <div class="flex items-center gap-2">
-                <!-- Hamburger Button -->
-                <button id="menuToggle" onclick="toggleMobileMenu()" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100/70 transition-colors">
-                    <svg id="hamburgerIcon" class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                    <svg id="closeIcon" class="w-5 h-5 text-gray-700 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
+
+            ${portalMode && window.NAVBAR_PAGE_TITLE ? `
+            <!-- Center: Page Title -->
+            <div class="flex-1 min-w-0">
+                <div class="text-sm font-bold text-gray-900 leading-tight truncate">${window.NAVBAR_PAGE_TITLE}</div>
+                ${window.NAVBAR_PAGE_SUBTITLE ? `<div class="text-xs text-gray-400 leading-tight truncate mt-0.5">${window.NAVBAR_PAGE_SUBTITLE}</div>` : ''}
             </div>
+            ` : `<div class="flex-1"></div>`}
+            
+            <!-- Hamburger Button -->
+            <button id="menuToggle" onclick="toggleMobileMenu()" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100/70 transition-colors flex-shrink-0">
+                <svg id="hamburgerIcon" class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+                <svg id="closeIcon" class="w-5 h-5 text-gray-700 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
         </div>
         
         <!-- Mobile Dropdown Menu -->
