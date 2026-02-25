@@ -10,12 +10,17 @@
     <!-- Admin Portal CSS -->
     <link rel="stylesheet" href="../../function/portal/css/admin-base.css">
     <script src="../../function/portal/components/admin-nav.js"></script>
+    <!-- Home Navbar (mobile pill) -->
+    <script>window.NAVBAR_PORTAL_MODE = true;</script>
+    <script src="../../function/home/components/navbar.js"></script>
 </head>
 
 <body class="bg-white min-h-screen">
 
     <!-- Admin Navigation (rendered by component) -->
     <div id="adminNavContainer" data-admin-nav="home"></div>
+    <div id="navbar-container"></div>
+    <script>renderNavbar();</script>
 
 
 
