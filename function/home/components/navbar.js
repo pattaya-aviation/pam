@@ -491,6 +491,17 @@
         });
     }
 
+    // Build an absolute URL to auth-callback.html that works on both
+    // file:// (window.location.origin === "null") and http:// protocols.
+    function getAuthCallbackUrl() {
+        // Use a URL object relative to the current page to produce a valid absolute URL.
+        // getBasePath() returns e.g. '../../../' to reach project root from current page.
+        const base = getBasePath();                       // e.g. '../../../'
+        const rel  = base + 'page/portal/auth-callback.html';
+        // Resolve relative path against current page href
+        return new URL(rel, window.location.href).href;
+    }
+
     window.signInWithMicrosoft = async function () {
         // ── Path A: Supabase Auth OAuth (recommended — enables RLS) ──
         // Wait briefly for supabaseClient if not yet ready (mobile may be slow to init)
@@ -498,11 +509,12 @@
             await new Promise(r => setTimeout(r, 800));
         }
         if (window.supabaseClient) {
+            const callbackUrl = getAuthCallbackUrl();
             const { error } = await window.supabaseClient.auth.signInWithOAuth({
                 provider: 'azure',
                 options: {
                     scopes: 'openid profile email',
-                    redirectTo: window.location.origin + '/page/portal/auth-callback.html'
+                    redirectTo: callbackUrl
                 }
             });
             if (error) showModalError('เกิดข้อผิดพลาด: ' + error.message);
