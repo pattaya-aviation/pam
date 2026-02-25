@@ -157,42 +157,11 @@
             background: rgba(209, 213, 219, 0.6);
         }
 
-        .hero-layout {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4rem;
+        .login-wrapper {
             width: 100%;
-            max-width: 1100px;
+            max-width: 420px;
             margin: 0 auto;
             padding: 0 1.5rem;
-        }
-
-        .hero-text {
-            flex: 1;
-            text-align: left;
-        }
-
-        .hero-card {
-            flex: 0 0 380px;
-        }
-
-        /* Stack on small screens */
-        @media (max-width: 900px) {
-            .hero-layout {
-                flex-direction: column;
-                gap: 2.5rem;
-            }
-
-            .hero-text {
-                text-align: center;
-            }
-
-            .hero-card {
-                flex: none;
-                width: 100%;
-                max-width: 420px;
-            }
         }
 
         /* Alert messages */
@@ -251,17 +220,10 @@
 
     <!-- Main Hero + Login Card -->
     <div class="w-full flex items-center justify-center">
-        <div class="hero-layout">
-
-            <!-- Hero Text -->
-            <div class="hero-text">
-                <h1 class="text-7xl lg:text-9xl font-bold text-gray-900 leading-none tracking-tight">PAM</h1>
-                <p class="text-xl lg:text-3xl text-blue-500 mt-4 lg:mt-6 font-medium">Pattaya Aviation<br>Management
-                    System</p>
-            </div>
+        <div class="login-wrapper">
 
             <!-- Login Card -->
-            <div class="hero-card">
+            <div>
                 <div class="login-card p-7">
                     <!-- Header -->
                     <div class="mb-6">
