@@ -1,0 +1,243 @@
+/* =====================================================
+   admin-nav.css — Admin navigation component styles
+   (extracted from admin-nav.js inline CSS)
+   ===================================================== */
+
+/* Floating menu items - hidden on mobile by default */
+.floating-menu {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+}
+
+@media (min-width: 1024px) {
+    .floating-menu {
+        display: flex;
+    }
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    width: 56px;
+    height: 56px;
+    padding: 0;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(229, 231, 235, 0.8);
+    box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.3s ease,
+        background-color 0.2s ease,
+        padding 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    --hover-width: 180px;
+}
+
+.menu-item:hover {
+    width: var(--hover-width);
+    padding-right: 16px;
+    box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.12);
+}
+
+.menu-item.active {
+    background: #3b82f6;
+    border-color: #3b82f6;
+    box-shadow: 0 4px 15px -3px rgba(59, 130, 246, 0.3);
+}
+
+.menu-item.active:hover {
+    box-shadow: 0 8px 25px -5px rgba(59, 130, 246, 0.35);
+}
+
+.menu-item .icon-wrapper {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.menu-item .menu-text {
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+    padding-right: 16px;
+}
+
+.menu-item:hover .menu-text {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 0.15s;
+}
+
+.menu-divider {
+    width: 40px;
+    height: 1px;
+    background: rgba(229, 231, 235, 0.8);
+    margin: 4px auto;
+}
+
+/* Mobile menu - show only on mobile */
+.admin-mobile-nav {
+    display: block;
+}
+
+@media (min-width: 1024px) {
+    .admin-mobile-nav {
+        display: none;
+    }
+}
+
+/* ── Profile Pill (desktop top-right) ── */
+.admin-profile-pill {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .admin-profile-pill {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        z-index: 50;
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(229, 231, 235, 0.85);
+        border-radius: 9999px;
+        padding: 6px 14px 6px 6px;
+        box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.08);
+        cursor: default;
+        transition: box-shadow 0.2s, background 0.2s;
+    }
+
+    .admin-profile-pill:hover {
+        box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.13);
+        background: rgba(255, 255, 255, 0.98);
+    }
+
+    .admin-profile-pill:hover .pill-email {
+        max-height: 18px;
+        opacity: 1;
+        margin-top: 1px;
+    }
+
+    .admin-profile-pill:hover .pill-logout {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+.pill-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #9ca3af;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    letter-spacing: 0.02em;
+    user-select: none;
+}
+
+.pill-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.pill-name {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #111827;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+    line-height: 1.3;
+}
+
+.pill-email {
+    font-size: 0.695rem;
+    color: #6b7280;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.22s ease, opacity 0.22s ease, margin-top 0.22s ease;
+    line-height: 1.3;
+}
+
+.pill-logout {
+    margin-left: 6px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #9ca3af;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, background 0.15s, color 0.15s;
+    flex-shrink: 0;
+}
+
+.pill-logout:hover {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+/* ── Mobile Admin Pill Navbar ── */
+.admin-mobile-pill {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(12px) saturate(1.8) brightness(1.1);
+    -webkit-backdrop-filter: blur(12px) saturate(1.8) brightness(1.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow:
+        0 8px 32px 0 rgba(31, 38, 135, 0.2),
+        0 2px 16px 0 rgba(31, 38, 135, 0.1),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
+        inset 0 -1px 0 0 rgba(255, 255, 255, 0.2);
+    border-radius: 9999px;
+    padding: 6px 10px 6px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+
+.admin-mobile-pill:hover {
+    box-shadow:
+        0 12px 40px 0 rgba(31, 38, 135, 0.25),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+}
+
+.admin-mobile-dropdown {
+    margin-top: 8px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(229, 231, 235, 0.6);
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
