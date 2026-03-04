@@ -43,9 +43,9 @@
 
     <!-- Floating Tab Bar + Hamburger wrapper -->
     <div class="tab-bar-wrapper"
-      style="margin:0 auto 16px;display:flex;align-items:center;gap:8px;max-width:calc(100% - 16px);width:fit-content;z-index:50">
+      style="margin:0 auto 16px;display:flex;align-items:center;gap:8px;max-width:calc(100% - 16px);width:fit-content;z-index:1000;position:relative">
       <div class="tab-bar" id="navbarTabBar"
-        style="flex:1;min-width:0;background:rgba(255,255,255,0.9);backdrop-filter:blur(20px);border-radius:9999px;padding:4px;box-shadow:0 4px 20px -3px rgba(0,0,0,0.1);border:1px solid rgba(229,231,235,0.8);overflow-x:auto">
+        style="flex:1;min-width:0;min-height:46px;box-sizing:border-box;background:rgba(255,255,255,0.9);backdrop-filter:blur(20px);border-radius:9999px;padding:4px;box-shadow:0 4px 20px -3px rgba(0,0,0,0.1);border:1px solid rgba(229,231,235,0.8);overflow-x:auto">
 
         <button class="tab-btn active" id="tabInbox" onclick="switchTab('inbox')">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
