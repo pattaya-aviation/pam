@@ -13,12 +13,15 @@
 @media (min-width: 1024px) {
     .floating-menu {
         display: flex;
+        top: 12px !important;
     }
 }
 
 .menu-item {
+    position: relative;
     display: flex;
     align-items: center;
+    justify-content: center;
     width: 44px;
     height: 44px;
     padding: 0;
@@ -27,19 +30,13 @@
     backdrop-filter: blur(20px);
     border: 1px solid rgba(229, 231, 235, 0.8);
     box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.08);
-    overflow: hidden;
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-        box-shadow 0.3s ease,
-        background-color 0.2s ease,
-        padding 0.3s ease;
+    overflow: visible;
+    transition: box-shadow 0.3s ease, background-color 0.2s ease;
     cursor: pointer;
     text-decoration: none;
-    --hover-width: 180px;
 }
 
 .menu-item:hover {
-    width: var(--hover-width);
-    padding-right: 16px;
     box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.12);
 }
 
@@ -63,17 +60,29 @@
 }
 
 .menu-item .menu-text {
+    position: absolute;
+    left: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%) translateX(-4px);
     white-space: nowrap;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #374151;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(229, 231, 235, 0.8);
+    border-radius: 8px;
+    padding: 6px 12px;
+    box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.1);
     opacity: 0;
-    transform: translateX(-10px);
-    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
-    padding-right: 16px;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .menu-item:hover .menu-text {
-    opacity: 1;
-    transform: translateX(0);
-    transition-delay: 0.15s;
+    opacity: 1 !important;
+    transform: translateY(-50%) translateX(0);
+    transition-delay: 0.3s;
 }
 
 .menu-divider {
@@ -105,7 +114,7 @@
         align-items: center;
         gap: 10px;
         position: fixed;
-        top: 16px;
+        top: 8px;
         right: 16px;
         z-index: 50;
         background: rgba(255, 255, 255, 0.88);
