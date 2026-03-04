@@ -101,19 +101,23 @@ function toggleAdminMobileMenu() {
 
 // Render desktop floating menu (left side)
 function renderDesktopMenu(currentPage) {
-    let html = '';
+    // Logo at top of sidebar (styled like menu-item, non-interactive)
+    let html = '<div class="menu-item" style="cursor:default;margin-bottom:2px;pointer-events:none;width:44px!important;transition:none!important">' +
+        '<div class="icon-wrapper" style="display:flex;align-items:center;justify-content:center">' +
+        '<img src="' + _adminNavScriptBase + '../shared/logo/P_0.png" alt="" style="height:20px;object-fit:contain">' +
+        '</div></div>';
     adminMenuItems.forEach(function (item) {
         const isActive = currentPage === item.id;
         const iconStyle = isActive ? 'color:white' : 'color:' + item.iconColor;
         html += '<a href="' + item.href + '" class="menu-item ' + (isActive ? 'active' : '') + '" style="--hover-width: ' + item.hoverWidth + '">' +
             '<div class="icon-wrapper"><span style="display:flex;' + iconStyle + '">' + item.icon + '</span></div>' +
-            '<span class="menu-text ' + (isActive ? 'text-white font-medium' : 'text-gray-700') + '">' + item.label + '</span>' +
+            '<span class="menu-text ' + (isActive ? 'text-white font-medium' : 'text-gray-700') + '" style="opacity:0;position:absolute">' + item.label + '</span>' +
             '</a>';
     });
     html += '<div class="menu-divider"></div>' +
         '<button onclick="logout()" class="menu-item" style="--hover-width: 165px">' +
         '<div class="icon-wrapper"><svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg></div>' +
-        '<span class="menu-text text-gray-500">ออกจากระบบ</span>' +
+        '<span class="menu-text text-gray-500" style="opacity:0;position:absolute">ออกจากระบบ</span>' +
         '</button>';
     return '<nav class="floating-menu fixed top-4 left-4 z-40">' + html + '</nav>';
 }
@@ -186,6 +190,17 @@ function renderMobileMenu(currentPage) {
         // ── Dropdown ─────────────────────────────────────────────────
         '<div id="adminMobileMenu" class="admin-mobile-dropdown hidden">' +
 
+        // Close button
+        '<div style="display:flex;justify-content:flex-end;padding:16px 16px 0">' +
+        '<button onclick="toggleAdminMobileMenu()" style="width:40px;height:40px;border-radius:50%;border:none;' +
+        'background:rgba(128,128,128,0.15);cursor:pointer;display:flex;align-items:center;justify-content:center;' +
+        'color:#6b7280;transition:all 0.15s"' +
+        ' onmouseover="this.style.background=\'rgba(128,128,128,0.25)\'"' +
+        ' onmouseout="this.style.background=\'rgba(128,128,128,0.15)\'">' +
+        '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>' +
+        '</svg></button></div>' +
+
         // User header
         '<div style="display:flex;align-items:center;gap:12px;padding:14px 16px 12px;border-bottom:1px solid rgba(229,231,235,0.6)">' +
         '<div class="pill-avatar" style="width:40px;height:40px;flex-shrink:0;background:linear-gradient(135deg,#3b82f6,#2563eb)">' +
@@ -237,8 +252,9 @@ function renderAdminNav(containerId, currentPage) {
 // ── Theme Auto-Load ──
 (function () {
     const saved = localStorage.getItem('admin-theme');
-    if (saved && saved !== 'light') {
-        document.documentElement.className = saved;
+    const theme = saved || 'dark-grey'; // default to dark mode
+    if (theme !== 'light') {
+        document.documentElement.className = theme;
     }
 })();
 
@@ -249,8 +265,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const currentPage = navContainer.dataset.adminNav || 'home';
         renderAdminNav(navContainer.id, currentPage);
     }
-    const savedTheme = localStorage.getItem('admin-theme');
-    if (savedTheme && savedTheme !== 'light') {
+    const savedTheme = localStorage.getItem('admin-theme') || 'dark-grey';
+    if (savedTheme !== 'light') {
         document.body.classList.remove('dark-grey', 'dark-navy');
         document.body.classList.add(savedTheme);
     }
