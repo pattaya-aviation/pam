@@ -13,7 +13,7 @@ body {
 /* Layout */
 .admin-content {
     margin-left: 80px;
-    padding: 24px 32px;
+    padding: 8px 32px 24px;
     height: 100vh;
     overflow-y: auto;
     overflow-x: clip;
@@ -36,5 +36,10 @@ body {
         height: auto !important;
         overflow-y: visible !important;
         min-height: 0 !important;
+    }
+
+    /* Hide home navbar on portal mobile — admin-nav provides its own mobile menu */
+    #navbar-container {
+        display: none !important;
     }
 }
