@@ -43,11 +43,42 @@ body {
     }
 }
 
-/* Hide desktop navbar from navbar.js on all portal pages:
-   admin sidebar handles desktop navigation */
-#navbar-container nav.lg\:block,
-#navbar-container nav[class*="lg:block"] {
-    display: none !important;
+/* ── Mobile: reposition admin mobile nav for hamburger button ── */
+@media (max-width: 1023px) {
+
+    /* Hide admin-mobile-pill since hamburger button replaces it */
+    .admin-mobile-pill {
+        display: none !important;
+    }
+
+    /* Reposition the mobile nav so dropdown falls below the hamburger */
+    .admin-mobile-nav {
+        top: 64px !important;
+        right: 16px !important;
+        left: auto !important;
+        transform: none !important;
+        width: calc(100% - 2rem) !important;
+        max-width: 320px !important;
+        z-index: 999 !important;
+        pointer-events: none !important;
+    }
+
+    .admin-mobile-nav .admin-mobile-dropdown {
+        pointer-events: auto !important;
+    }
+}
+
+/* ── Standard admin content area (all portal pages) ── */
+.admin-content {
+    margin-left: 80px;
+    padding: 12px 24px;
+}
+
+@media (max-width: 1023px) {
+    .admin-content {
+        margin-left: 0;
+        padding: 8px 12px;
+    }
 }
 
 
@@ -590,6 +621,32 @@ body.dark-navy {
     color: var(--dm-text-secondary) !important;
 }
 
+/* Floating tab bar pill — dark mode */
+:is(body.dark-grey, body.dark-navy) .tab-bar {
+    background: var(--dm-nav-btn-bg) !important;
+    border-color: var(--dm-nav-btn-border) !important;
+    box-shadow: 0 4px 20px -3px rgba(0, 0, 0, 0.3) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .tab-btn {
+    color: var(--dm-text-muted) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .tab-btn:hover {
+    background: var(--dm-surface-3) !important;
+    color: var(--dm-text-secondary) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .tab-btn.active {
+    background: rgba(59, 130, 246, 0.15) !important;
+    color: #60a5fa !important;
+    border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+:is(body.dark-grey, body.dark-navy) .tab-btn.active:hover {
+    background: rgba(59, 130, 246, 0.25) !important;
+}
+
 /* Hamburger circle button */
 :is(body.dark-grey, body.dark-navy) .tab-hamburger {
     background: var(--dm-nav-btn-bg) !important;
@@ -600,6 +657,39 @@ body.dark-navy {
 :is(body.dark-grey, body.dark-navy) .tab-hamburger:hover {
     background: var(--dm-surface-3) !important;
     color: var(--dm-text-primary) !important;
+}
+
+/* Floating hamburger (auto-injected on non-VFC portal pages) */
+.admin-float-hamburger {
+    display: none;
+    position: fixed !important;
+    top: 16px;
+    right: 16px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid rgba(229, 231, 235, 0.8);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 20px -3px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #374151;
+    font-size: 1.3rem;
+    z-index: 1000;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.admin-float-hamburger:hover {
+    box-shadow: 0 6px 24px -2px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 1023px) {
+    .admin-float-hamburger {
+        display: flex;
+    }
 }
 
 /* Profile pill */
