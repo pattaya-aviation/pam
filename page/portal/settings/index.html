@@ -11,58 +11,59 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="../../../function/shared/js/supabase-config.js"></script>
     <script src="../../../function/portal/components/admin-nav.js"></script>
-    <!-- Home Navbar (mobile pill) -->
-    <script>
-        window.NAVBAR_PORTAL_MODE = true;
-        window.NAVBAR_PAGE_TITLE = 'ตั้งค่าระบบ';
-        window.NAVBAR_PAGE_SUBTITLE = 'จัดการผู้ใช้ สิทธิ์การเข้าถึง และธีม';
-    </script>
-    <script src="../../../function/home/components/navbar.js"></script>
     <!-- Settings Page CSS -->
     <link rel="stylesheet" href="../../../function/portal/css/settings.css">
-    </head>
+    <link rel="stylesheet" href="../../../function/portal/css/vfc-modal.css">
+</head>
 
 <body class="bg-white min-h-screen">
     <div id="adminNavContainer" data-admin-nav="settings"></div>
-    <div id="navbar-container"></div>
-    <script>renderNavbar();</script>
 
     <div class="admin-content">
-        <div class="mb-4">
-            <h1 class="text-xl font-bold text-gray-900">ตั้งค่าระบบ</h1>
-            <p class="text-sm text-gray-500 mt-0.5">จัดการผู้ใช้ สิทธิ์การเข้าถึง และธีม</p>
-        </div>
 
-        <div class="tab-bar" style="margin-bottom:16px">
-            <button class="tab-btn active" id="tabApproval" onclick="switchTab('approval')">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <!-- Floating Tab Bar + Hamburger wrapper -->
+        <div class="tab-bar-wrapper"
+            style="margin:0 auto 16px;display:flex;align-items:center;gap:8px;max-width:calc(100% - 16px);width:fit-content;z-index:1000;position:relative">
+            <div class="tab-bar" id="settingsTabBar"
+                style="flex:1;min-width:0;min-height:46px;box-sizing:border-box;background:rgba(255,255,255,0.9);backdrop-filter:blur(20px);border-radius:9999px;padding:4px;box-shadow:0 4px 20px -3px rgba(0,0,0,0.1);border:1px solid rgba(229,231,235,0.8);overflow-x:auto">
+
+                <button class="tab-btn active" id="tabApproval" onclick="switchTab('approval')">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    อนุมัติ
+                    <span id="pendingBadge"
+                        class="hidden ml-1 px-1.5 py-0.5 text-xs font-bold bg-red-500 text-white rounded-full"></span>
+                </button>
+                <button class="tab-btn" id="tabUsers" onclick="switchTab('users')">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    ผู้ใช้ทั้งหมด
+                </button>
+                <button class="tab-btn" id="tabTheme" onclick="switchTab('theme')">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                    </svg>
+                    ธีม
+                </button>
+                <button class="tab-btn" id="tabGeneral" onclick="switchTab('general')">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    </svg>
+                    ทั่วไป
+                </button>
+
+            </div>
+            <button class="tab-hamburger" onclick="toggleAdminMobileMenu()" title="เมนู">
+                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
-                อนุมัติ
-                <span id="pendingBadge"
-                    class="hidden ml-1 px-1.5 py-0.5 text-xs font-bold bg-red-500 text-white rounded-full"></span>
-            </button>
-            <button class="tab-btn" id="tabUsers" onclick="switchTab('users')">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-                ผู้ใช้ทั้งหมด
-            </button>
-            <button class="tab-btn" id="tabTheme" onclick="switchTab('theme')">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                </svg>
-                ธีม
-            </button>
-            <button class="tab-btn" id="tabGeneral" onclick="switchTab('general')">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                </svg>
-                ทั่วไป
             </button>
         </div>
 
