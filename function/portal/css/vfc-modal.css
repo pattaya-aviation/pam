@@ -1095,31 +1095,10 @@
     color: #374151;
 }
 
-/* Tablet/Mobile: show hamburger, hide admin pill */
+/* Tablet/Mobile: show VFC tab-bar hamburger */
 @media (max-width: 1023px) {
     .tab-hamburger {
         display: flex !important;
-    }
-
-    /* Hide admin-mobile-pill since tab bar has its own hamburger */
-    .admin-mobile-pill {
-        display: none !important;
-    }
-
-    /* Reposition the mobile nav so dropdown falls below the tab bar */
-    .admin-mobile-nav {
-        top: 64px !important;
-        right: 16px !important;
-        left: auto !important;
-        transform: none !important;
-        width: calc(100% - 2rem) !important;
-        max-width: 320px !important;
-        z-index: 999 !important;
-        pointer-events: none !important;
-    }
-
-    .admin-mobile-nav .admin-mobile-dropdown {
-        pointer-events: auto !important;
     }
 }
 
