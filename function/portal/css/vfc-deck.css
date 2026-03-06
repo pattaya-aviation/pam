@@ -5,7 +5,7 @@
 
 /* Override cards-grid height when in deck mode */
 .cards-grid {
-    height: calc(100vh - 180px);
+    height: calc(100vh - 140px);
     min-height: 480px;
     overflow: visible;
     padding: 0 0 28px;
@@ -14,7 +14,7 @@
 /* Tablet (iPad) — tab bar + header take more space */
 @media (max-width: 1023px) and (min-width: 641px) {
     .cards-grid {
-        height: calc(100vh - 220px);
+        height: calc(100vh - 170px);
         min-height: 400px;
     }
 }
@@ -22,8 +22,8 @@
 /* Mobile — match actual content height above cards */
 @media (max-width: 640px) {
     .cards-grid {
-        height: calc(100vh - 195px);
-        min-height: 360px;
+        height: calc(100vh - 135px);
+        min-height: 400px;
         padding: 0 0 8px;
     }
 }
