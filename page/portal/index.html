@@ -1,50 +1,56 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="th">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Portal - PA System</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Portal — PAM</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../../function/shared/css/fonts.css">
-    <!-- Admin Portal CSS -->
-    <link rel="stylesheet" href="../../function/portal/css/admin-base.css">
+    <link rel="stylesheet" href="../../function/shared/css/fonts.css" />
+    <link rel="stylesheet" href="../../function/portal/css/admin-base.css" />
+    <link rel="stylesheet" href="../../function/portal/css/admin-nav.css" />
     <script src="../../function/portal/components/admin-nav.js"></script>
-    <!-- Home Navbar (mobile pill) -->
-    <script>
-        window.NAVBAR_PORTAL_MODE = true;
-        window.NAVBAR_PAGE_TITLE = 'Admin Portal';
-    </script>
-    <script src="../../function/home/components/navbar.js"></script>
+    <link rel="stylesheet" href="../../function/portal/css/admin-page.css">
+    <script src="../../function/portal/components/pill-dropdown.js"></script>
+    <style>
+        .portal-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 40px);
+        }
+
+        .portal-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #111827;
+            letter-spacing: -0.02em;
+        }
+
+        body.dark-grey .portal-title {
+            color: #f3f4f6;
+        }
+    </style>
 </head>
 
-<body class="bg-white min-h-screen">
-
-    <!-- Admin Navigation (rendered by component) -->
+<body>
     <div id="adminNavContainer" data-admin-nav="home"></div>
-    <div id="navbar-container"></div>
-    <script>renderNavbar();</script>
 
+    <div class="admin-content">
+        <!-- Hamburger menu (auto-rendered, no tabs) -->
+        <div class="admin-tabs-row">
+            <div id="pillDropdownContainer" data-no-tabs></div>
+        </div>
 
-
-    <!-- Main Content -->
-    <div id="mainContent" class="flex items-center justify-center min-h-screen">
-        <div class="text-center">
-            <h1 class="text-2xl font-bold text-gray-900">Admin Portal</h1>
+        <div class="portal-center">
+            <h1 class="portal-title">Admin Portal</h1>
         </div>
     </div>
 
     <script>
-        // Auth check — logout() is provided by admin-nav.js, do NOT redeclare here
         const user = sessionStorage.getItem('user');
-        if (!user) {
-            window.location.href = '../home/main/pam.html';
-        }
-        // Dead code removed: toggleSearch(), toggleNotifications(), markAllRead(),
-        // and click listener — these referenced non-existent DOM elements causing
-        // TypeError on every click. logout() moved exclusively to admin-nav.js.
+        if (!user) window.location.href = '../home/main/pam.html';
     </script>
-
 </body>
 
 </html>
